@@ -22,6 +22,10 @@ class AppPage extends StatelessWidget {
               onPressed: () => context.go('/cubitCount'),
               child: const Text('Cubit模式的加减数'),
             ),
+            ElevatedButton(
+              onPressed: () => context.go('/blocTimer'),
+              child: const Text('Bloc定时器'),
+            ),
           ],
         ),
       ),

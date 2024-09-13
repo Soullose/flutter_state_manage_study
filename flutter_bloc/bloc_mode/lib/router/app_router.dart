@@ -1,6 +1,7 @@
 import 'package:bloc_mode/app.dart';
 import 'package:bloc_mode/counter/view/bloc/counter_page.dart';
 import 'package:bloc_mode/counter/view/cubit/count/counter_cubit_page.dart';
+import 'package:bloc_mode/timer/view/timer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,6 +22,10 @@ class AppRouter {
           GoRoute(
             path: 'cubitCount',
             builder: (context, state) => const CounterCubitPage(),
+          ),
+          GoRoute(
+            path: 'blocTimer',
+            builder: (context, state) => const TimerPage(),
           ),
         ],
       ),
