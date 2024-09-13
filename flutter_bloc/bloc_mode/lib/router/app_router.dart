@@ -1,5 +1,5 @@
 import 'package:bloc_mode/app.dart';
-import 'package:bloc_mode/counter/view/counter_page.dart';
+import 'package:bloc_mode/counter/view/bloc/counter_page.dart';
 import 'package:bloc_mode/counter/view/cubit/count/counter_cubit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
