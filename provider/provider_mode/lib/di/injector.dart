@@ -6,5 +6,5 @@ final injector = GetIt.instance;
 
 
 Future<void> initDependencies() async {
-  injector.registerSingleton(() => CounterProvider());
+  injector.registerFactory(() => CounterProvider());
 }
