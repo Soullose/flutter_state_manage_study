@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:provider_mode/counter/counter_provider.dart';
-import 'package:provider_mode/di/injector.dart';
 
 class AppPage extends StatelessWidget {
   const AppPage({super.key});

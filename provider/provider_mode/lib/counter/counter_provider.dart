@@ -7,7 +7,6 @@ class CounterProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   void increment() {
     _count++;
-    print(_count);
     notifyListeners();
   }
 
