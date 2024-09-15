@@ -15,6 +15,11 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+### 使用riverpod代码生成模式
+```shell
+dart run build_runner watch
+```
+
 ### 使用custom_lint
 ```shell
 dart run custom_lint
