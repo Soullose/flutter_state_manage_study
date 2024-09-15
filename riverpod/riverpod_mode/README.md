@@ -18,6 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 ### 使用riverpod代码生成模式
 ```shell
 dart run build_runner watch
+dart run build_runner build
 ```
 
 ### 使用custom_lint
