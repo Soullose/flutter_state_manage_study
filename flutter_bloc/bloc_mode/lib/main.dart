@@ -1,5 +1,6 @@
 import 'package:bloc_mode/di/injector.dart';
 import 'package:bloc_mode/router/app_router.dart';
+import 'package:bloc_mode/style/mt_theme.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -15,9 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: AppRouter.router,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: const MaterialTheme(TextTheme()).light(),
     );
   }
 }
