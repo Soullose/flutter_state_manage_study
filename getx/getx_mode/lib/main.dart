@@ -4,6 +4,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:getx_mode/router/app_routes.dart';
 import 'package:getx_mode/router/index.dart';
 import 'package:getx_mode/style/mt_theme.dart';
+import 'package:getx_mode/style/style.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -24,7 +25,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, child) => GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'getx状态管理',
-        theme: const MaterialTheme(TextTheme()).light(),
+        theme: ThemeData(colorScheme: AppTheme.lightColorScheme),
         initialRoute: AppRoutes.initial,
         getPages: AppPages.routes,
       ),

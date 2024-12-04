@@ -14,6 +14,6 @@ class WelcomeController extends GetxController {
     }
 
     Future.delayed(
-        const Duration(seconds: 1), () => debugPrint('xxxxxxxxxxxxxxxxxxx'));
+        const Duration(seconds: 1), () => Get.offAllNamed('/app'));
   }
 }
