@@ -8,22 +8,22 @@ class AppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('学习Flutter'),
+        title: const Text('学习Bloc'),
         centerTitle: true,
       ),
       body: Center(
         child: Column(
           children: [
             ElevatedButton(
-              onPressed: () => context.go('/blocCount'),
+              onPressed: () => context.go('/one/blocCount'),
               child: const Text('Bloc模式的加减数'),
             ),
             ElevatedButton(
-              onPressed: () => context.go('/cubitCount'),
+              onPressed: () => context.go('/one/cubitCount'),
               child: const Text('Cubit模式的加减数'),
             ),
             ElevatedButton(
-              onPressed: () => context.go('/blocTimer'),
+              onPressed: () => context.go('/one/blocTimer'),
               child: const Text('Bloc定时器'),
             ),
           ],

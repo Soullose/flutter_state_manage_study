@@ -34,6 +34,7 @@ class CounterCubitView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: 'increment',
             onPressed: () {
               context.read<CounterCubit>().increment();
             },
@@ -42,6 +43,7 @@ class CounterCubitView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
+            heroTag: 'decrement',
             onPressed: () {
               context.read<CounterCubit>().decrement();
             },
