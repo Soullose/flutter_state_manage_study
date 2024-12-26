@@ -1,9 +1,10 @@
-import 'package:bloc_mode/di/injector.dart';
+import 'package:bloc_mode/common/di/injector.dart';
 import 'package:bloc_mode/router/app_router.dart';
 import 'package:bloc_mode/style/mt_theme.dart';
 import 'package:flutter/material.dart';
 
-void main() async {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
   runApp(const MyApp());
 }

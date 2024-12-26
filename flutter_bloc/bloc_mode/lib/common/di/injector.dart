@@ -4,6 +4,7 @@ import 'package:bloc_mode/timer/bloc/timer_bloc.dart';
 import 'package:bloc_mode/timer/ticker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 var log = Logger();
 
@@ -11,6 +12,9 @@ final injector = GetIt.instance;
 
 Future<void> initDependencies() async {
   log.i('初始化依赖');
+
+  final prefs = await SharedPreferences.getInstance();
+
   injector.registerFactory(() => CounterBloc());
 
   injector.registerFactory(() => CounterCubit());
