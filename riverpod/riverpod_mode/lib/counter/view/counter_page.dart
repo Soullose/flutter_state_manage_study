@@ -8,10 +8,11 @@ class CounterPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    int count = ref.watch(counterProvider.select((count) => count));
     return Scaffold(
       appBar: AppBar(title: const Text('Counter example')),
       body: Center(
-        child: Text('${ref.watch(counterProvider)}'),
+        child: Text('计数:$count'),
       ),
       floatingActionButton: FloatingActionButton(
         // The read method is a utility to read a provider without listening to it
