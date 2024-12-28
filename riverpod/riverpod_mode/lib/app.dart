@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'generated/l10n.dart';
+
 class AppPage extends StatelessWidget {
   const AppPage({super.key});
 
@@ -8,7 +10,7 @@ class AppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('学习Riverpod'),
+        title: Text(S.of(context).mainTitle),
         titleTextStyle: TextStyle(color: ColorScheme.of(context).onPrimary),
         centerTitle: true,
         backgroundColor: ColorScheme.of(context).primary,

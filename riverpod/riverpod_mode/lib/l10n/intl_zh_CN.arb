@@ -1,1 +1,4 @@
-{}
+{
+    "@@locale": "zh_CN",
+    "mainTitle": "学习 Riverpod"
+}
