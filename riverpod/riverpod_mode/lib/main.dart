@@ -2,15 +2,23 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_mode/common/storage/shared_preferences_provider.dart';
 import 'package:riverpod_mode/route/app_router.dart';
 import 'package:riverpod_mode/utils/app_provider_observer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'generated/l10n.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
   runApp(
     ProviderScope(
       observers: [AppProviderObserver()],
+      overrides: [
+        sharedPreferencesUtilsProvider(prefs, asyncPrefs),
+      ],
       child: const MyApp(),
     ),
   );
