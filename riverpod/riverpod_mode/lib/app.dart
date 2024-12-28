@@ -8,8 +8,10 @@ class AppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('学习Riverpod'),
+        title: Text('学习Riverpod'),
+        titleTextStyle: TextStyle(color: ColorScheme.of(context).onPrimary),
         centerTitle: true,
+        backgroundColor: ColorScheme.of(context).primary,
       ),
       body: Center(
         child: Column(
