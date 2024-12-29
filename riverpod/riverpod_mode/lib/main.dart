@@ -17,7 +17,7 @@ Future<void> main() async {
     ProviderScope(
       observers: [AppProviderObserver()],
       overrides: [
-        sharedPreferencesUtilsProvider(prefs, asyncPrefs),
+        sharedPreferencesUtilsProvider,
       ],
       child: const MyApp(),
     ),
