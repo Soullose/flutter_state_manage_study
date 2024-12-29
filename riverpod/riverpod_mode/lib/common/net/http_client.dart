@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_mode/common/net/result_data.dart';
@@ -38,8 +39,8 @@ Future<ResultData?> netFetch(
 
   final dio = Dio();
   dio.interceptors.add(HeaderInterceptors());
-  dio.interceptors.add(CookieInterceptors(ref: ref));
-  dio.interceptors.add(TokenInterceptors(ref: ref));
+  // dio.interceptors.add(CookieInterceptors(ref: ref));
+  // dio.interceptors.add(TokenInterceptors(ref: ref));
   dio.interceptors.add(ErrorInterceptors());
   dio.interceptors.add(ResponseInterceptors());
 
@@ -66,6 +67,7 @@ Future<ResultData?> netFetch(
   try {
     response = await dio.request(url,
         queryParameters: params, data: data, options: options);
+    print('response1:${response.data}');
     if (response.data is DioException) {
       return resultError(response.data);
     }
