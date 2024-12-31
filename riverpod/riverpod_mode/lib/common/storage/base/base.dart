@@ -15,3 +15,9 @@ Future<List<String>?>? cookie(Ref ref) {
   final sharedPreferencesUtils = ref.read(sharedPreferencesUtilsProvider);
   return sharedPreferencesUtils.value?.getListAsync('cookie');
 }
+
+@riverpod
+Future<void>? setCookie(Ref ref,List<String> value) {
+  final sharedPreferencesUtils = ref.read(sharedPreferencesUtilsProvider);
+  return sharedPreferencesUtils.value?.setListAsync('cookie',value);
+}

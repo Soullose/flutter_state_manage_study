@@ -34,8 +34,8 @@ class CookieInterceptors extends QueuedInterceptorsWrapper {
   void saveCookie(Response<dynamic> response) async {
     final setCookie = response.headers.map[responseHeaderKey]!;
     debugPrint('cookie:$setCookie');
-    var cookie = ref.read(cookieProvider).value;
-    cookie = setCookie;
+    ref.read(setCookieProvider(setCookie));
+    // cookie = setCookie;
   }
 
   List<String>? getCookie() {
