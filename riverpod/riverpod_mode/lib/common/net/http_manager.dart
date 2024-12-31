@@ -134,15 +134,12 @@ class HttpManager extends _$HttpManager {
         onReceiveProgress: onReceiveProgress,
       );
 
-      // 处理响应
-      final resultData = _handleResponse(response);
-
       // // 存储缓存
       // if (useCache && response.statusCode == successCode) {
       //   await _cache.set(url, resultData, duration: _cacheDuration);
       // }
 
-      return resultData;
+      return response.data;
     } on DioException catch (e) {
       return _handleError(e, url);
     } catch (e) {
