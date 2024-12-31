@@ -51,7 +51,8 @@ dependencies:
   fluttertoast: ^8.2.10
   flutter_screenutil: ^5.9.3
   connectivity_plus: ^6.1.1
-  json_annotation: ^4.9.0
+  freezed_annotation: ^2.4.4
+#  json_annotation: ^4.9.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -70,7 +71,8 @@ dev_dependencies:
   custom_lint: ^0.7.0
   riverpod_generator: ^2.6.3
   riverpod_lint: ^2.6.3
-  json_serializable: ^6.9.0
+  freezed: ^2.5.7
+#  json_serializable: ^6.9.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
