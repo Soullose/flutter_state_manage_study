@@ -370,6 +370,12 @@ class MaterialTheme {
     ),
     scaffoldBackgroundColor: colorScheme.background,
     canvasColor: colorScheme.surface,
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
+        TargetPlatform.values,
+        value: (dynamic _) => const CupertinoPageTransitionsBuilder(),
+      ),
+    ),
   );
 
 

@@ -69,6 +69,22 @@ class AppRouter {
                   GoRoute(
                     path: 'blocCount',
                     builder: (context, state) => const CounterPage(),
+                    // pageBuilder: (context, state) => CustomTransitionPage(
+                    //     child: const CounterPage(),
+                    //     transitionsBuilder:
+                    //         (context, animation, secondaryAnimation, child) {
+                    //       const begin = Offset(0.0, 1.0);
+                    //       const end = Offset.zero;
+                    //       const curve = Curves.ease;
+                    //
+                    //       var tween = Tween(begin: begin, end: end)
+                    //           .chain(CurveTween(curve: curve));
+                    //
+                    //       return SlideTransition(
+                    //         position: animation.drive(tween),
+                    //         child: child,
+                    //       );
+                    //     }),
                   ),
                   GoRoute(
                     path: 'cubitCount',
@@ -78,6 +94,11 @@ class AppRouter {
                     path: 'blocTimer',
                     pageBuilder: (context, state) => CustomTransitionPage(
                       child: const TimerPage(),
+                      barrierDismissible: true,
+                      opaque: false,
+                      barrierColor: Colors.black38,
+                      transitionDuration: const Duration(milliseconds: 500),
+                      reverseTransitionDuration: const Duration(milliseconds: 200),
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
                         const begin = Offset(0.0, 1.0);
@@ -86,11 +107,12 @@ class AppRouter {
 
                         var tween = Tween(begin: begin, end: end)
                             .chain(CurveTween(curve: curve));
-
-                        return SlideTransition(
-                          position: animation.drive(tween),
-                          child: child,
-                        );
+                        return FadeTransition(
+                            opacity: animation, child: child);
+                        // return SlideTransition(
+                        //   position: animation.drive(tween),
+                        //   child: child,
+                        // );
                       },
                     ),
                   ),
