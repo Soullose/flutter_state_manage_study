@@ -1,0 +1,83 @@
+import 'package:bloc_mode/common/net/interceptors/header_interceptor.dart';
+import 'package:bloc_mode/common/net/result_data.dart';
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class HttpManager {
+  static const contentTypeJson = "application/json";
+  static const contentTypeForm = "application/x-www-form-urlencoded";
+
+  final dio = Dio();
+  final cookieJar = CookieJar();
+  final SharedPreferences prefs;
+
+  HttpManager({required this.prefs}) {
+    dio.interceptors.add(CookieManager(cookieJar));
+    dio.interceptors.add(HeaderInterceptors());
+  }
+
+  Future<ResultData?> netFetch(
+    url, {
+    DioMethod method = DioMethod.get,
+    Map<String, dynamic>? params,
+    Object? data,
+    Options? options,
+    Map<String, dynamic>? header,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    noTip = false,
+  }) async {
+    const methodValues = {
+      DioMethod.get: 'get',
+      DioMethod.post: 'post',
+      DioMethod.put: 'put',
+      DioMethod.delete: 'delete',
+      DioMethod.patch: 'patch',
+      DioMethod.head: 'head'
+    };
+    options ??= Options(method: methodValues[method]);
+    // print(options.headers);
+
+    Response response;
+
+    try {
+      response = await dio.request(url,
+          queryParameters: params, data: data, options: options);
+    } on DioException catch (e) {
+      return _resultError(e, url);
+    }
+    if (response.data is DioException) {
+      return _resultError(response.data, url);
+    }
+
+    return response.data;
+  }
+}
+
+ResultData _resultError(DioException e, String url) {
+  Response? errorResponse;
+  if (e.response != null) {
+    errorResponse = e.response;
+  } else {
+    errorResponse =
+        Response(statusCode: 999, requestOptions: RequestOptions(path: url));
+  }
+  if (e.type == DioExceptionType.connectionTimeout ||
+      e.type == DioExceptionType.receiveTimeout) {
+    errorResponse!.statusCode = -2;
+  }
+  return ResultData(e.message, false, errorResponse!.statusCode);
+}
+
+
+
+enum DioMethod {
+  get,
+  post,
+  put,
+  delete,
+  patch,
+  head,
+}

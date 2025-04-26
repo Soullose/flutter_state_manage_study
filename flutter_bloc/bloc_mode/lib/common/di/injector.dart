@@ -1,3 +1,5 @@
+import 'package:bloc_mode/common/net/HttpManager.dart';
+import 'package:bloc_mode/common/storage/shared_preferences_utils.dart';
 import 'package:bloc_mode/counter/bloc/counter_bloc.dart';
 import 'package:bloc_mode/counter/cubit/counter_cubit.dart';
 import 'package:bloc_mode/timer/bloc/timer_bloc.dart';
@@ -13,7 +15,13 @@ final injector = GetIt.instance;
 Future<void> initDependencies() async {
   log.i('初始化依赖');
 
-  final prefs = await SharedPreferences.getInstance();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+
+  injector.registerLazySingleton<SharedPreferencesUtils>(
+      () => SharedPreferencesUtils(prefs: prefs, asyncPrefs: asyncPrefs));
+
+  injector.registerLazySingleton<HttpManager>(() => HttpManager(prefs: prefs));
 
   injector.registerFactory(() => CounterBloc());
 
