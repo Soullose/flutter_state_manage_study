@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 import 'controller.dart';
 
-class WelcomeBinding extends Bindings {
+class WelcomeBinding extends BindingsInterface {
   @override
   void dependencies() {
     Get.lazyPut<WelcomeController>(() => WelcomeController());
