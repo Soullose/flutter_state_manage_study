@@ -1,21 +1,26 @@
+import 'package:bloc_mode/common/net/interceptors/cookie_interceptors.dart';
 import 'package:bloc_mode/common/net/interceptors/header_interceptor.dart';
 import 'package:bloc_mode/common/net/result_data.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../di/injector.dart';
+
 class HttpManager {
-  static const contentTypeJson = "application/json";
-  static const contentTypeForm = "application/x-www-form-urlencoded";
+  // static const contentTypeJson = "application/json";
+  // static const contentTypeForm = "application/x-www-form-urlencoded";
 
   final dio = Dio();
   final cookieJar = CookieJar();
   final SharedPreferences prefs;
 
   HttpManager({required this.prefs}) {
-    dio.interceptors.add(CookieManager(cookieJar));
     dio.interceptors.add(HeaderInterceptors());
+    dio.interceptors.add(CookieInterceptors(prefs: prefs));
+    dio.interceptors.add(CookieManager(cookieJar));
   }
 
   Future<ResultData?> netFetch(
@@ -35,16 +40,27 @@ class HttpManager {
       DioMethod.put: 'put',
       DioMethod.delete: 'delete',
       DioMethod.patch: 'patch',
-      DioMethod.head: 'head'
+      DioMethod.head: 'head',
+      DioMethod.non: ''
     };
-    options ??= Options(method: methodValues[method]);
-    // print(options.headers);
+    if(method != DioMethod.non) {
+      options ??= Options(method: methodValues[method]);
+    }
+    // options ??=Options(method: methodValues[method]) : null;
+    if (kDebugMode) {
+      print('options:$options');
+    }
 
     Response response;
 
     try {
       response = await dio.request(url,
           queryParameters: params, data: data, options: options);
+      if (kDebugMode) {
+        print('response:$response');
+        print('responseHeaders:${response.headers}');
+        print('cookie-jar:${await cookieJar.loadForRequest(Uri.parse(url))}');
+      }
     } on DioException catch (e) {
       return _resultError(e, url);
     }
@@ -71,7 +87,7 @@ ResultData _resultError(DioException e, String url) {
   return ResultData(e.message, false, errorResponse!.statusCode);
 }
 
-
+final HttpManager httpManager = injector<HttpManager>();
 
 enum DioMethod {
   get,
@@ -80,4 +96,5 @@ enum DioMethod {
   delete,
   patch,
   head,
+  non
 }

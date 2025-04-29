@@ -3,6 +3,7 @@ import 'package:bloc_mode/common/di/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../bloc/counter_event.dart';
 import 'counter_view.dart';
 
 class CounterPage extends StatelessWidget {
@@ -11,7 +12,7 @@ class CounterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => injector<CounterBloc>(),
+      create: (_) => injector<CounterBloc>()..add(const IncrementCountEvent()),
       child: const CounterView(),
     );
   }

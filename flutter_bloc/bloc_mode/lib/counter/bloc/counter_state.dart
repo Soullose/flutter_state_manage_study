@@ -1,17 +1,24 @@
 import 'package:equatable/equatable.dart';
 
 class CounterState extends Equatable {
-  const CounterState._({
-    this.counter = 0,
+  const CounterState({
+    required this.counter
   });
 
-  const CounterState.init() : this._();
+  factory CounterState.init(){
+    return const CounterState(counter: 0);
+  }
 
-  const CounterState.increment(int v) : this._(counter: v);
+  CounterState copyWith(int count) {
+    return CounterState(counter: count);
+  }
+
+  factory CounterState.increment(int v) {
+    return CounterState(counter: v);
+  }
 
   final int counter;
 
   @override
-  // TODO: implement props
   List<Object?> get props => [counter];
 }
