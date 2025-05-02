@@ -5,6 +5,7 @@ import 'package:bloc_mode/common/bloc_observer.dart';
 import 'package:bloc_mode/common/di/injector.dart';
 import 'package:bloc_mode/router/app_router.dart';
 import 'package:bloc_mode/style/mt_theme.dart';
+import 'package:bloc_mode/style/snack_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       builder: (_, child) {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
+          scaffoldMessengerKey: scaffoldMessengerKey,
           routerConfig: AppRouter.router,
           theme: const MaterialTheme(TextTheme()).light(),
         );
