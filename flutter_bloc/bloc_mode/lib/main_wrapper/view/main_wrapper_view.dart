@@ -10,22 +10,7 @@ class MainWrapperView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageTransitionSwitcher(
-        // duration: const Duration(milliseconds: 300),
-        transitionBuilder: (
-          Widget child,
-          Animation<double> animation,
-          Animation<double> secondaryAnimation,
-        ) {
-          return FadeThroughTransition(
-            fillColor: Colors.transparent,
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            child: child,
-          );
-        },
-        child: navigationShell,
-      ),
+      body: navigationShell,
       // body: navigationShell,
       bottomNavigationBar:
           // GestureDetector(

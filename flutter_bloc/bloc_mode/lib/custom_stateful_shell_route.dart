@@ -349,13 +349,14 @@ class AnimatedBranchContainer extends StatelessWidget {
         ).toList());
   }
 
-  Widget _branchNavigatorWrapper(int index, Widget navigator) => IgnorePointer(
-    ignoring: index != currentIndex,
-    child: TickerMode(
-      enabled: index == currentIndex,
-      child: navigator,
-    ),
-  );
+  Widget _branchNavigatorWrapper(int index, Widget navigator) =>
+      IgnorePointer(
+        ignoring: index != currentIndex,
+        child: TickerMode(
+          enabled: index == currentIndex,
+          child: navigator,
+        ),
+      );
 }
 
 /// Widget for the root page for the first section of the bottom navigation bar.
@@ -373,7 +374,10 @@ class RootScreenA extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text('Screen A', style: Theme.of(context).textTheme.titleLarge),
+            Text('Screen A', style: Theme
+                .of(context)
+                .textTheme
+                .titleLarge),
             const Padding(padding: EdgeInsets.all(4)),
             TextButton(
               onPressed: () {
@@ -426,7 +430,9 @@ class DetailsScreenState extends State<DetailsScreen> {
       );
     } else {
       return ColoredBox(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Theme
+            .of(context)
+            .scaffoldBackgroundColor,
         child: _build(context),
       );
     }
@@ -438,7 +444,10 @@ class DetailsScreenState extends State<DetailsScreen> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text('Details for ${widget.label} - Counter: $_counter',
-              style: Theme.of(context).textTheme.titleLarge),
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .titleLarge),
           const Padding(padding: EdgeInsets.all(4)),
           TextButton(
             onPressed: () {
@@ -451,7 +460,10 @@ class DetailsScreenState extends State<DetailsScreen> {
           const Padding(padding: EdgeInsets.all(8)),
           if (widget.param != null)
             Text('Parameter: ${widget.param!}',
-                style: Theme.of(context).textTheme.titleMedium),
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleMedium),
           const Padding(padding: EdgeInsets.all(8)),
           if (!widget.withScaffold) ...<Widget>[
             const Padding(padding: EdgeInsets.all(16)),
@@ -530,7 +542,8 @@ class TabbedRootScreenState extends State<TabbedRootScreen>
     return Scaffold(
       appBar: AppBar(
           title: Text(
-              'Section B root (tab: ${widget.navigationShell.currentIndex + 1})'),
+              'Section B root (tab: ${widget.navigationShell.currentIndex +
+                  1})'),
           bottom: TabBar(
             controller: tabController,
             tabs: tabs,
@@ -648,7 +661,10 @@ class TabScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('Screen $label', style: Theme.of(context).textTheme.titleLarge),
+          Text('Screen $label', style: Theme
+              .of(context)
+              .textTheme
+              .titleLarge),
           const Padding(padding: EdgeInsets.all(4)),
           TextButton(
             onPressed: () {

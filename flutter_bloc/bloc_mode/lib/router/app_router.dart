@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:bloc_mode/app.dart';
 import 'package:bloc_mode/counter/view/bloc/counter_page.dart';
 import 'package:bloc_mode/counter/view/cubit/count/counter_cubit_page.dart';
@@ -17,24 +18,44 @@ class AppRouter {
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/one',
     routes: <RouteBase>[
-      StatefulShellRoute(
+      StatefulShellRoute.indexedStack(
         // pageBuilder: (BuildContext context, GoRouterState state,
         //     StatefulNavigationShell navigationShell) {
         //   return MainWrapperPage(navigationShell: navigationShell);
         // },
-        navigatorContainerBuilder: (BuildContext context,
-            StatefulNavigationShell navigationShell, List<Widget> children) {
-          return MainWrapperPage(navigationShell: navigationShell);
-        },
+        // navigatorContainerBuilder: (BuildContext context,
+        //     StatefulNavigationShell navigationShell, List<Widget> children) {
+        //   return MainWrapperPage(navigationShell: navigationShell);
+        // },
+        parentNavigatorKey: _rootNavigatorKey,
+        // builder: (BuildContext context, GoRouterState state,
+        //     StatefulNavigationShell navigationShell) {
+        //   return MainWrapperPage(navigationShell: navigationShell);
+        // },
+
         builder: (BuildContext context, GoRouterState state,
             StatefulNavigationShell navigationShell) {
           // Return the widget that implements the custom shell (in this case
           // using a BottomNavigationBar). The StatefulNavigationShell is passed
           // to be able access the state of the shell and to navigate to other
           // branches in a stateful way.
-          return navigationShell;
+          return PageTransitionSwitcher(
+            duration: const Duration(milliseconds: 500),
+            transitionBuilder: (
+                Widget child,
+                Animation<double> animation,
+                Animation<double> secondaryAnimation,
+                ) {
+              return FadeThroughTransition(
+                fillColor: Colors.transparent,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: child,
+              );
+            },
+            child: MainWrapperPage(navigationShell: navigationShell),
+          );
         },
-
         branches: <StatefulShellBranch>[
           StatefulShellBranch(
             navigatorKey: _oneNavigatorKey,
