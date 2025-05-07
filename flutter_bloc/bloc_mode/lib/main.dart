@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:animations/animations.dart';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_mode/common/bloc_observer.dart';
 import 'package:bloc_mode/common/di/injector.dart';
@@ -38,7 +39,13 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           scaffoldMessengerKey: scaffoldMessengerKey,
           routerConfig: AppRouter.router,
-          theme: const MaterialTheme(TextTheme()).light(),
+          theme: const MaterialTheme(TextTheme()).light().copyWith(
+                // pageTransitionsTheme: const PageTransitionsTheme(
+                //   builders: <TargetPlatform, PageTransitionsBuilder>{
+                //     TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                //   },
+                // ),
+              ),
         );
       },
     );
