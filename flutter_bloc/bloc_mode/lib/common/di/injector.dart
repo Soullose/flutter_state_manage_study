@@ -2,6 +2,7 @@ import 'package:bloc_mode/common/net/HttpManager.dart';
 import 'package:bloc_mode/common/storage/shared_preferences_utils.dart';
 import 'package:bloc_mode/counter/bloc/counter_bloc.dart';
 import 'package:bloc_mode/counter/cubit/counter_cubit.dart';
+import 'package:bloc_mode/main_wrapper/main_wrapper_bloc.dart';
 import 'package:bloc_mode/timer/bloc/timer_bloc.dart';
 import 'package:bloc_mode/timer/ticker.dart';
 import 'package:get_it/get_it.dart';
@@ -22,6 +23,8 @@ Future<void> initDependencies() async {
       () => SharedPreferencesUtils(prefs: prefs, asyncPrefs: asyncPrefs));
 
   injector.registerLazySingleton<HttpManager>(() => HttpManager(prefs: prefs));
+
+  injector.registerFactory(() => MainWrapperBloc());
 
   injector.registerFactory(() => CounterBloc());
 

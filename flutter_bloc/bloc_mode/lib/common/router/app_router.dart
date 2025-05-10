@@ -21,16 +21,30 @@ class AppRouter {
       StatefulShellRoute.indexedStack(
         // pageBuilder: (BuildContext context, GoRouterState state,
         //     StatefulNavigationShell navigationShell) {
-        //   return MainWrapperPage(navigationShell: navigationShell);
-        // },
-        // navigatorContainerBuilder: (BuildContext context,
-        //     StatefulNavigationShell navigationShell, List<Widget> children) {
-        //   return MainWrapperPage(navigationShell: navigationShell);
+        //   return CustomTransitionPage(
+        //     child: MainWrapperPage(navigationShell: navigationShell),
+        //     transitionsBuilder: (BuildContext context,
+        //         Animation<double> animation,
+        //         Animation<double> secondaryAnimation,
+        //         Widget child) {
+        //       return FadeThroughTransition(
+        //         fillColor: Colors.transparent,
+        //         animation: animation,
+        //         secondaryAnimation: secondaryAnimation,
+        //         child: child,
+        //       );
+        //     },
+        //   );
         // },
         parentNavigatorKey: _rootNavigatorKey,
         // builder: (BuildContext context, GoRouterState state,
         //     StatefulNavigationShell navigationShell) {
-        //   return MainWrapperPage(navigationShell: navigationShell);
+        //   return navigationShell;
+        // },
+        // navigatorContainerBuilder: (BuildContext context,
+        //     StatefulNavigationShell navigationShell, List<Widget> children) {
+        //   return MainWrapperPage(
+        //       navigationShell: navigationShell, children: children);
         // },
 
         builder: (BuildContext context, GoRouterState state,
@@ -39,22 +53,7 @@ class AppRouter {
           // using a BottomNavigationBar). The StatefulNavigationShell is passed
           // to be able access the state of the shell and to navigate to other
           // branches in a stateful way.
-          return PageTransitionSwitcher(
-            duration: const Duration(milliseconds: 500),
-            transitionBuilder: (
-              Widget child,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return FadeThroughTransition(
-                fillColor: Colors.transparent,
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: child,
-              );
-            },
-            child: MainWrapperPage(navigationShell: navigationShell),
-          );
+          return MainWrapperPage(navigationShell: navigationShell);
         },
         branches: <StatefulShellBranch>[
           StatefulShellBranch(
@@ -62,41 +61,42 @@ class AppRouter {
             routes: <RouteBase>[
               GoRoute(
                 path: '/one',
-                // builder: (context, state) => const AppPage(),
-                pageBuilder: (context, state) => CustomTransitionPage(
-                  key: state.pageKey,
-                  child: const AppPage(),
-                  transitionsBuilder: (BuildContext context,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,
-                      Widget child) {
-                    return FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: child,
-                    );
-                  },
-                ),
+                builder: (context, state) => const AppPage(),
+                // pageBuilder: (context, state) => CustomTransitionPage(
+                //   key: state.pageKey,
+                //   child: const AppPage(),
+                //   transitionsBuilder: (BuildContext context,
+                //       Animation<double> animation,
+                //       Animation<double> secondaryAnimation,
+                //       Widget child) {
+                //     return FadeThroughTransition(
+                //       fillColor: Colors.transparent,
+                //       animation: animation,
+                //       secondaryAnimation: secondaryAnimation,
+                //       child: child,
+                //     );
+                //   },
+                // ),
                 routes: [
                   GoRoute(
                     path: 'blocCount',
-                    // builder: (context, state) => const CounterPage(),
-                    pageBuilder: (context, state) => CustomTransitionPage(
-                      key: state.pageKey,
-                      child: const CounterPage(),
-                      transitionsBuilder: (BuildContext context,
-                          Animation<double> animation,
-                          Animation<double> secondaryAnimation,
-                          Widget child) {
-                        return FadeThroughTransition(
-                          fillColor: Colors.transparent,
-                          animation: animation,
-                          secondaryAnimation: secondaryAnimation,
-                          child: child,
-                        );
-                      },
-                    ),
+                    builder: (context, state) => const CounterPage(),
+                    // pageBuilder: (context, state) => CustomTransitionPage(
+                    //   key: state.pageKey,
+                    //   child: const CounterPage(),
+                    //   transitionsBuilder: (BuildContext context,
+                    //       Animation<double> animation,
+                    //       Animation<double> secondaryAnimation,
+                    //       Widget child) {
+                    //     return SharedAxisTransition(
+                    //       fillColor: Colors.transparent,
+                    //       animation: animation,
+                    //       secondaryAnimation: secondaryAnimation,
+                    //       transitionType: SharedAxisTransitionType.horizontal,
+                    //       child: child,
+                    //     );
+                    //   },
+                    // ),
                   ),
                   GoRoute(
                     path: 'cubitCount',
@@ -109,7 +109,7 @@ class AppRouter {
                       barrierDismissible: true,
                       opaque: false,
                       barrierColor: Colors.black38,
-                      transitionDuration: const Duration(milliseconds: 500),
+                      transitionDuration: const Duration(milliseconds: 300),
                       reverseTransitionDuration:
                           const Duration(milliseconds: 200),
                       transitionsBuilder:
@@ -120,11 +120,11 @@ class AppRouter {
 
                         var tween = Tween(begin: begin, end: end)
                             .chain(CurveTween(curve: curve));
-                        return FadeTransition(opacity: animation, child: child);
-                        // return SlideTransition(
-                        //   position: animation.drive(tween),
-                        //   child: child,
-                        // );
+                        // return FadeTransition(opacity: animation, child: child);
+                        return SlideTransition(
+                          position: animation.drive(tween),
+                          child: child,
+                        );
                       },
                     ),
                   ),
