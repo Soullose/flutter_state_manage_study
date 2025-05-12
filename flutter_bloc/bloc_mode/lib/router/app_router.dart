@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 
 class AppRouter {
+  static final _rootKey = GlobalKey<StatefulNavigationShellState>();
   static final _rootNavigatorKey =
       GlobalKey<NavigatorState>(debugLabel: 'root');
   static final _oneNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'one');
@@ -19,6 +20,7 @@ class AppRouter {
     initialLocation: '/one',
     routes: <RouteBase>[
       StatefulShellRoute.indexedStack(
+        key: _rootKey,
         // pageBuilder: (BuildContext context, GoRouterState state,
         //     StatefulNavigationShell navigationShell) {
         //   return MainWrapperPage(navigationShell: navigationShell);
@@ -33,51 +35,71 @@ class AppRouter {
         //   return MainWrapperPage(navigationShell: navigationShell);
         // },
 
-        builder: (BuildContext context, GoRouterState state,
+        pageBuilder: (BuildContext context, GoRouterState state,
             StatefulNavigationShell navigationShell) {
-          // Return the widget that implements the custom shell (in this case
-          // using a BottomNavigationBar). The StatefulNavigationShell is passed
-          // to be able access the state of the shell and to navigate to other
-          // branches in a stateful way.
-          return PageTransitionSwitcher(
-            duration: const Duration(milliseconds: 500),
-            transitionBuilder: (
-              Widget child,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return FadeThroughTransition(
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: MainWrapperPage(navigationShell: navigationShell),
+            transitionDuration: const Duration(milliseconds: 800),
+            transitionsBuilder: (BuildContext context,
+                Animation<double> animation,
+                Animation<double> secondaryAnimation,
+                Widget child) {
+              return SharedAxisTransition(
                 fillColor: Colors.transparent,
                 animation: animation,
                 secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.vertical,
                 child: child,
               );
             },
-            child: MainWrapperPage(navigationShell: navigationShell),
           );
         },
+        // builder: (BuildContext context, GoRouterState state,
+        //     StatefulNavigationShell navigationShell) {
+        //   // Return the widget that implements the custom shell (in this case
+        //   // using a BottomNavigationBar). The StatefulNavigationShell is passed
+        //   // to be able access the state of the shell and to navigate to other
+        //   // branches in a stateful way.
+        //   return PageTransitionSwitcher(
+        //     duration: const Duration(milliseconds: 500),
+        //     transitionBuilder: (
+        //       Widget child,
+        //       Animation<double> animation,
+        //       Animation<double> secondaryAnimation,
+        //     ) {
+        //       return FadeThroughTransition(
+        //         fillColor: Colors.transparent,
+        //         animation: animation,
+        //         secondaryAnimation: secondaryAnimation,
+        //         child: child,
+        //       );
+        //     },
+        //     child: MainWrapperPage(navigationShell: navigationShell),
+        //   );
+        // },
         branches: <StatefulShellBranch>[
           StatefulShellBranch(
             navigatorKey: _oneNavigatorKey,
             routes: <RouteBase>[
               GoRoute(
                 path: '/one',
-                // builder: (context, state) => const AppPage(),
-                pageBuilder: (context, state) => CustomTransitionPage(
-                  key: state.pageKey,
-                  child: const AppPage(),
-                  transitionsBuilder: (BuildContext context,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,
-                      Widget child) {
-                    return FadeThroughTransition(
-                      fillColor: Colors.transparent,
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      child: child,
-                    );
-                  },
-                ),
+                builder: (context, state) => const AppPage(),
+                // pageBuilder: (context, state) => CustomTransitionPage(
+                //   key: state.pageKey,
+                //   child: const AppPage(),
+                //   transitionsBuilder: (BuildContext context,
+                //       Animation<double> animation,
+                //       Animation<double> secondaryAnimation,
+                //       Widget child) {
+                //     return FadeThroughTransition(
+                //       fillColor: Colors.transparent,
+                //       animation: animation,
+                //       secondaryAnimation: secondaryAnimation,
+                //       child: child,
+                //     );
+                //   },
+                // ),
                 routes: [
                   GoRoute(
                     path: 'blocCount',
@@ -85,14 +107,15 @@ class AppRouter {
                     pageBuilder: (context, state) => CustomTransitionPage(
                       key: state.pageKey,
                       child: const CounterPage(),
+                      transitionDuration: const Duration(milliseconds: 300),
                       transitionsBuilder: (BuildContext context,
                           Animation<double> animation,
                           Animation<double> secondaryAnimation,
                           Widget child) {
-                        return FadeThroughTransition(
-                          fillColor: Colors.transparent,
+                        return SharedAxisTransition(
                           animation: animation,
                           secondaryAnimation: secondaryAnimation,
+                          transitionType: SharedAxisTransitionType.horizontal,
                           child: child,
                         );
                       },
@@ -100,7 +123,23 @@ class AppRouter {
                   ),
                   GoRoute(
                     path: 'cubitCount',
-                    builder: (context, state) => const CounterCubitPage(),
+                    // builder: (context, state) => const CounterCubitPage(),
+                    pageBuilder: (context, state) => CustomTransitionPage(
+                      key: state.pageKey,
+                      child: const CounterPage(),
+                      transitionDuration: const Duration(milliseconds: 300),
+                      transitionsBuilder: (BuildContext context,
+                          Animation<double> animation,
+                          Animation<double> secondaryAnimation,
+                          Widget child) {
+                        return SharedAxisTransition(
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          transitionType: SharedAxisTransitionType.scaled,
+                          child: child,
+                        );
+                      },
+                    ),
                   ),
                   GoRoute(
                     path: 'blocTimer',
@@ -137,7 +176,22 @@ class AppRouter {
             routes: <RouteBase>[
               GoRoute(
                 path: '/two',
-                builder: (context, state) => const CounterPage(),
+                // builder: (context, state) => const CounterPage(),
+                pageBuilder: (context, state) => CustomTransitionPage(
+                  key: state.pageKey,
+                  child: const CounterPage(),
+                  transitionsBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                      Widget child) {
+                    return FadeThroughTransition(
+                      fillColor: Colors.transparent,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: child,
+                    );
+                  },
+                ),
               ),
             ],
           ),
