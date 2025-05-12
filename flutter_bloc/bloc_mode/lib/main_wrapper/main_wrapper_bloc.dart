@@ -9,9 +9,6 @@ class MainWrapperBloc extends Bloc<MainWrapperEvent, MainWrapperState> {
   MainWrapperBloc() : super(const MainWrapperInitial()) {
     on<InitIndexPage>(_initIndexPage);
     on<ChangeIndexPage>(_changeIndexPage);
-    // on<MainWrapperEvent>((event, emit) {
-    //   // TODO: implement event handler
-    // });
   }
 
   void _initIndexPage(InitIndexPage event, Emitter<MainWrapperState> emit) {
