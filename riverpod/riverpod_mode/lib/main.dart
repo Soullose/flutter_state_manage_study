@@ -4,19 +4,24 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:riverpod_mode/common/storage/shared_preferences_provider.dart';
+import 'package:riverpod_mode/common/storage/shared_preferences_service.dart';
 import 'package:riverpod_mode/route/app_router.dart';
 import 'package:riverpod_mode/utils/app_provider_observer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'common/state_logger.dart';
 import 'generated/l10n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // final SharedPreferences prefs = await SharedPreferences.getInstance();
-  // final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
   runApp(
     ProviderScope(
-      observers: [AppProviderObserver()],
+      observers: [
+        // AppProviderObserver(),
+        StateLogger(),
+      ],
       overrides: [
         sharedPreferencesUtilsProvider,
       ],

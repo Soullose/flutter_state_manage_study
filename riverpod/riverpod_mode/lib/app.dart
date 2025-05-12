@@ -22,6 +22,10 @@ class AppPage extends StatelessWidget {
               onPressed: () => context.go('/riverpodCounter'),
               child: const Text('Riverpod的加减数'),
             ),
+            ElevatedButton(
+              onPressed: () => context.go('/riverpodSetting'),
+              child: const Text('Riverpod的设置页面'),
+            ),
           ],
         ),
       ),
