@@ -62,41 +62,10 @@ class AppRouter {
               GoRoute(
                 path: '/one',
                 builder: (context, state) => const AppPage(),
-                // pageBuilder: (context, state) => CustomTransitionPage(
-                //   key: state.pageKey,
-                //   child: const AppPage(),
-                //   transitionsBuilder: (BuildContext context,
-                //       Animation<double> animation,
-                //       Animation<double> secondaryAnimation,
-                //       Widget child) {
-                //     return FadeThroughTransition(
-                //       fillColor: Colors.transparent,
-                //       animation: animation,
-                //       secondaryAnimation: secondaryAnimation,
-                //       child: child,
-                //     );
-                //   },
-                // ),
                 routes: [
                   GoRoute(
                     path: 'blocCount',
                     builder: (context, state) => const CounterPage(),
-                    // pageBuilder: (context, state) => CustomTransitionPage(
-                    //   key: state.pageKey,
-                    //   child: const CounterPage(),
-                    //   transitionsBuilder: (BuildContext context,
-                    //       Animation<double> animation,
-                    //       Animation<double> secondaryAnimation,
-                    //       Widget child) {
-                    //     return SharedAxisTransition(
-                    //       fillColor: Colors.transparent,
-                    //       animation: animation,
-                    //       secondaryAnimation: secondaryAnimation,
-                    //       transitionType: SharedAxisTransitionType.horizontal,
-                    //       child: child,
-                    //     );
-                    //   },
-                    // ),
                   ),
                   GoRoute(
                     path: 'cubitCount',
