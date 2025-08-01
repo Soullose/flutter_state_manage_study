@@ -9,6 +9,7 @@ import 'package:bloc_mode/common/style/mt_theme.dart';
 import 'package:bloc_mode/common/style/snack_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -21,7 +22,12 @@ Future<void> main() async {
   if (kDebugMode) {
     print('测试app路径:$appDocPath');
   }
-  runApp(const MyApp());
+  runApp(
+    RepositoryProvider(
+      create: (context) => null,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -40,12 +46,12 @@ class MyApp extends StatelessWidget {
           scaffoldMessengerKey: scaffoldMessengerKey,
           routerConfig: AppRouter.router,
           theme: const MaterialTheme(TextTheme()).light().copyWith(
-                // pageTransitionsTheme: const PageTransitionsTheme(
-                //   builders: <TargetPlatform, PageTransitionsBuilder>{
-                //     TargetPlatform.android: ZoomPageTransitionsBuilder(),
-                //   },
-                // ),
-              ),
+            // pageTransitionsTheme: const PageTransitionsTheme(
+            //   builders: <TargetPlatform, PageTransitionsBuilder>{
+            //     TargetPlatform.android: ZoomPageTransitionsBuilder(),
+            //   },
+            // ),
+          ),
         );
       },
     );
