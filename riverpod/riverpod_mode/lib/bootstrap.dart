@@ -1,9 +1,11 @@
 
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:riverpod_mode/common/theme/dark_theme_provider.dart';
+import 'package:riverpod_mode/common/theme/light_theme_provider.dart';
+import 'package:riverpod_mode/common/theme/switch_theme_mode.dart';
 import 'package:riverpod_mode/route/app_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,12 +32,14 @@ Future<void> bootstrap() async {
   );
 }
 
-
-
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  ConsumerState createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -59,8 +63,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         routerConfig: AppRouter.router,
-        theme: FlexThemeData.light(scheme: FlexScheme.bahamaBlue),
-        darkTheme: FlexThemeData.dark(scheme: FlexScheme.bahamaBlue),
+        themeMode: ref.watch(switchThemeModeProvider),
+        theme: ref.watch(lightThemeProvider),
+        darkTheme: ref.watch(darkThemeProvider),
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
