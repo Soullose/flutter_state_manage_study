@@ -4,13 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part 'shared_preferences_service.g.dart';
 
-@riverpod
-Future<SharedPreferences> sharedPreferences(Ref ref) async =>
-    await SharedPreferences.getInstance();
-
-@riverpod
-SharedPreferencesAsync sharedPreferencesAsync(Ref ref) =>
-    SharedPreferencesAsync();
+// @riverpod
+// Future<SharedPreferences> sharedPreferences(Ref ref) async =>
+//     await SharedPreferences.getInstance();
+//
+// @riverpod
+// SharedPreferencesAsync sharedPreferencesAsync(Ref ref) =>
+//     SharedPreferencesAsync();
 
 @riverpod
 Future<SharedPreferencesService> sharedPreferencesService(Ref ref) async {
