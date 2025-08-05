@@ -16,8 +16,8 @@ import 'generated/l10n.dart';
 Future<void> bootstrap() async {
 
   WidgetsFlutterBinding.ensureInitialized();
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+  // final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
   runApp(
     ProviderScope(
       observers: [
@@ -46,20 +46,6 @@ class _MyAppState extends ConsumerState<MyApp> {
       designSize: const Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
-      // builder: (context, child) {
-      //   return MaterialApp.router(
-      //     routerConfig: AppRouter.router,
-      //     theme: FlexThemeData.light(scheme: FlexScheme.bahamaBlue),
-      //     darkTheme: FlexThemeData.dark(scheme: FlexScheme.bahamaBlue),
-      //     localizationsDelegates: const [
-      //       S.delegate,
-      //       GlobalMaterialLocalizations.delegate,
-      //       GlobalCupertinoLocalizations.delegate,
-      //       GlobalWidgetsLocalizations.delegate
-      //     ],
-      //     supportedLocales: S.delegate.supportedLocales,
-      //   );
-      // },
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         routerConfig: AppRouter.router,
