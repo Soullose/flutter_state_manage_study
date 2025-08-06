@@ -9,10 +9,7 @@ class CounterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('学习Provider状态管理'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('学习Provider状态管理'), centerTitle: true),
       body: const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -32,8 +29,9 @@ class CounterView extends StatelessWidget {
     );
   }
 }
+
 class Count extends StatelessWidget {
-  const Count({Key? key}) : super(key: key);
+  const Count({super.key});
 
   @override
   Widget build(BuildContext context) {

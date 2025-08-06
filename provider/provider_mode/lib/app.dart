@@ -9,23 +9,20 @@ class AppPage extends StatelessWidget {
     // final count = Provider.of<CounterProvider>(context);
     // ChangeNotifierProvider.value(value: value)
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('学习Provider状态管理'),
-          centerTitle: true,
+      appBar: AppBar(title: const Text('学习Provider状态管理'), centerTitle: true),
+      body: Center(
+        child: Column(
+          // mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            const Text('You have pushed the button this many times:'),
+            ElevatedButton(
+              onPressed: () => context.go('/providerCounter'),
+              child: const Text('Provider计数器'),
+            ),
+          ],
         ),
-        body: Center(
-          child: Column(
-            // mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const Text('You have pushed the button this many times:'),
-              ElevatedButton(
-                onPressed: () => context.go('/providerCounter'),
-                child: const Text('Provider计数器'),
-              ),
-            ],
-          ),
-        ),
+      ),
     );
   }
 }

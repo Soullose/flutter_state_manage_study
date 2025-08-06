@@ -84,18 +84,18 @@ packages:
     dependency: "direct main"
     description:
       name: get_it
-      sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
+      sha256: a4292e7cf67193f8e7c1258203104eb2a51ec8b3a04baa14695f4064c144297b
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "7.7.0"
+    version: "8.2.0"
   go_router:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "2ddb88e9ad56ae15ee144ed10e33886777eb5ca2509a914850a5faa7b52ff459"
+      sha256: b453934c36e289cef06525734d1e676c1f91da9e22e2017d9dcab6ce0f999175
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "14.2.7"
+    version: "15.1.3"
   leak_tracker:
     dependency: transitive
     description:
@@ -255,4 +255,4 @@ packages:
     version: "15.0.0"
 sdks:
   dart: ">=3.7.0-0 <4.0.0"
-  flutter: ">=3.19.0"
+  flutter: ">=3.27.0"
