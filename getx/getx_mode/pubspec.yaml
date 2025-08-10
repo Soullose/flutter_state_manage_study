@@ -37,10 +37,13 @@ dependencies:
   cupertino_icons: ^1.0.8
   get: ^5.0.0-release-candidate-9.3.2
   dio: ^5.8.0+1
+  animations: ^2.0.11
   flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
