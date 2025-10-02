@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider_mode/core/store/shared_preferences_service.dart';
 import 'package:provider_mode/di/injector.dart';
 import 'package:provider_mode/router/app_router.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
+  await SharedPreferencesDb().init();
   // Provider.debugCheckInvalidValueType = null;
   runApp(const MyApp());
 }

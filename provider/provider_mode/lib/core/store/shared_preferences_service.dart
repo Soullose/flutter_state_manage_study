@@ -10,11 +10,18 @@ abstract class KeyValueDb {
 }
 
 class SharedPreferencesDb implements KeyValueDb {
+  static final SharedPreferencesDb _instance = SharedPreferencesDb._internal();
+  factory SharedPreferencesDb() => _instance;
+  SharedPreferencesDb._internal();
   late final SharedPreferences _prefs;
 
   @override
   Future<void> init() async {
-    _prefs = await SharedPreferences.getInstance();
+    try {
+      _prefs = await SharedPreferences.getInstance();
+    } catch (e) {
+      throw Exception('Failed to initialize SharedPreferences: $e');
+    }
   }
 
   @override
@@ -22,6 +29,10 @@ class SharedPreferencesDb implements KeyValueDb {
     try {
       if (sameTypes<T, String>()) {
         final value = _prefs.getString(key) ?? defaultValue as String;
+        return value as T;
+      }
+      if (sameTypes<T, int>()) {
+        final value = _prefs.getInt(key) ?? defaultValue as int;
         return value as T;
       }
     } catch (e) {
@@ -32,6 +43,21 @@ class SharedPreferencesDb implements KeyValueDb {
 
   @override
   Future<void> put<T>(String key, T value) async {
-    // await _prefs.setInt(key, value);
+    if (sameTypes<T, int>()) {
+      await _prefs.setInt(key, value as int);
+    }
+    if (sameTypes<T, String>()) {
+      await _prefs.setString(key, value as String);
+    }
+    if (sameTypes<T, bool>()) {
+      await _prefs.setBool(key, value as bool);
+    }
+    if (sameTypes<T, double>()) {
+      await _prefs.setDouble(key, value as double);
+    }
+    if (sameTypes<T, List<String>>()) {
+      await _prefs.setStringList(key, value as List<String>);
+    }
+    return;
   }
 }
