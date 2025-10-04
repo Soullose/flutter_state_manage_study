@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_mode/core/mqtt/mqtt_state.dart';
 import 'package:provider_mode/counter/counter_provider.dart';
 import 'package:provider_mode/counter/view/counter_view.dart';
 import 'package:provider_mode/di/injector.dart';
@@ -9,8 +10,18 @@ class CounterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => injector<CounterProvider>(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => injector<CounterProvider>(),
+        ),
+        // ChangeNotifierProvider(
+        //   create: (_) => injector<MqttState>(),
+        // ),
+        // ChangeNotifierProvider(
+        //   create: (_) => injector<CounterProvider>(),
+        // ),
+      ],
       child: const CounterView(),
     );
   }
