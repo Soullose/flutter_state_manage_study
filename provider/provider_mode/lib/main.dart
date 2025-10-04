@@ -6,7 +6,8 @@ import 'package:provider_mode/router/app_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();
-  await SharedPreferencesDb().init();
+  injector<SharedPreferencesDb>().init();
+  // await SharedPreferencesDb().init();
   // Provider.debugCheckInvalidValueType = null;
   runApp(const MyApp());
 }

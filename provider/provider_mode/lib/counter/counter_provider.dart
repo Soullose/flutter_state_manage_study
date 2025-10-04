@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:provider_mode/core/store/shared_preferences_service.dart';
+import 'package:provider_mode/di/injector.dart';
 
 class CounterProvider with ChangeNotifier, DiagnosticableTreeMixin {
-  final KeyValueDb _db = SharedPreferencesDb(); // 保存实例引用
+  final KeyValueDb _db = injector<SharedPreferencesDb>(); // 保存实例引用
   int _count = 0;
 
   int get count => _db.get('count', 0);

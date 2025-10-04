@@ -35,6 +35,18 @@ class SharedPreferencesDb implements KeyValueDb {
         final value = _prefs.getInt(key) ?? defaultValue as int;
         return value as T;
       }
+      if (sameTypes<T, bool>()) {
+        final value = _prefs.getBool(key) ?? defaultValue as bool;
+        return value as T;
+      }
+      if (sameTypes<T, double>()) {
+        final value = _prefs.getDouble(key) ?? defaultValue as double;
+        return value as T;
+      }
+      if (sameTypes<T, List<String>>()) {
+        final value = _prefs.getStringList(key) ?? defaultValue as List<String>;
+        return value as T;
+      }
     } catch (e) {
       return defaultValue;
     }
