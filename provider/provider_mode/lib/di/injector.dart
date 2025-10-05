@@ -12,6 +12,5 @@ Future<void> initDependencies() async {
   // 使用单例模式注册MqttState，确保整个应用使用同一个实例
   injector.registerLazySingleton(() => MqttState());
   // 更新MqttServerClientService注册，传递MqttState实例
-  injector.registerLazySingleton(
-      () => MqttServerClientService(injector<MqttState>()));
+  injector.registerFactory(() => MqttServerClientService());
 }

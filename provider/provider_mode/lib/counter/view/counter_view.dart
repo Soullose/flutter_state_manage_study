@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_mode/core/mqtt/mqtt_server_client_service.dart';
 import 'package:provider_mode/core/mqtt/mqtt_state.dart';
@@ -14,6 +15,8 @@ class CounterView extends StatelessWidget {
   Widget build(BuildContext context) {
     final MqttServerClientService mqttClientService =
         injector<MqttServerClientService>();
+    // final MqttServerClientService mqttClientService =
+    //     MqttServerClientService.instance;
     // 移除直接注入的MqttState实例，统一使用Provider监听
     mqttStateToast(
         context.watch<MqttState>().getAppConnectionState, mqttClientService);
@@ -69,8 +72,14 @@ class CounterView extends StatelessWidget {
       if (kDebugMode) {
         print('mqtt已连接');
       }
-      mqttClientService.subScribeTo('topic1', null);
-      mqttClientService.subScribeTo('topic2', null);
+      List<BatchSubscription> subscriptions = [];
+      final sub1 = BatchSubscription('topic1', MqttQos.atLeastOnce);
+      final sub2 = BatchSubscription('topic2', MqttQos.atLeastOnce);
+      subscriptions.add(sub1);
+      subscriptions.add(sub2);
+      mqttClientService.multipleSubScribe(subscriptions);
+      // mqttClientService.subScribeTo('topic1', null);
+      // mqttClientService.subScribeTo('topic2', null);
     }
   }
 }

@@ -7,11 +7,30 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:provider_mode/core/mqtt/mqtt_state.dart';
 import 'package:provider_mode/di/injector.dart';
 
-class MqttServerClientService with ChangeNotifier {
-  // 移除直接注入，改为在构造函数中接收MqttState实例
-  final MqttState _mqttState;
+class MqttServerClientService {
+// 单例实例
+  static MqttServerClientService? _instance;
+// 私有构造函数
+  MqttServerClientService._internal();
+  // 工厂构造函数 - 单例入口点
+  factory MqttServerClientService() {
+    _instance ??= MqttServerClientService._internal();
+    return _instance!;
+  }
 
-  MqttServerClientService(this._mqttState);
+  // 获取实例的静态方法（可选）
+  static MqttServerClientService get instance {
+    if (_instance == null) {
+      throw Exception(
+          'MqttServerClientService not initialized. Call factory constructor first.');
+    }
+    return _instance!;
+  }
+
+  // 移除直接注入，改为在构造函数中接收MqttState实例
+  final MqttState _mqttState = injector<MqttState>();
+
+  // MqttServerClientService();
 
   /// MQTT client instance
   late final MqttServerClient _client;
@@ -105,8 +124,26 @@ class MqttServerClientService with ChangeNotifier {
     }
   }
 
+  ///批量订阅主题
+  void multipleSubScribe(List<BatchSubscription> subscriptions) {
+    _client.subscribeBatch(subscriptions);
+    _client.updates!.listen((messageList) {
+      final recMess = messageList[0];
+      final pubMess = recMess.payload as MqttPublishMessage;
+      final pt = MqttPublishPayload.bytesToStringAsString(
+        pubMess.payload.message,
+      );
+      if (kDebugMode) {
+        print(
+          'EXAMPLE::Change notification:: topic is <${recMess.topic}>, payload is <-- $pt -->',
+        );
+      }
+    });
+  }
+
   ///mqtt监听 wms/scheduler/devices/%s/state
   ///         wms/scheduler/devices/message
+  /// 订阅单个主题
   void subScribeTo(String topic, MqttQos? qos) {
     // _topic = topic;
     qos ??= MqttQos.atLeastOnce;
@@ -115,9 +152,13 @@ class MqttServerClientService with ChangeNotifier {
       final recMess = c[0].payload as MqttPublishMessage;
 
       if (kDebugMode) {
-        print('mqttMess:---${recMess.payload.message}');
+        for (var element in c) {
+          print(
+              '示例::接收到主题为 <${element.topic}> 的消息,消息内容为:${Utf8Decoder().convert((element.payload as MqttPublishMessage).payload.message)}');
+        }
+        print('示例::接收到主题为 <${c[0].topic}> 的消息');
+        print('mqttMess:---${Utf8Decoder().convert(recMess.payload.message)}');
       }
-      Utf8Decoder().convert(recMess.payload.message);
     });
   }
 
