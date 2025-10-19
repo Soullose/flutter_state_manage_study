@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -8,17 +9,19 @@ import 'package:provider_mode/core/mqtt/mqtt_state.dart';
 import 'package:provider_mode/di/injector.dart';
 
 class MqttServerClientService {
-// 单例实例
+  /// 单例实例
   static MqttServerClientService? _instance;
-// 私有构造函数
+
+  /// 私有构造函数
   MqttServerClientService._internal();
-  // 工厂构造函数 - 单例入口点
+
+  /// 工厂构造函数 - 单例入口点
   factory MqttServerClientService() {
     _instance ??= MqttServerClientService._internal();
     return _instance!;
   }
 
-  // 获取实例的静态方法（可选）
+  /// 获取实例的静态方法（可选）
   static MqttServerClientService get instance {
     if (_instance == null) {
       throw Exception(
@@ -27,10 +30,17 @@ class MqttServerClientService {
     return _instance!;
   }
 
-  // 移除直接注入，改为在构造函数中接收MqttState实例
+  /// 移除直接注入，改为在构造函数中接收MqttState实例
   final MqttState _mqttState = injector<MqttState>();
 
-  // MqttServerClientService();
+  /// MqttServerClientService();
+
+  /// 添加心跳监控相关变量
+  DateTime? _lastPongTime;
+  Timer? _heartbeatTimer;
+  static const int _heartbeatTimeout = 30000;
+
+  /// 30秒超时
 
   /// MQTT client instance
   late final MqttServerClient _client;
@@ -199,10 +209,67 @@ class MqttServerClientService {
 
   /// Pong callback
   void pong() {
+    try {
+      if (kDebugMode) {
+        print(
+          '示例::Ping 响应客户端回调被调用 - 您可能想在此处断开您的代理',
+        );
+      }
+
+      /// 1. 记录心跳
+      _lastPongTime = DateTime.now();
+
+      /// 2. 更新连接健康状态
+      _mqttState.setConnectionHealth(true);
+
+      /// 重置心跳检查定时器
+      _startHeartbeatMonitor();
+    } catch (e) {
+      if (kDebugMode) {
+        print('MQTT::pong回调处理异常: $e');
+      }
+    }
+  }
+
+  /// 启动心跳监控
+  void _startHeartbeatMonitor() {
+    _heartbeatTimer?.cancel();
+
+    _heartbeatTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      _checkHeartbeat();
+    });
+  }
+
+  void _checkHeartbeat() {
+    if (_lastPongTime == null) return;
+
+    final now = DateTime.now();
+    final difference = now.difference(_lastPongTime!).inMilliseconds;
+
+    if (difference > _heartbeatTimeout) {
+      if (kDebugMode) {
+        print('MQTT::心跳超时 - 最后响应: ${difference}ms 前');
+      }
+
+      _mqttState.setConnectionHealth(false);
+
+      /// 可选：触发重连逻辑
+      _handleHeartbeatTimeout();
+    }
+  }
+
+  /// 处理心跳超时
+  void _handleHeartbeatTimeout() {
     if (kDebugMode) {
-      print(
-        '示例::Ping 响应客户端回调被调用 - 您可能想在此处断开您的代理',
-      );
+      print('MQTT::心跳超时，尝试重新连接...');
+    }
+
+    /// 停止当前监控
+    _heartbeatTimer?.cancel();
+
+    /// 触发重连逻辑
+    if (_client.connectionStatus?.state != MqttConnectionState.connected) {
+      // _reconnect();
     }
   }
 }

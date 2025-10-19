@@ -7,12 +7,21 @@ class MqttState with ChangeNotifier {
 
   MqttAppConnectionState get getAppConnectionState => _appConnectionState;
 
+  bool _connectionHealth = false;
+
+  bool get getConnectionHealth => _connectionHealth;
+
   ///存放mqtt状态方法
   void setAppConnectionState(MqttAppConnectionState state) {
     if (kDebugMode) {
       print('${DateTime.now()} -$state');
     }
     _appConnectionState = state;
+    notifyListeners();
+  }
+
+  void setConnectionHealth(bool health) {
+    _connectionHealth = health;
     notifyListeners();
   }
 }
