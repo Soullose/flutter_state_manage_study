@@ -1,13 +1,7 @@
 import 'package:provider_mode/core/utils/same_types.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-abstract class KeyValueDb {
-  Future<void> init();
-
-  T get<T>(String key, T defaultValue);
-
-  Future<void> put<T>(String key, T value);
-}
+import 'key_value_db.dart';
 
 class SharedPreferencesDb implements KeyValueDb {
   static final SharedPreferencesDb _instance = SharedPreferencesDb._internal();
