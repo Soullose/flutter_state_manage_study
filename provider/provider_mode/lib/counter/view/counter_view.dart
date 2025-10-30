@@ -37,28 +37,34 @@ class CounterView extends StatelessWidget {
             ),
             Text(
               /// Calls `context.watch` to make [Count] rebuild when [Counter] changes.
+              '${context.watch<CounterProvider>().count1}',
+              key: const Key('counterState2'),
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text(
+              /// Calls `context.watch` to make [Count] rebuild when [Counter] changes.
               '${context.watch<MqttState>().getAppConnectionState}',
-              key: Key('counterState1'),
+              key: Key('counterState3'),
               style: Theme.of(context).textTheme.headlineMedium,
             )
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   key: const Key('increment_floatingActionButton'),
-      //   onPressed: () => context.read<CounterProvider>().increment(),
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ),
-
       floatingActionButton: FloatingActionButton(
-        key: const Key('mqttClientService_floatingActionButton'),
-        onPressed: () {
-          mqttClientService.connect('192.168.5.47', 1883);
-        },
-        tooltip: 'mqttClientService',
-        child: const Icon(Icons.multiple_stop),
+        key: const Key('increment_floatingActionButton'),
+        onPressed: () => context.read<CounterProvider>().increment(),
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
+
+      // floatingActionButton: FloatingActionButton(
+      //   key: const Key('mqttClientService_floatingActionButton'),
+      //   onPressed: () {
+      //     mqttClientService.connect('192.168.5.47', 1883);
+      //   },
+      //   tooltip: 'mqttClientService',
+      //   child: const Icon(Icons.multiple_stop),
+      // ),
     );
   }
 
