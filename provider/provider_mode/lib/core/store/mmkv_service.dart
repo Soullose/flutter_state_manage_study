@@ -40,6 +40,10 @@ class MMKVService implements KeyValueDb {
       if (sameTypes<T, String>()) {
         _mmkv.encodeString(key, value as String);
       }
+      if (sameTypes<T, MMBuffer>()) {
+        _mmkv.encodeBytes(key, value as MMBuffer);
+        value.destroy();
+      }
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -64,6 +68,11 @@ class MMKVService implements KeyValueDb {
       }
       if (sameTypes<T, String>()) {
         final value = _mmkv.decodeString(key);
+        return value as T;
+      }
+      if (sameTypes<T, MMBuffer>()) {
+        final value = _mmkv.decodeBytes(key)!;
+        value.destroy();
         return value as T;
       }
     } catch (e) {
