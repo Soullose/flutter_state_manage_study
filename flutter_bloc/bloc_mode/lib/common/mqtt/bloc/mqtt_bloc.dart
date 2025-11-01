@@ -1,0 +1,81 @@
+import 'package:bloc/bloc.dart';
+import 'package:bloc_mode/common/mqtt/mqtt_server_client_service.dart';
+import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
+import 'package:mqtt_client/mqtt_client.dart';
+
+part 'mqtt_event.dart';
+
+part 'mqtt_state.dart';
+
+class MqttBloc extends Bloc<MqttEvent, MqttState> {
+  MqttBloc() : super(MqttDisconnected()) {
+    on<MqttEvent>((event, emit) {});
+
+    /// 连接
+    on<MqttConnectEvent>(_connect);
+
+    /// 断开
+    on<MqttDisconnectEvent>(_disconnect);
+
+    /// 订阅
+    on<MqttSubscribeEvent>(_subscribe);
+
+    /// 取消订阅
+    on<MqttUnsubscribeEvent>(_unsubscribe);
+
+    /// 发布
+    on<MqttPublishEvent>(_publish);
+  }
+
+  final MqttServerClientService _mqttServerClientService =
+      MqttServerClientService();
+
+  /// 关闭
+  @override
+  Future<void> close() {
+    _mqttServerClientService.disConnect();
+    return super.close();
+  }
+
+  /// Connect to MQTT broker
+  void _connect(MqttConnectEvent event, Emitter<MqttState> emit) {
+    final String ip = event.ip;
+    final int port = event.port;
+    emit(const MqttConnecting());
+    try {
+      _mqttServerClientService.connect(ip, port);
+      emit(MqttConnected(ip: ip, port: port));
+    } catch (e) {
+      emit(MqttConnectionFailed());
+    }
+  }
+
+  /// Disconnect from MQTT broker
+  void _disconnect(MqttDisconnectEvent event, Emitter<MqttState> emit) {
+    emit(MqttDisconnected());
+    _mqttServerClientService.disConnect();
+  }
+
+  /// Subscribe to a topic
+  void _subscribe(MqttSubscribeEvent event, Emitter<MqttState> emit) {
+    final String topic = event.topic;
+    try {
+      _mqttServerClientService.subScribeTo(topic, MqttQos.atLeastOnce);
+      emit(MqttConnectedSubscribed());
+    } catch (e) {
+      emit(MqttConnectedSubscribeFailed());
+    }
+  }
+
+  /// Unsubscribe from a topic
+  void _unsubscribe(MqttUnsubscribeEvent event, Emitter<MqttState> emit) {
+    final String topic = event.topic;
+    emit(MqttConnectedSubscribeFailed());
+  }
+
+  /// Publish a message to a topic
+  void _publish(MqttPublishEvent event, Emitter<MqttState> emit) {
+    emit(MqttPublish(topic: event.topic, payload: event.message));
+  }
+}
