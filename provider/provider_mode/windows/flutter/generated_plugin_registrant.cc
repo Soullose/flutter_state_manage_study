@@ -9,6 +9,6 @@
 #include <mmkv_win32/mmkv_win32_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
-    MmkvWin32PluginRegisterWithRegistrar(
-            registry->GetRegistrarForPlugin("MmkvWin32Plugin"));
+  MmkvWin32PluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("MmkvWin32Plugin"));
 }
