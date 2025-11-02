@@ -3,6 +3,7 @@ import 'package:bloc_mode/app.dart';
 import 'package:bloc_mode/counter/view/bloc/counter_page.dart';
 import 'package:bloc_mode/counter/view/cubit/count/counter_cubit_page.dart';
 import 'package:bloc_mode/main_wrapper/view/main_wrapper_page.dart';
+import 'package:bloc_mode/mqtt_client/view/mqtt_client_page.dart';
 import 'package:bloc_mode/timer/view/timer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -96,6 +97,10 @@ class AppRouter {
                         );
                       },
                     ),
+                  ),
+                  GoRoute(
+                    path: 'blocMqtt',
+                    builder: (context, state) => const MqttClientPage(),
                   ),
                 ],
               ),

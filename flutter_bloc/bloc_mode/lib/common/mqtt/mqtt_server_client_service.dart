@@ -40,7 +40,7 @@ class MqttServerClientService {
   late final MqttServerClient _client;
   final _uuid = const Uuid();
 
-  void connect(String server, int port) async {
+  Future<MqttConnectionState> connect(String server, int port) async {
     _client = MqttServerClient(server, _uuid.v4());
     _client.port = port;
 
@@ -107,6 +107,7 @@ class MqttServerClientService {
         print('示例::客户端异常 - $e');
       }
       _client.disconnect();
+      return _client.connectionStatus!.state;
     }
 
     /// 检查我们是否已连接
@@ -124,6 +125,7 @@ class MqttServerClientService {
       _client.disconnect();
       exit(-1);
     }
+    return _client.connectionStatus!.state;
   }
 
   ///批量订阅主题

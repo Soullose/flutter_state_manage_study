@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:bloc_mode/common/mqtt/mqtt_server_client_service.dart';
 import 'package:equatable/equatable.dart';
@@ -39,13 +41,22 @@ class MqttBloc extends Bloc<MqttEvent, MqttState> {
   }
 
   /// Connect to MQTT broker
-  void _connect(MqttConnectEvent event, Emitter<MqttState> emit) {
+  Future<void> _connect(MqttConnectEvent event, Emitter<MqttState> emit) async {
     final String ip = event.ip;
     final int port = event.port;
     emit(const MqttConnecting());
+
     try {
-      _mqttServerClientService.connect(ip, port);
-      emit(MqttConnected(ip: ip, port: port));
+      final MqttConnectionState status =
+          await _mqttServerClientService.connect(ip, port);
+      log('status: $status');
+      if (status == MqttConnectionState.connected) {
+        log('123');
+        emit(MqttConnected(ip: ip, port: port));
+        log('321');
+      } else {
+        emit(MqttConnectionFailed());
+      }
     } catch (e) {
       emit(MqttConnectionFailed());
     }

@@ -8,11 +8,13 @@ sealed class MqttState extends Equatable {
 /// mqtt连接成功
 final class MqttConnected extends MqttState {
   const MqttConnected({required this.ip, required this.port});
+
   final String ip;
 
   final int port;
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [ip, port];
 }
 
 /// mqtt连接失败

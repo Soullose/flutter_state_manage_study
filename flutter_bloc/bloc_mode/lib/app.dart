@@ -35,6 +35,10 @@ class AppPage extends StatelessWidget {
               onPressed: () => context.go('/one/blocTimer'),
               child: const Text('Bloc定时器'),
             ),
+            ElevatedButton(
+              onPressed: () => context.go('/one/blocMqtt'),
+              child: const Text('Bloc-Mqtt连接'),
+            ),
           ],
         ),
       ),

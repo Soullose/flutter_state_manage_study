@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:animations/animations.dart';
-import 'package:bloc/bloc.dart';
 import 'package:bloc_mode/common/bloc_observer.dart';
 import 'package:bloc_mode/common/di/injector.dart';
+import 'package:bloc_mode/common/mqtt/bloc/mqtt_bloc.dart';
 import 'package:bloc_mode/common/router/app_router.dart';
 import 'package:bloc_mode/common/style/mt_theme.dart';
 import 'package:bloc_mode/common/style/snack_bar.dart';
@@ -23,10 +22,16 @@ Future<void> main() async {
     print('测试app路径:$appDocPath');
   }
   runApp(
-    RepositoryProvider(
-      create: (context) => null,
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<MqttBloc>(create: (BuildContext context) => MqttBloc())
+      ],
       child: const MyApp(),
     ),
+    // RepositoryProvider(
+    //   create: (context) => null,
+    //   child: const MyApp(),
+    // ),
   );
 }
 
@@ -46,12 +51,12 @@ class MyApp extends StatelessWidget {
           scaffoldMessengerKey: scaffoldMessengerKey,
           routerConfig: AppRouter.router,
           theme: const MaterialTheme(TextTheme()).light().copyWith(
-            // pageTransitionsTheme: const PageTransitionsTheme(
-            //   builders: <TargetPlatform, PageTransitionsBuilder>{
-            //     TargetPlatform.android: ZoomPageTransitionsBuilder(),
-            //   },
-            // ),
-          ),
+              // pageTransitionsTheme: const PageTransitionsTheme(
+              //   builders: <TargetPlatform, PageTransitionsBuilder>{
+              //     TargetPlatform.android: ZoomPageTransitionsBuilder(),
+              //   },
+              // ),
+              ),
         );
       },
     );

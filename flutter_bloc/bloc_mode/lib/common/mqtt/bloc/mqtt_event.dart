@@ -12,7 +12,7 @@ class MqttConnectEvent extends MqttEvent {
   final int port;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [ip, port];
 }
 
  class MqttDisconnectEvent extends MqttEvent {
@@ -23,7 +23,7 @@ class MqttConnectEvent extends MqttEvent {
 }
 
  class MqttSubscribeEvent extends MqttEvent {
-  const MqttSubscribeEvent(this.topic);
+  const MqttSubscribeEvent({required this.topic});
 
   final String topic;
 
