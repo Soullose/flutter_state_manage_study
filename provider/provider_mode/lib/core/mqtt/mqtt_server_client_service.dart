@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:provider_mode/core/event/event_bus.dart';
+import 'package:provider_mode/core/event/mqtt_events.dart';
 import 'package:provider_mode/core/mqtt/mqtt_state.dart';
 import 'package:provider_mode/di/injector.dart';
 
@@ -12,8 +14,11 @@ class MqttServerClientService {
   /// 单例实例
   static MqttServerClientService? _instance;
 
+  /// 事件总线实例，用于发布状态变化事件
+  final EventBus _eventBus;
+
   /// 私有构造函数
-  MqttServerClientService._internal();
+  MqttServerClientService._internal() : _eventBus = injector<EventBus>();
 
   /// 工厂构造函数 - 单例入口点
   factory MqttServerClientService() {
@@ -29,11 +34,6 @@ class MqttServerClientService {
     }
     return _instance!;
   }
-
-  /// 移除直接注入，改为在构造函数中接收MqttState实例
-  final MqttState _mqttState = injector<MqttState>();
-
-  /// MqttServerClientService();
 
   /// 添加心跳监控相关变量
   DateTime? _lastPongTime;
@@ -106,14 +106,16 @@ class MqttServerClientService {
     /// 在某些情况下，代理只会断开我们，请参阅规范关于此点的说明，但我们
     /// 永远不会发送格式错误的消息。
     try {
-      _mqttState.setAppConnectionState(MqttAppConnectionState.connecting);
+      _eventBus.fire(
+          MqttConnectionStateChangedEvent(MqttAppConnectionState.connecting));
       await _client.connect('mqtt_vhost:mqtt', '123');
     } on Exception catch (e) {
       if (kDebugMode) {
         print('示例::客户端异常 - $e');
       }
       _client.disconnect();
-      _mqttState.setAppConnectionState(MqttAppConnectionState.connectionfailed);
+      _eventBus.fire(MqttConnectionStateChangedEvent(
+          MqttAppConnectionState.connectionfailed));
     }
 
     /// 检查我们是否已连接
@@ -129,7 +131,8 @@ class MqttServerClientService {
         );
       }
       _client.disconnect();
-      _mqttState.setAppConnectionState(MqttAppConnectionState.disconnected);
+      _eventBus.fire(
+          MqttConnectionStateChangedEvent(MqttAppConnectionState.disconnected));
       exit(-1);
     }
   }
@@ -204,7 +207,8 @@ class MqttServerClientService {
         '示例::OnConnected 客户端回调 - 客户端连接成功',
       );
     }
-    _mqttState.setAppConnectionState(MqttAppConnectionState.connected);
+    _eventBus.fire(
+        MqttConnectionStateChangedEvent(MqttAppConnectionState.connected));
   }
 
   /// Pong callback
@@ -220,7 +224,7 @@ class MqttServerClientService {
       _lastPongTime = DateTime.now();
 
       /// 2. 更新连接健康状态
-      _mqttState.setConnectionHealth(true);
+      _eventBus.fire(MqttConnectionHealthChangedEvent(true));
 
       /// 重置心跳检查定时器
       _startHeartbeatMonitor();
@@ -251,7 +255,7 @@ class MqttServerClientService {
         print('MQTT::心跳超时 - 最后响应: ${difference}ms 前');
       }
 
-      _mqttState.setConnectionHealth(false);
+      _eventBus.fire(MqttConnectionHealthChangedEvent(false));
 
       /// 可选：触发重连逻辑
       _handleHeartbeatTimeout();
