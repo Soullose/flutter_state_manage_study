@@ -11,9 +11,6 @@ class MqttServerClientService {
   /// 单例实例
   static MqttServerClientService? _instance;
 
-  /// 消息回调函数
-  Function(String topic, String payload)? _onMessageReceived;
-
   /// 私有构造函数
   MqttServerClientService._internal();
 
@@ -32,10 +29,20 @@ class MqttServerClientService {
     return _instance!;
   }
 
+  /// 消息回调函数
+  Function(String topic, String payload)? _onMessageReceived;
+
   /// 设置消息接收回调
   void setMessageCallback(Function(String topic, String payload) callback) {
     _onMessageReceived = callback;
   }
+
+  /// 用于广播接收到的所有MQTT消息
+  final StreamController<Map<String, String>> _messageController =
+      StreamController<Map<String, String>>.broadcast();
+
+  /// 公共的消息流，外部（如Bloc）可以监听
+  Stream<Map<String, String>> get messageStream => _messageController.stream;
 
   /// 添加心跳监控相关变量
   DateTime? _lastPongTime;
@@ -152,7 +159,8 @@ class MqttServerClientService {
             'EXAMPLE::Change notification:: topic is <$topic>, payload is <-- $payload -->',
           );
         }
-
+        // **新逻辑：将消息添加到 Stream**
+        _messageController.sink.add({'topic': topic, 'payload': payload});
         // 触发消息回调
         if (_onMessageReceived != null) {
           _onMessageReceived!(topic, payload);
@@ -177,7 +185,8 @@ class MqttServerClientService {
         if (kDebugMode) {
           print('示例::接收到主题为 <$topic> 的消息,消息内容为:$payload');
         }
-
+        // **新逻辑：将消息添加到 Stream**
+        _messageController.sink.add({'topic': topic, 'payload': payload});
         // 触发消息回调
         if (_onMessageReceived != null) {
           _onMessageReceived!(topic, payload);
@@ -187,7 +196,11 @@ class MqttServerClientService {
   }
 
   void disConnect() {
+    _messageController.close();
     _client.disconnect();
+    _heartbeatTimer?.cancel();
+    // 仅在确保没有其他地方会使用时调用
+    // _instance = null;
   }
 
   /// 订阅回调
