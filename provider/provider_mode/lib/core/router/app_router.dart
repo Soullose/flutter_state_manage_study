@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider_mode/app.dart';
-import 'package:provider_mode/counter/view/counter_page.dart';
+import 'package:provider_mode/features/counter/view/counter_page.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();

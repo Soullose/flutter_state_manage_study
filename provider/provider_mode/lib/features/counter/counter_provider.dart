@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
+import 'package:provider_mode/core/store/key_value_db.dart';
 import 'package:provider_mode/core/store/mmkv_service.dart';
 import 'package:provider_mode/core/store/shared_preferences_service.dart';
 import 'package:provider_mode/di/injector.dart';
 
-import '../core/store/key_value_db.dart';
 
 class CounterProvider with ChangeNotifier, DiagnosticableTreeMixin {
   final KeyValueDb _db = injector<SharedPreferencesDb>(); // 保存实例引用

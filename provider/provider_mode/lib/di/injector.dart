@@ -5,7 +5,7 @@ import 'package:provider_mode/core/mqtt/mqtt_state.dart';
 import 'package:provider_mode/core/mqtt/mqtt_state_manager.dart';
 import 'package:provider_mode/core/store/mmkv_service.dart';
 import 'package:provider_mode/core/store/shared_preferences_service.dart';
-import 'package:provider_mode/counter/counter_provider.dart';
+import 'package:provider_mode/features/counter/counter_provider.dart';
 
 final injector = GetIt.instance;
 
