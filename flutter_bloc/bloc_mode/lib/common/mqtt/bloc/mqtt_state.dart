@@ -60,3 +60,19 @@ final class MqttPublish extends MqttState {
   @override
   List<Object> get props => [topic, payload];
 }
+
+/// mqtt接收消息
+final class MqttMessageReceivedState extends MqttState {
+  const MqttMessageReceivedState({
+    required this.topic,
+    required this.payload,
+    required this.timestamp,
+  });
+
+  final String topic;
+  final String payload;
+  final DateTime timestamp;
+
+  @override
+  List<Object> get props => [topic, payload, timestamp];
+}

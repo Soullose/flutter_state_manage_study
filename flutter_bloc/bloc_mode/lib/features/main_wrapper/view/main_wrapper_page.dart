@@ -1,9 +1,9 @@
 import 'package:bloc_mode/common/di/injector.dart';
 import 'package:bloc_mode/counter/bloc/counter_bloc.dart';
 import 'package:bloc_mode/counter/cubit/counter_cubit.dart';
-import 'package:bloc_mode/main_wrapper/main_wrapper_bloc.dart';
-import 'package:bloc_mode/main_wrapper/view/main_wrapper_view.dart';
-import 'package:bloc_mode/timer/bloc/timer_bloc.dart';
+import 'package:bloc_mode/features/main_wrapper/main_wrapper_bloc.dart';
+import 'package:bloc_mode/features/main_wrapper/view/main_wrapper_view.dart';
+import 'package:bloc_mode/features/timer/bloc/timer_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

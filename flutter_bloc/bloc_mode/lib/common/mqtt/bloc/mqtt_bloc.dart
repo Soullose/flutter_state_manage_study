@@ -28,6 +28,9 @@ class MqttBloc extends Bloc<MqttEvent, MqttState> {
 
     /// 发布
     on<MqttPublishEvent>(_publish);
+
+    /// 接收消息
+    on<MqttMessageReceivedEvent>(_onMessageReceived);
   }
 
   final MqttServerClientService _mqttServerClientService =
@@ -88,5 +91,15 @@ class MqttBloc extends Bloc<MqttEvent, MqttState> {
   /// Publish a message to a topic
   void _publish(MqttPublishEvent event, Emitter<MqttState> emit) {
     emit(MqttPublish(topic: event.topic, payload: event.message));
+  }
+
+  /// 处理接收到的MQTT消息
+  void _onMessageReceived(
+      MqttMessageReceivedEvent event, Emitter<MqttState> emit) {
+    emit(MqttMessageReceivedState(
+      topic: event.topic,
+      payload: event.payload,
+      timestamp: event.timestamp,
+    ));
   }
 }

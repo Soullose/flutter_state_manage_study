@@ -15,14 +15,14 @@ class MqttConnectEvent extends MqttEvent {
   List<Object> get props => [ip, port];
 }
 
- class MqttDisconnectEvent extends MqttEvent {
+class MqttDisconnectEvent extends MqttEvent {
   const MqttDisconnectEvent();
 
   @override
   List<Object> get props => [];
 }
 
- class MqttSubscribeEvent extends MqttEvent {
+class MqttSubscribeEvent extends MqttEvent {
   const MqttSubscribeEvent({required this.topic});
 
   final String topic;
@@ -31,7 +31,7 @@ class MqttConnectEvent extends MqttEvent {
   List<Object> get props => [topic];
 }
 
- class MqttUnsubscribeEvent extends MqttEvent {
+class MqttUnsubscribeEvent extends MqttEvent {
   const MqttUnsubscribeEvent(this.topic);
 
   final String topic;
@@ -48,4 +48,19 @@ class MqttPublishEvent extends MqttEvent {
 
   @override
   List<Object> get props => [topic, message];
+}
+
+class MqttMessageReceivedEvent extends MqttEvent {
+  const MqttMessageReceivedEvent({
+    required this.topic,
+    required this.payload,
+    required this.timestamp,
+  });
+
+  final String topic;
+  final String payload;
+  final DateTime timestamp;
+
+  @override
+  List<Object> get props => [topic, payload, timestamp];
 }

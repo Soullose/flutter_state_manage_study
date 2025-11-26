@@ -11,6 +11,9 @@ class MqttServerClientService {
   /// 单例实例
   static MqttServerClientService? _instance;
 
+  /// 消息回调函数
+  Function(String topic, String payload)? _onMessageReceived;
+
   /// 私有构造函数
   MqttServerClientService._internal();
 
@@ -27,6 +30,11 @@ class MqttServerClientService {
           'MqttServerClientService not initialized. Call factory constructor first.');
     }
     return _instance!;
+  }
+
+  /// 设置消息接收回调
+  void setMessageCallback(Function(String topic, String payload) callback) {
+    _onMessageReceived = callback;
   }
 
   /// 添加心跳监控相关变量
@@ -132,15 +140,23 @@ class MqttServerClientService {
   void multipleSubScribe(List<BatchSubscription> subscriptions) {
     _client.subscribeBatch(subscriptions);
     _client.updates!.listen((messageList) {
-      final recMess = messageList[0];
-      final pubMess = recMess.payload as MqttPublishMessage;
-      final pt = MqttPublishPayload.bytesToStringAsString(
-        pubMess.payload.message,
-      );
-      if (kDebugMode) {
-        print(
-          'EXAMPLE::Change notification:: topic is <${recMess.topic}>, payload is <-- $pt -->',
+      for (var recMess in messageList) {
+        final pubMess = recMess.payload as MqttPublishMessage;
+        final payload = MqttPublishPayload.bytesToStringAsString(
+          pubMess.payload.message,
         );
+        final topic = recMess.topic;
+
+        if (kDebugMode) {
+          print(
+            'EXAMPLE::Change notification:: topic is <$topic>, payload is <-- $payload -->',
+          );
+        }
+
+        // 触发消息回调
+        if (_onMessageReceived != null) {
+          _onMessageReceived!(topic, payload);
+        }
       }
     });
   }
@@ -153,15 +169,19 @@ class MqttServerClientService {
     qos ??= MqttQos.atLeastOnce;
     _client.subscribe(topic, qos);
     _client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-      final recMess = c[0].payload as MqttPublishMessage;
+      for (var element in c) {
+        final recMess = element.payload as MqttPublishMessage;
+        final payload = const Utf8Decoder().convert(recMess.payload.message);
+        final topic = element.topic;
 
-      if (kDebugMode) {
-        for (var element in c) {
-          print(
-              '示例::接收到主题为 <${element.topic}> 的消息,消息内容为:${Utf8Decoder().convert((element.payload as MqttPublishMessage).payload.message)}');
+        if (kDebugMode) {
+          print('示例::接收到主题为 <$topic> 的消息,消息内容为:$payload');
         }
-        print('示例::接收到主题为 <${c[0].topic}> 的消息');
-        print('mqttMess:---${const Utf8Decoder().convert(recMess.payload.message)}');
+
+        // 触发消息回调
+        if (_onMessageReceived != null) {
+          _onMessageReceived!(topic, payload);
+        }
       }
     });
   }
@@ -231,7 +251,7 @@ class MqttServerClientService {
   void _startHeartbeatMonitor() {
     _heartbeatTimer?.cancel();
 
-    _heartbeatTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _heartbeatTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
       _checkHeartbeat();
     });
   }

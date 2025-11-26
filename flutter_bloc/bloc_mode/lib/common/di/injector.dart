@@ -1,11 +1,12 @@
+import 'package:bloc_mode/common/mqtt/bloc/mqtt_bloc.dart';
 import 'package:bloc_mode/common/net/HttpManager.dart';
 import 'package:bloc_mode/common/storage/shared_preferences_service.dart';
 import 'package:bloc_mode/common/storage/shared_preferences_utils.dart';
 import 'package:bloc_mode/counter/bloc/counter_bloc.dart';
 import 'package:bloc_mode/counter/cubit/counter_cubit.dart';
-import 'package:bloc_mode/main_wrapper/main_wrapper_bloc.dart';
-import 'package:bloc_mode/timer/bloc/timer_bloc.dart';
-import 'package:bloc_mode/timer/ticker.dart';
+import 'package:bloc_mode/features/main_wrapper/main_wrapper_bloc.dart';
+import 'package:bloc_mode/features/timer/bloc/timer_bloc.dart';
+import 'package:bloc_mode/features/timer/ticker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,4 +35,6 @@ Future<void> initDependencies() async {
   injector.registerFactory(() => CounterCubit());
 
   injector.registerFactory(() => TimerBloc(ticker: const Ticker()));
+
+  injector.registerFactory(() => MqttBloc());
 }
