@@ -35,6 +35,13 @@ class MqttServerClientService {
     return _instance!;
   }
 
+  /// 用于广播接收到的所有MQTT消息
+  final StreamController<Map<String, String>> _messageController =
+      StreamController<Map<String, String>>.broadcast();
+
+  /// 公共的消息流，外部（如Bloc）可以监听
+  Stream<Map<String, String>> get messageStream => _messageController.stream;
+
   /// 添加心跳监控相关变量
   DateTime? _lastPongTime;
   Timer? _heartbeatTimer;
@@ -143,14 +150,18 @@ class MqttServerClientService {
     _client.updates!.listen((messageList) {
       final recMess = messageList[0];
       final pubMess = recMess.payload as MqttPublishMessage;
-      final pt = MqttPublishPayload.bytesToStringAsString(
+      final payload = MqttPublishPayload.bytesToStringAsString(
         pubMess.payload.message,
       );
+      final topic = recMess.topic;
       if (kDebugMode) {
         print(
-          'EXAMPLE::Change notification:: topic is <${recMess.topic}>, payload is <-- $pt -->',
+          'EXAMPLE::Change notification:: topic is <$topic>, payload is <-- $payload -->',
         );
       }
+
+      /// **新逻辑：将消息添加到 Stream**
+      _messageController.sink.add({'topic': topic, 'payload': payload});
     });
   }
 
@@ -163,7 +174,7 @@ class MqttServerClientService {
     _client.subscribe(topic, qos);
     _client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       final recMess = c[0].payload as MqttPublishMessage;
-
+      final payload = Utf8Decoder().convert(recMess.payload.message);
       if (kDebugMode) {
         for (var element in c) {
           print(
@@ -172,6 +183,9 @@ class MqttServerClientService {
         print('示例::接收到主题为 <${c[0].topic}> 的消息');
         print('mqttMess:---${Utf8Decoder().convert(recMess.payload.message)}');
       }
+
+      /// **新逻辑：将消息添加到 Stream**
+      _messageController.sink.add({'topic': topic, 'payload': payload});
     });
   }
 
