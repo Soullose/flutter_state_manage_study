@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
   dynamic_color
+  mmkv_win32
   sqlite3_flutter_libs
 )
 

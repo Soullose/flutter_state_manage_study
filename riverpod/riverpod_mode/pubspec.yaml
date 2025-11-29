@@ -47,6 +47,7 @@ dependencies:
   dio: ^5.9.0
   pretty_dio_logger: ^1.4.0
   shared_preferences: ^2.5.3
+  mmkv: ^2.2.4
   mqtt_client: ^10.11.1
   flex_color_scheme: ^8.3.0
   flutter_image_compress: ^2.3.0
