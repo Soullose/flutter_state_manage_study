@@ -20,10 +20,14 @@ class Setting extends _$Setting {
   }
 
   Future<void> setIpAddress(String ipAddress) async {
-    print('ipAddress:$ipAddress');
+    if (kDebugMode) {
+      print('ipAddress:$ipAddress');
+    }
     final prefs = await ref.watch(sharedPreferencesServiceProvider.future);
     state = AsyncValue.data(BaseSetting(ipAddress: ipAddress));
     prefs.setString("ipAddress", ipAddress);
-    print('xxxx:${prefs.getString("ipAddress")}');
+    if (kDebugMode) {
+      print('xxxx:${prefs.getString("ipAddress")}');
+    }
   }
 }

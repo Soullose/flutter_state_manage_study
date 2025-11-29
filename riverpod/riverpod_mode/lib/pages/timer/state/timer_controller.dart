@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_mode/pages/timer/state/timer_state.dart';
 
@@ -15,7 +16,9 @@ class TimerController extends _$TimerController {
   @override
   Stream<TimerState> build() {
     ref.onDispose(() {
-      print('[timerProvider] disposed');
+      if (kDebugMode) {
+        print('[timerProvider] disposed');
+      }
       _tickerSubscription?.cancel();
     });
     return Stream.value(TimeStateInitial(_duration));

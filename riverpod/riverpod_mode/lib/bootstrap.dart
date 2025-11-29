@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,14 +6,12 @@ import 'package:riverpod_mode/common/theme/dark_theme_provider.dart';
 import 'package:riverpod_mode/common/theme/light_theme_provider.dart';
 import 'package:riverpod_mode/common/theme/switch_theme_mode.dart';
 import 'package:riverpod_mode/route/app_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'common/state_logger.dart';
 import 'common/storage/shared_preferences_provider.dart';
 import 'generated/l10n.dart';
 
 Future<void> bootstrap() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   // final SharedPreferences prefs = await SharedPreferences.getInstance();
   // final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
@@ -24,9 +21,7 @@ Future<void> bootstrap() async {
         // AppProviderObserver(),
         StateLogger(),
       ],
-      overrides: [
-        sharedPreferencesUtilsProvider,
-      ],
+      overrides: [sharedPreferencesUtilsProvider],
       child: const MyApp(),
     ),
   );
@@ -56,7 +51,7 @@ class _MyAppState extends ConsumerState<MyApp> {
           S.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate
+          GlobalWidgetsLocalizations.delegate,
         ],
         supportedLocales: S.delegate.supportedLocales,
       ),

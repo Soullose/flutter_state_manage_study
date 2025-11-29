@@ -1,14 +1,11 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_mode/common/net/result_data.dart';
 
-import 'interceptors/cookie_interceptors.dart';
 import 'interceptors/error_interceptors.dart';
 import 'interceptors/header_interceptor.dart';
 import 'interceptors/response_interceptors.dart';
-import 'interceptors/token_interceptors.dart';
 
 part 'http_client.g.dart';
 
@@ -34,7 +31,7 @@ Future<ResultData?> netFetch(
     DioMethod.put: 'put',
     DioMethod.delete: 'delete',
     DioMethod.patch: 'patch',
-    DioMethod.head: 'head'
+    DioMethod.head: 'head',
   };
 
   final dio = Dio();
@@ -52,8 +49,10 @@ Future<ResultData?> netFetch(
     if (e.response != null) {
       errorResponse = e.response;
     } else {
-      errorResponse =
-          Response(statusCode: 999, requestOptions: RequestOptions(path: url));
+      errorResponse = Response(
+        statusCode: 999,
+        requestOptions: RequestOptions(path: url),
+      );
     }
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout) {
@@ -65,9 +64,15 @@ Future<ResultData?> netFetch(
   Response response;
 
   try {
-    response = await dio.request(url,
-        queryParameters: params, data: data, options: options);
-    print('response1:${response.data}');
+    response = await dio.request(
+      url,
+      queryParameters: params,
+      data: data,
+      options: options,
+    );
+    if (kDebugMode) {
+      print('response1:${response.data}');
+    }
     if (response.data is DioException) {
       return resultError(response.data);
     }
@@ -77,11 +82,4 @@ Future<ResultData?> netFetch(
   }
 }
 
-enum DioMethod {
-  get,
-  post,
-  put,
-  delete,
-  patch,
-  head,
-}
+enum DioMethod { get, post, put, delete, patch, head }
