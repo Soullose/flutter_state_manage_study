@@ -10,7 +10,7 @@ MqttServerClientService mqttServerClientService(Ref ref) {
 
 /// 2. 核心：StreamProvider
 ///
-/// 生成器会根据返回类型 Stream<Map<String, String>> 自动生成对应的 AutoDisposeStreamProvider
+/// 生成器会根据返回类型 `Stream<Map<String, String>>` 自动生成对应的 AutoDisposeStreamProvider
 @riverpod
 Stream<Map<String, String>> mqttMessage(Ref ref) {
   /// 监听上面的 mqttServiceProvider

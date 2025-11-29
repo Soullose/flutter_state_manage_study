@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_mode/pages/timer/state/timer_state.dart';
+import 'package:riverpod_mode/features/timer/state/timer_state.dart';
 
 part 'timer_controller.g.dart';
 

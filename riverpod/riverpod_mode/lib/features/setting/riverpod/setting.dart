@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_mode/common/storage/shared_preferences_service.dart';
-import 'package:riverpod_mode/pages/setting/model/base_setting.dart';
+import 'package:riverpod_mode/features/setting/model/base_setting.dart';
 
 part 'setting.g.dart';
 
