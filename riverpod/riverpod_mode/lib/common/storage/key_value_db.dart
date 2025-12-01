@@ -1,7 +1,7 @@
 abstract class KeyValueDb {
   Future<void> init();
 
-  T get<T>(String key);
+  Future<void> put<T>(String key, T value);
 
-  Future<void> set<T>(String key, T value);
+  T get<T>(String key, T defaultValue);
 }

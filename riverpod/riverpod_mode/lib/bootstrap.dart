@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:riverpod_mode/common/storage/mmkv/provider/mmkv_service_provider.dart';
 import 'package:riverpod_mode/common/theme/dark_theme_provider.dart';
 import 'package:riverpod_mode/common/theme/light_theme_provider.dart';
 import 'package:riverpod_mode/common/theme/switch_theme_mode.dart';
@@ -15,16 +16,16 @@ Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   // final SharedPreferences prefs = await SharedPreferences.getInstance();
   // final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
-  runApp(
-    ProviderScope(
-      observers: [
-        // AppProviderObserver(),
-        StateLogger(),
-      ],
-      overrides: [sharedPreferencesUtilsProvider],
-      child: const MyApp(),
-    ),
+
+  final container = ProviderContainer(
+    observers: [
+      // AppProviderObserver(),
+      StateLogger(),
+    ],
+    overrides: [sharedPreferencesUtilsProvider],
   );
+  await container.read(mmkvServiceProvider).init();
+  runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
