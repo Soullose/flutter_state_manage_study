@@ -25,6 +25,7 @@ Future<void> bootstrap() async {
     overrides: [sharedPreferencesUtilsProvider],
   );
   await container.read(mmkvServiceProvider).init();
+  await ScreenUtil.ensureScreenSize();
   runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
 }
 

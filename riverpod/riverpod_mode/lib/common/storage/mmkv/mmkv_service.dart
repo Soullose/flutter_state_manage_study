@@ -14,6 +14,9 @@ class MMKVService implements KeyValueDb {
 
   @override
   Future<void> init() async {
+    if(kDebugMode) {
+      print('MMKV初始化');
+    }
     try {
       await MMKV.initialize();
       _mmkv = MMKV.defaultMMKV();
