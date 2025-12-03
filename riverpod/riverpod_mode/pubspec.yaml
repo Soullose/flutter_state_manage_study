@@ -63,6 +63,7 @@ dependencies:
   drift: ^2.26.1
   drift_flutter: ^0.2.4
   path_provider: ^2.1.5
+  dart_either: ^2.0.0
   equatable: ^2.0.7
   skeletonizer: ^2.1.1
 
