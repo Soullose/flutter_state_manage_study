@@ -1,4 +1,4 @@
-import 'package:bloc_mode/common/di/injector.dart';
+import 'package:bloc_mode/core/di/injector.dart';
 import 'package:bloc_mode/features/timer/bloc/timer_bloc.dart';
 import 'package:bloc_mode/features/timer/view/timer_view.dart';
 import 'package:flutter/material.dart';

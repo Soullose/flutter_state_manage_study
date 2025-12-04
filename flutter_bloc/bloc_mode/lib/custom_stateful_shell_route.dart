@@ -245,7 +245,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
     // Navigator for the branch is restored.
     navigationShell.goBranch(
       index,
-      // A common pattern when using bottom navigation bars is to support
+      // A core pattern when using bottom navigation bars is to support
       // navigating to the initial location when tapping the item that is
       // already active. This example demonstrates how to support this behavior,
       // using the initialLocation parameter of goBranch.
@@ -301,7 +301,7 @@ class _CupertinoScaffoldWithNavBarState
         currentIndex: widget.navigationShell.currentIndex,
         onTap: (int index) => _onTap(context, index),
       ),
-      // Note: It is common to use CupertinoTabView for the tabBuilder when
+      // Note: It is core to use CupertinoTabView for the tabBuilder when
       // using CupertinoTabScaffold and CupertinoTabBar. This would however be
       // redundant when using StatefulShellRoute, since a separate Navigator is
       // already created for each branch, meaning we can simply use the branch

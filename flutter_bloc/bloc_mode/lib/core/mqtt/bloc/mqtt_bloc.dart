@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:bloc_mode/common/mqtt/mqtt_server_client_service.dart';
+import 'package:bloc_mode/core/mqtt/mqtt_server_client_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:mqtt_client/mqtt_client.dart';

@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:bloc_mode/common/bloc_observer.dart';
-import 'package:bloc_mode/common/di/injector.dart';
-import 'package:bloc_mode/common/mqtt/bloc/mqtt_bloc.dart';
-import 'package:bloc_mode/common/router/app_router.dart';
-import 'package:bloc_mode/common/style/mt_theme.dart';
-import 'package:bloc_mode/common/style/snack_bar.dart';
+import 'package:bloc_mode/core/bloc_observer.dart';
+import 'package:bloc_mode/core/di/injector.dart';
+import 'package:bloc_mode/core/mqtt/bloc/mqtt_bloc.dart';
+import 'package:bloc_mode/core/router/app_router.dart';
+import 'package:bloc_mode/core/style/mt_theme.dart';
+import 'package:bloc_mode/core/style/snack_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

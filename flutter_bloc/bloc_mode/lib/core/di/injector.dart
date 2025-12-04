@@ -1,7 +1,7 @@
-import 'package:bloc_mode/common/mqtt/bloc/mqtt_bloc.dart';
-import 'package:bloc_mode/common/net/HttpManager.dart';
-import 'package:bloc_mode/common/storage/shared_preferences_service.dart';
-import 'package:bloc_mode/common/storage/shared_preferences_utils.dart';
+import 'package:bloc_mode/core/mqtt/bloc/mqtt_bloc.dart';
+import 'package:bloc_mode/core/net/HttpManager.dart';
+import 'package:bloc_mode/core/storage/shared_preferences_service.dart';
+import 'package:bloc_mode/core/storage/shared_preferences_utils.dart';
 import 'package:bloc_mode/counter/bloc/counter_bloc.dart';
 import 'package:bloc_mode/counter/cubit/counter_cubit.dart';
 import 'package:bloc_mode/features/main_wrapper/main_wrapper_bloc.dart';

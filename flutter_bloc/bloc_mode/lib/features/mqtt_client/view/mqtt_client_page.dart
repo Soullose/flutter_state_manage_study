@@ -1,6 +1,6 @@
-import 'package:bloc_mode/common/di/injector.dart';
-import 'package:bloc_mode/common/mqtt/bloc/mqtt_bloc.dart';
-import 'package:bloc_mode/common/mqtt/mqtt_server_client_service.dart';
+import 'package:bloc_mode/core/di/injector.dart';
+import 'package:bloc_mode/core/mqtt/bloc/mqtt_bloc.dart';
+import 'package:bloc_mode/core/mqtt/mqtt_server_client_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,5 +1,5 @@
 import 'package:bloc_mode/counter/bloc/counter_bloc.dart';
-import 'package:bloc_mode/common/di/injector.dart';
+import 'package:bloc_mode/core/di/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

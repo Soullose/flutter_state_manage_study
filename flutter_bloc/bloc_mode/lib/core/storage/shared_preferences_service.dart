@@ -1,4 +1,4 @@
-import 'package:bloc_mode/common/utils/same_types.dart';
+import 'package:bloc_mode/core/utils/same_types.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class KeyValueDb {

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:bloc_mode/common/di/injector.dart';
-import 'package:bloc_mode/common/net/HttpManager.dart';
+import 'package:bloc_mode/core/di/injector.dart';
+import 'package:bloc_mode/core/net/HttpManager.dart';
 import 'package:bloc_mode/counter/bloc/counter_event.dart';
 import 'package:bloc_mode/counter/bloc/counter_state.dart';
 import 'package:cookie_jar/cookie_jar.dart';

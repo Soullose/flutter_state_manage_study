@@ -1,6 +1,6 @@
-import 'package:bloc_mode/common/net/interceptors/cookie_interceptors.dart';
-import 'package:bloc_mode/common/net/interceptors/header_interceptor.dart';
-import 'package:bloc_mode/common/net/result_data.dart';
+import 'package:bloc_mode/core/net/interceptors/cookie_interceptors.dart';
+import 'package:bloc_mode/core/net/interceptors/header_interceptor.dart';
+import 'package:bloc_mode/core/net/result_data.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
