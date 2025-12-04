@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:bloc_mode/app.dart';
-import 'package:bloc_mode/counter/view/bloc/counter_page.dart';
-import 'package:bloc_mode/counter/view/cubit/count/counter_cubit_page.dart';
+import 'package:bloc_mode/features/counter/view/bloc/counter_page.dart';
+import 'package:bloc_mode/features/counter/view/cubit/count/counter_cubit_page.dart';
 import 'package:bloc_mode/features/main_wrapper/view/main_wrapper_page.dart';
 import 'package:bloc_mode/features/mqtt_client/view/mqtt_client_page.dart';
 import 'package:bloc_mode/features/timer/view/timer_page.dart';
