@@ -1,5 +1,5 @@
 import 'package:bloc_mode/core/mqtt/bloc/mqtt_bloc.dart';
-import 'package:bloc_mode/core/net/HttpManager.dart';
+import 'package:bloc_mode/core/net/http_manager.dart';
 import 'package:bloc_mode/core/storage/shared_preferences_service.dart';
 import 'package:bloc_mode/core/storage/shared_preferences_utils.dart';
 import 'package:bloc_mode/features/counter/bloc/counter_bloc.dart';
