@@ -1,16 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:bloc_mode/core/di/injector.dart';
-import 'package:bloc_mode/core/net/HttpManager.dart';
 import 'package:bloc_mode/features/counter/bloc/counter_event.dart';
 import 'package:bloc_mode/features/counter/bloc/counter_state.dart';
-import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:flutter/foundation.dart';
-import 'package:encrypt/encrypt.dart';
 
 class CounterBloc extends Bloc<CounterEvent, CounterState> {
   CounterBloc() : super(CounterState.init()) {

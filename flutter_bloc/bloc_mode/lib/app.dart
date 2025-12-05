@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 class AppPage extends StatelessWidget {
@@ -11,13 +10,13 @@ class AppPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('学习Bloc'),
-            // .animate()
-            // .fade(duration: 500.ms)
-            // .scale(delay: 300.ms)
-            // .move(
-            //     delay: 300.ms,
-            //     duration: 600.ms) ,// runs after the above w/new duration
-            // .blurXY(),
+        // .animate()
+        // .fade(duration: 500.ms)
+        // .scale(delay: 300.ms)
+        // .move(
+        //     delay: 300.ms,
+        //     duration: 600.ms) ,// runs after the above w/new duration
+        // .blurXY(),
         centerTitle: true,
       ),
       body: Center(

@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:bloc_mode/app.dart';
 import 'package:bloc_mode/features/counter/view/bloc/counter_page.dart';
 import 'package:bloc_mode/features/counter/view/cubit/count/counter_cubit_page.dart';
