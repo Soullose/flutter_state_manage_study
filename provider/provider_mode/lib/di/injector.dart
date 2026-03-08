@@ -6,20 +6,30 @@ import 'package:provider_mode/core/mqtt/mqtt_state_manager.dart';
 import 'package:provider_mode/core/store/mmkv_service.dart';
 import 'package:provider_mode/core/store/shared_preferences_service.dart';
 import 'package:provider_mode/features/counter/counter_provider.dart';
+import 'package:provider_mode/features/locale/locale_provider.dart';
+import 'package:provider_mode/features/settings/settings_provider.dart';
+import 'package:provider_mode/features/theme/theme_provider.dart';
 
 final injector = GetIt.instance;
 
 Future<void> initDependencies() async {
-  injector.registerFactory(() => CounterProvider());
+  // 存储服务
   injector.registerFactory(() => SharedPreferencesDb());
   injector.registerFactory(() => MMKVService());
-  // 使用单例模式注册MqttState，确保整个应用使用同一个实例
+
+  // 功能Provider
+  injector.registerFactory(() => CounterProvider());
+  injector
+      .registerFactory(() => ThemeProvider(injector<SharedPreferencesDb>()));
+  injector
+      .registerFactory(() => LocaleProvider(injector<SharedPreferencesDb>()));
+  injector
+      .registerFactory(() => SettingsProvider(injector<SharedPreferencesDb>()));
+
+  // MQTT相关 - 使用单例模式
   injector.registerLazySingleton(() => MqttState());
-  // 注册事件总线为单例
   injector.registerLazySingleton(() => EventBus());
-  // 注册MqttStateManager为单例，并注入EventBus和MqttState
   injector.registerLazySingleton(
       () => MqttStateManager(injector<EventBus>(), injector<MqttState>()));
-  // 注册MqttServerClientService，现在它通过事件总线与状态管理器通信
   injector.registerFactory(() => MqttServerClientService());
 }

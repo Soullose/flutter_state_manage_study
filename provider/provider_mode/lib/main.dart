@@ -4,6 +4,9 @@ import 'package:provider_mode/core/mqtt/mqtt_state.dart';
 import 'package:provider_mode/core/router/app_router.dart';
 import 'package:provider_mode/core/store/shared_preferences_service.dart';
 import 'package:provider_mode/di/injector.dart';
+import 'package:provider_mode/features/locale/locale_provider.dart';
+import 'package:provider_mode/features/settings/settings_provider.dart';
+import 'package:provider_mode/features/theme/theme_provider.dart';
 
 import 'core/store/mmkv_service.dart';
 
@@ -12,24 +15,49 @@ void main() async {
   await initDependencies();
   injector<SharedPreferencesDb>().init();
   injector<MMKVService>().init();
-  // await SharedPreferencesDb().init();
-  // Provider.debugCheckInvalidValueType = null;
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider.value(value: injector<MqttState>()),
-  ], child: const MyApp()));
+
+  runApp(MultiProvider(
+    providers: [
+      // 全局状态Provider
+      ChangeNotifierProvider.value(value: injector<ThemeProvider>()),
+      ChangeNotifierProvider.value(value: injector<LocaleProvider>()),
+      ChangeNotifierProvider.value(value: injector<SettingsProvider>()),
+      // MQTT状态
+      ChangeNotifierProvider.value(value: injector<MqttState>()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: AppRouter.router,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+    // 使用Consumer监听主题和语言变化
+    return Consumer2<ThemeProvider, LocaleProvider>(
+      builder: (context, themeProvider, localeProvider, child) {
+        return MaterialApp.router(
+          routerConfig: AppRouter.router,
+          debugShowCheckedModeBanner: false,
+          // 主题配置
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
+          ),
+          themeMode: themeProvider.themeMode,
+          // 语言配置
+          locale: localeProvider.locale,
+          supportedLocales: localeProvider.supportedLocales,
+        );
+      },
     );
   }
 }
