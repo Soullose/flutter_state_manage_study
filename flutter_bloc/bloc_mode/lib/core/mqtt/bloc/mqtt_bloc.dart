@@ -50,8 +50,10 @@ class MqttBloc extends Bloc<MqttEvent, MqttState> {
     emit(const MqttConnecting());
 
     try {
-      final MqttConnectionState status =
-          await _mqttServerClientService.connect(ip, port);
+      final MqttConnectionState status = await _mqttServerClientService.connect(
+        ip,
+        port,
+      );
       log('status: $status');
       if (status == MqttConnectionState.connected) {
         log('123');
@@ -84,7 +86,6 @@ class MqttBloc extends Bloc<MqttEvent, MqttState> {
 
   /// Unsubscribe from a topic
   void _unsubscribe(MqttUnsubscribeEvent event, Emitter<MqttState> emit) {
-    final String topic = event.topic;
     emit(MqttConnectedSubscribeFailed());
   }
 
@@ -95,11 +96,15 @@ class MqttBloc extends Bloc<MqttEvent, MqttState> {
 
   /// 处理接收到的MQTT消息
   void _onMessageReceived(
-      MqttMessageReceivedEvent event, Emitter<MqttState> emit) {
-    emit(MqttMessageReceivedState(
-      topic: event.topic,
-      payload: event.payload,
-      timestamp: event.timestamp,
-    ));
+    MqttMessageReceivedEvent event,
+    Emitter<MqttState> emit,
+  ) {
+    emit(
+      MqttMessageReceivedState(
+        topic: event.topic,
+        payload: event.payload,
+        timestamp: event.timestamp,
+      ),
+    );
   }
 }

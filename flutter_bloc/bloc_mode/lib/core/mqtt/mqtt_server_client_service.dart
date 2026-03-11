@@ -24,7 +24,8 @@ class MqttServerClientService {
   static MqttServerClientService get instance {
     if (_instance == null) {
       throw Exception(
-          'MqttServerClientService not initialized. Call factory constructor first.');
+        'MqttServerClientService not initialized. Call factory constructor first.',
+      );
     }
     return _instance!;
   }
@@ -103,7 +104,8 @@ class MqttServerClientService {
     final connMess = MqttConnectMessage()
         .withClientIdentifier('Mqtt_MyClientUniqueId')
         .withWillTopic(
-            'willtopic') // If you set this you must set a will message
+          'willtopic',
+        ) // If you set this you must set a will message
         .withWillMessage('My Will message')
         .startClean() // Non persistent session for testing
         .withWillQos(MqttQos.atLeastOnce);
@@ -197,7 +199,14 @@ class MqttServerClientService {
 
   void disConnect() {
     _messageController.close();
-    _client.disconnect();
+    try {
+      _client.disconnect();
+    } catch (e) {
+      // _client 未初始化（从未连接过），忽略此错误
+      if (kDebugMode) {
+        print('MQTT client was not initialized: $e');
+      }
+    }
     _heartbeatTimer?.cancel();
     // 仅在确保没有其他地方会使用时调用
     // _instance = null;
@@ -213,27 +222,21 @@ class MqttServerClientService {
   /// 预自动重连回调
   void onAutoReconnect() {
     if (kDebugMode) {
-      print(
-        '示例::onAutoReconnect 客户端回调 - 客户端自动重连序列将启动',
-      );
+      print('示例::onAutoReconnect 客户端回调 - 客户端自动重连序列将启动');
     }
   }
 
   /// 后自动重连回调
   void onAutoReconnected() {
     if (kDebugMode) {
-      print(
-        '示例::onAutoReconnected 客户端回调 - 客户端自动重连序列已完成',
-      );
+      print('示例::onAutoReconnected 客户端回调 - 客户端自动重连序列已完成');
     }
   }
 
   /// The successful connect callback
   void onConnected() {
     if (kDebugMode) {
-      print(
-        '示例::OnConnected 客户端回调 - 客户端连接成功',
-      );
+      print('示例::OnConnected 客户端回调 - 客户端连接成功');
     }
   }
 
@@ -241,9 +244,7 @@ class MqttServerClientService {
   void pong() {
     try {
       if (kDebugMode) {
-        print(
-          '示例::Ping 响应客户端回调被调用 - 您可能想在此处断开您的代理',
-        );
+        print('示例::Ping 响应客户端回调被调用 - 您可能想在此处断开您的代理');
       }
 
       /// 1. 记录心跳

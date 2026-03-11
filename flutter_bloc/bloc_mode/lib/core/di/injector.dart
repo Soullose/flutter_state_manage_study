@@ -2,6 +2,10 @@ import 'package:bloc_mode/core/mqtt/bloc/mqtt_bloc.dart';
 import 'package:bloc_mode/core/net/http_manager.dart';
 import 'package:bloc_mode/core/storage/shared_preferences_service.dart';
 import 'package:bloc_mode/core/storage/shared_preferences_utils.dart';
+import 'package:bloc_mode/core/l10n/bloc/locale_bloc.dart';
+import 'package:bloc_mode/core/style/bloc/theme_bloc.dart';
+import 'package:bloc_mode/features/auth/bloc/auth_bloc.dart';
+import 'package:bloc_mode/features/auth/repositories/auth_repository.dart';
 import 'package:bloc_mode/features/counter/bloc/counter_bloc.dart';
 import 'package:bloc_mode/features/counter/cubit/counter_cubit.dart';
 import 'package:bloc_mode/features/main_wrapper/main_wrapper_bloc.dart';
@@ -21,20 +25,35 @@ Future<void> initDependencies() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
 
+  // 存储服务
   injector.registerLazySingleton<SharedPreferencesUtils>(
-      () => SharedPreferencesUtils(prefs: prefs, asyncPrefs: asyncPrefs));
+    () => SharedPreferencesUtils(prefs: prefs, asyncPrefs: asyncPrefs),
+  );
 
+  // 网络服务
   injector.registerLazySingleton<HttpManager>(() => HttpManager(prefs: prefs));
 
+  // 数据库服务
   injector.registerFactory(() => SharedPreferencesDb());
 
+  // 全局 Bloc - 单例模式
+  injector.registerLazySingleton<ThemeBloc>(() => ThemeBloc(prefs: injector()));
+  injector.registerLazySingleton<LocaleBloc>(
+    () => LocaleBloc(prefs: injector()),
+  );
+
+  // 认证相关
+  injector.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(prefs: injector()),
+  );
+  injector.registerLazySingleton<AuthBloc>(
+    () => AuthBloc(authRepository: injector()),
+  );
+
+  // 功能 Bloc - 工厂模式
   injector.registerFactory(() => MainWrapperBloc());
-
   injector.registerFactory(() => CounterBloc());
-
   injector.registerFactory(() => CounterCubit());
-
   injector.registerFactory(() => TimerBloc(ticker: const Ticker()));
-
   injector.registerFactory(() => MqttBloc());
 }

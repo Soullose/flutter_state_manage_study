@@ -4,126 +4,176 @@ import 'package:bloc_mode/features/counter/view/cubit/count/counter_cubit_page.d
 import 'package:bloc_mode/features/main_wrapper/view/main_wrapper_page.dart';
 import 'package:bloc_mode/features/mqtt_client/view/mqtt_client_page.dart';
 import 'package:bloc_mode/features/timer/view/timer_page.dart';
+import 'package:bloc_mode/features/setting/presentation/pages/settings_page.dart';
+import 'package:bloc_mode/core/di/injector.dart';
+import 'package:bloc_mode/features/auth/bloc/auth_bloc.dart';
+import 'package:bloc_mode/features/auth/bloc/auth_state.dart';
+import 'package:bloc_mode/features/auth/view/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+import 'go_router_refresh_stream.dart';
 
 class AppRouter {
-  static final _rootNavigatorKey =
-      GlobalKey<NavigatorState>(debugLabel: 'root');
+  static final _rootNavigatorKey = GlobalKey<NavigatorState>(
+    debugLabel: 'root',
+  );
   static final _oneNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'one');
   static final _twoNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'two');
-  static final GoRouter _router = GoRouter(
-    observers: <NavigatorObserver>[MyNavObserver()],
-    navigatorKey: _rootNavigatorKey,
-    initialLocation: '/one',
-    routes: <RouteBase>[
-      StatefulShellRoute.indexedStack(
-        // pageBuilder: (BuildContext context, GoRouterState state,
-        //     StatefulNavigationShell navigationShell) {
-        //   return CustomTransitionPage(
-        //     child: MainWrapperPage(navigationShell: navigationShell),
-        //     transitionsBuilder: (BuildContext context,
-        //         Animation<double> animation,
-        //         Animation<double> secondaryAnimation,
-        //         Widget child) {
-        //       return FadeThroughTransition(
-        //         fillColor: Colors.transparent,
-        //         animation: animation,
-        //         secondaryAnimation: secondaryAnimation,
-        //         child: child,
-        //       );
-        //     },
-        //   );
-        // },
-        parentNavigatorKey: _rootNavigatorKey,
-        // builder: (BuildContext context, GoRouterState state,
-        //     StatefulNavigationShell navigationShell) {
-        //   return navigationShell;
-        // },
-        // navigatorContainerBuilder: (BuildContext context,
-        //     StatefulNavigationShell navigationShell, List<Widget> children) {
-        //   return MainWrapperPage(
-        //       navigationShell: navigationShell, children: children);
-        // },
 
-        builder: (BuildContext context, GoRouterState state,
-            StatefulNavigationShell navigationShell) {
-          // Return the widget that implements the custom shell (in this case
-          // using a BottomNavigationBar). The StatefulNavigationShell is passed
-          // to be able access the state of the shell and to navigate to other
-          // branches in a stateful way.
-          return MainWrapperPage(navigationShell: navigationShell);
-        },
-        branches: <StatefulShellBranch>[
-          StatefulShellBranch(
-            navigatorKey: _oneNavigatorKey,
-            routes: <RouteBase>[
-              GoRoute(
-                path: '/one',
-                builder: (context, state) => const AppPage(),
-                routes: [
-                  GoRoute(
-                    path: 'blocCount',
-                    builder: (context, state) => const CounterPage(),
-                  ),
-                  GoRoute(
-                    path: 'cubitCount',
-                    builder: (context, state) => const CounterCubitPage(),
-                  ),
-                  GoRoute(
-                    path: 'blocTimer',
-                    pageBuilder: (context, state) => CustomTransitionPage(
-                      child: const TimerPage(),
-                      barrierDismissible: true,
-                      opaque: false,
-                      barrierColor: Colors.black38,
-                      transitionDuration: const Duration(milliseconds: 300),
-                      reverseTransitionDuration:
-                          const Duration(milliseconds: 200),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        const begin = Offset(0.0, 1.0);
-                        const end = Offset.zero;
-                        const curve = Curves.ease;
+  /// 创建带认证守卫的路由
+  static GoRouter createRouter(AuthBloc authBloc) {
+    return GoRouter(
+      observers: <NavigatorObserver>[MyNavObserver()],
+      navigatorKey: _rootNavigatorKey,
+      initialLocation: '/one',
+      refreshListenable: GoRouterRefreshStream(authBloc.stream),
+      redirect: (context, state) {
+        final authState = authBloc.state;
+        final isAuthenticated = authState is Authenticated;
+        final isGoingToLogin = state.matchedLocation == '/login';
 
-                        var tween = Tween(begin: begin, end: end)
-                            .chain(CurveTween(curve: curve));
-                        // return FadeTransition(opacity: animation, child: child);
-                        return SlideTransition(
-                          position: animation.drive(tween),
-                          child: child,
-                        );
-                      },
-                    ),
-                  ),
-                  GoRoute(
-                    path: 'blocMqtt',
-                    builder: (context, state) => const MqttClientPage(),
+        // 未认证且不是去登录页，重定向到登录页
+        if (!isAuthenticated && !isGoingToLogin) {
+          return '/login';
+        }
+
+        // 已认证且去登录页，重定向到首页
+        if (isAuthenticated && isGoingToLogin) {
+          return '/one';
+        }
+
+        return null; // 无需重定向
+      },
+      // 自定义错误页面
+      errorBuilder: (context, state) => Scaffold(
+        appBar: AppBar(title: const Text('页面未找到')),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 64, color: Colors.grey),
+                const SizedBox(height: 24),
+                Text(
+                  '抱歉，页面未找到',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  '路径: ${state.matchedLocation}',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+                if (state.error != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    state.error.toString(),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.red),
+                    textAlign: TextAlign.center,
                   ),
                 ],
-              ),
-            ],
+                const SizedBox(height: 32),
+                ElevatedButton.icon(
+                  onPressed: () => context.go('/one'),
+                  icon: const Icon(Icons.home),
+                  label: const Text('返回首页'),
+                ),
+              ],
+            ),
           ),
-          StatefulShellBranch(
-            navigatorKey: _twoNavigatorKey,
-            routes: <RouteBase>[
-              GoRoute(
-                path: '/two',
-                builder: (context, state) => const CounterPage(),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
-    ],
-  );
+      routes: <RouteBase>[
+        // 登录页面（无需认证）
+        GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+        // 设置页面（需要认证）
+        GoRoute(
+          path: '/settings',
+          builder: (context, state) => const SettingsPage(),
+        ),
+        // 主界面（需要认证）
+        StatefulShellRoute.indexedStack(
+          parentNavigatorKey: _rootNavigatorKey,
+          builder: (context, state, navigationShell) {
+            return MainWrapperPage(navigationShell: navigationShell);
+          },
+          branches: <StatefulShellBranch>[
+            StatefulShellBranch(
+              navigatorKey: _oneNavigatorKey,
+              routes: <RouteBase>[
+                GoRoute(
+                  path: '/one',
+                  builder: (context, state) => const AppPage(),
+                  routes: [
+                    GoRoute(
+                      path: 'blocCount',
+                      builder: (context, state) => const CounterPage(),
+                    ),
+                    GoRoute(
+                      path: 'cubitCount',
+                      builder: (context, state) => const CounterCubitPage(),
+                    ),
+                    GoRoute(
+                      path: 'blocTimer',
+                      pageBuilder: (context, state) => CustomTransitionPage(
+                        child: const TimerPage(),
+                        barrierDismissible: true,
+                        opaque: false,
+                        barrierColor: Colors.black38,
+                        transitionDuration: const Duration(milliseconds: 300),
+                        reverseTransitionDuration: const Duration(
+                          milliseconds: 200,
+                        ),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                              const begin = Offset(0.0, 1.0);
+                              const end = Offset.zero;
+                              const curve = Curves.ease;
 
-// GoRouter routes() {
-//   return GoRouter(routes: routes,refreshListenable: );
-// }
+                              var tween = Tween(
+                                begin: begin,
+                                end: end,
+                              ).chain(CurveTween(curve: curve));
+                              return SlideTransition(
+                                position: animation.drive(tween),
+                                child: child,
+                              );
+                            },
+                      ),
+                    ),
+                    GoRoute(
+                      path: 'blocMqtt',
+                      builder: (context, state) => const MqttClientPage(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _twoNavigatorKey,
+              routes: <RouteBase>[
+                GoRoute(
+                  path: '/two',
+                  builder: (context, state) => const CounterPage(),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
-  static GoRouter get router => _router;
+  /// 获取默认路由器（用于无认证的示例）
+  static final GoRouter _defaultRouter = createRouter(injector<AuthBloc>());
+
+  static GoRouter get router => _defaultRouter;
 }
 
 /// The Navigator observer.

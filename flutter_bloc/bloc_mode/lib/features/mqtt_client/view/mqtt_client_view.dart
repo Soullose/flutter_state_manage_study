@@ -15,9 +15,7 @@ class _MqttClientViewState extends State<MqttClientView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('MQTT Client'),
-      ),
+      appBar: AppBar(title: const Text('MQTT Client')),
       body: Column(
         children: [
           // 连接状态显示
@@ -57,16 +55,18 @@ class _MqttClientViewState extends State<MqttClientView> {
                   });
                 }
                 if (state is MqttConnectionFailed) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(const SnackBar(content: Text('MQTT连接失败')));
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('MQTT连接失败')));
                 }
                 if (state is MqttConnected) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(const SnackBar(content: Text('MQTT连接成功')));
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('MQTT连接成功')));
                   // 自动订阅测试主题
-                  context
-                      .read<MqttBloc>()
-                      .add(const MqttSubscribeEvent(topic: 'test'));
+                  context.read<MqttBloc>().add(
+                    const MqttSubscribeEvent(topic: 'test'),
+                  );
                 }
               },
               child: _buildMessageList(),
@@ -78,16 +78,18 @@ class _MqttClientViewState extends State<MqttClientView> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: 'mqtt_connect',
             onPressed: () {
-              context
-                  .read<MqttBloc>()
-                  .add(const MqttConnectEvent(ip: '192.168.0.4', port: 1883));
+              context.read<MqttBloc>().add(
+                const MqttConnectEvent(ip: '192.168.0.4', port: 1883),
+              );
             },
             tooltip: '连接',
             child: const Icon(Icons.link),
           ),
           const SizedBox(height: 16),
           FloatingActionButton(
+            heroTag: 'mqtt_clear',
             onPressed: () {
               setState(() {
                 _messages.clear();
@@ -104,9 +106,7 @@ class _MqttClientViewState extends State<MqttClientView> {
 
   Widget _buildMessageList() {
     if (_messages.isEmpty) {
-      return const Center(
-        child: Text('暂无消息', style: TextStyle(fontSize: 16)),
-      );
+      return const Center(child: Text('暂无消息', style: TextStyle(fontSize: 16)));
     }
 
     return ListView.builder(
