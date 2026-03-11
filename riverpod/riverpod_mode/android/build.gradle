@@ -1,5 +1,10 @@
 allprojects {
     repositories {
+        // 优先使用阿里云镜像，解决国内网络问题
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        // 原始仓库作为备用
         google()
         mavenCentral()
     }
