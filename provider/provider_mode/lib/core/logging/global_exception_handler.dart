@@ -1,7 +1,5 @@
 // lib/core/logging/global_exception_handler.dart
 
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -156,22 +154,6 @@ class GlobalExceptionHandler {
 
     // 调用自定义回调
     onError?.call(error, stackTrace);
-  }
-
-  /// 在Zone中运行应用，捕获异步错误
-  static void runWithCatch(void Function() callback,
-      {required LogService logService}) {
-    runZonedGuarded(
-      callback,
-      (error, stackTrace) async {
-        debugPrint('==================== ZONE ERROR ====================');
-        debugPrint('Error: $error');
-        debugPrint('Stack trace: $stackTrace');
-        debugPrint('====================================================');
-
-        logService.logError(error, stackTrace, 'AsyncZone');
-      },
-    );
   }
 }
 

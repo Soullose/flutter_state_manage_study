@@ -28,28 +28,25 @@ void main() async {
   await logService.initialize();
 
   // 设置全局异常捕获
+  // 从 Flutter 3.3 开始，PlatformDispatcher.instance.onError 可以捕获所有 Dart 异步错误
+  // 不再需要使用 runZonedGuarded
   final exceptionHandler = injector<GlobalExceptionHandler>();
   exceptionHandler.setup();
 
-  // 使用Zone捕获异步错误
-  GlobalExceptionHandler.runWithCatch(
-    () {
-      runApp(MultiProvider(
-        providers: [
-          // 全局状态Provider
-          ChangeNotifierProvider.value(value: injector<ThemeProvider>()),
-          ChangeNotifierProvider.value(value: injector<LocaleProvider>()),
-          ChangeNotifierProvider.value(value: injector<SettingsProvider>()),
-          // MQTT状态
-          ChangeNotifierProvider.value(value: injector<MqttState>()),
-          // 日志管理
-          ChangeNotifierProvider.value(value: injector<LogsProvider>()),
-        ],
-        child: const MyApp(),
-      ));
-    },
-    logService: logService,
-  );
+  // 直接运行应用，异常由 GlobalExceptionHandler 统一处理
+  runApp(MultiProvider(
+    providers: [
+      // 全局状态Provider
+      ChangeNotifierProvider.value(value: injector<ThemeProvider>()),
+      ChangeNotifierProvider.value(value: injector<LocaleProvider>()),
+      ChangeNotifierProvider.value(value: injector<SettingsProvider>()),
+      // MQTT状态
+      ChangeNotifierProvider.value(value: injector<MqttState>()),
+      // 日志管理
+      ChangeNotifierProvider.value(value: injector<LogsProvider>()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
