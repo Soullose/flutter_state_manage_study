@@ -1,0 +1,366 @@
+{
+  "@@locale": "zh",
+  "appTitle": "Provider状态管理学习",
+  "@appTitle": {
+    "description": "应用标题"
+  },
+  "toggleTheme": "切换主题",
+  "@toggleTheme": {
+    "description": "切换主题按钮提示"
+  },
+  "welcomeMessage": "欢迎学习Provider状态管理",
+  "@welcomeMessage": {
+    "description": "欢迎卡片标题"
+  },
+  "welcomeSubtitle": "点击下方卡片探索不同的Provider使用场景",
+  "@welcomeSubtitle": {
+    "description": "欢迎卡片副标题"
+  },
+  "@toggleTheme": {
+    "description": "切换主题按钮提示"
+  },
+  "providerExamples": "Provider示例",
+  "@providerExamples": {
+    "description": "Provider示例分组标题"
+  },
+  "currentStatus": "当前状态",
+  "@currentStatus": {
+    "description": "当前状态分组标题"
+  },
+  "counter": "计数器",
+  "@counter": {
+    "description": "计数器示例标题"
+  },
+  "counterSubtitle": "基础状态管理",
+  "@counterSubtitle": {
+    "description": "计数器示例副标题"
+  },
+  "themeSwitch": "主题切换",
+  "@themeSwitch": {
+    "description": "主题切换示例标题"
+  },
+  "themeSwitchSubtitle": "亮色/暗色/系统",
+  "@themeSwitchSubtitle": {
+    "description": "主题切换示例副标题"
+  },
+  "multiLanguage": "多语言",
+  "@multiLanguage": {
+    "description": "多语言示例标题"
+  },
+  "multiLanguageSubtitle": "中文/English",
+  "@multiLanguageSubtitle": {
+    "description": "多语言示例副标题"
+  },
+  "appSettings": "应用设置",
+  "@appSettings": {
+    "description": "应用设置示例标题"
+  },
+  "appSettingsSubtitle": "复杂对象管理",
+  "@appSettingsSubtitle": {
+    "description": "应用设置示例副标题"
+  },
+  "errorLog": "错误日志",
+  "@errorLog": {
+    "description": "错误日志示例标题"
+  },
+  "errorLogSubtitle": "异常日志管理",
+  "@errorLogSubtitle": {
+    "description": "错误日志示例副标题"
+  },
+  "currentTheme": "当前主题",
+  "@currentTheme": {
+    "description": "当前主题显示标签"
+  },
+  "selectTheme": "选择主题",
+  "@selectTheme": {
+    "description": "选择主题标题"
+  },
+  "themeLight": "亮色模式",
+  "@themeLight": {
+    "description": "亮色主题"
+  },
+  "themeDark": "暗色模式",
+  "@themeDark": {
+    "description": "暗色主题"
+  },
+  "themeSystem": "跟随系统",
+  "@themeSystem": {
+    "description": "跟随系统主题"
+  },
+  "currentLanguage": "当前语言",
+  "@currentLanguage": {
+    "description": "当前语言显示标签"
+  },
+  "selectLanguage": "选择语言",
+  "@selectLanguage": {
+    "description": "选择语言标题"
+  },
+  "languageChinese": "简体中文",
+  "@languageChinese": {
+    "description": "中文语言名称"
+  },
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "英文语言名称"
+  },
+  "languageSystem": "跟随系统",
+  "@languageSystem": {
+    "description": "跟随系统语言"
+  },
+  "notificationSettings": "通知设置",
+  "@notificationSettings": {
+    "description": "通知设置分组标题"
+  },
+  "pushNotification": "推送通知",
+  "@pushNotification": {
+    "description": "推送通知设置项"
+  },
+  "pushNotificationSubtitle": "接收应用通知",
+  "@pushNotificationSubtitle": {
+    "description": "推送通知设置项副标题"
+  },
+  "sound": "声音",
+  "@sound": {
+    "description": "声音设置项"
+  },
+  "soundSubtitle": "播放提示音",
+  "@soundSubtitle": {
+    "description": "声音设置项副标题"
+  },
+  "vibration": "振动",
+  "@vibration": {
+    "description": "振动设置项"
+  },
+  "vibrationSubtitle": "触觉反馈",
+  "@vibrationSubtitle": {
+    "description": "振动设置项副标题"
+  },
+  "privacySettings": "隐私设置",
+  "@privacySettings": {
+    "description": "隐私设置分组标题"
+  },
+  "autoUpdateCheck": "自动检查更新",
+  "@autoUpdateCheck": {
+    "description": "自动检查更新设置项"
+  },
+  "autoUpdateCheckSubtitle": "启动时检查新版本",
+  "@autoUpdateCheckSubtitle": {
+    "description": "自动检查更新设置项副标题"
+  },
+  "analytics": "数据统计",
+  "@analytics": {
+    "description": "数据统计设置项"
+  },
+  "analyticsSubtitle": "帮助改进应用体验",
+  "@analyticsSubtitle": {
+    "description": "数据统计设置项副标题"
+  },
+  "storage": "存储",
+  "@storage": {
+    "description": "存储分组标题"
+  },
+  "cache": "缓存",
+  "@cache": {
+    "description": "缓存设置项"
+  },
+  "clearCache": "清除缓存",
+  "@clearCache": {
+    "description": "清除缓存按钮"
+  },
+  "exportLog": "导出日志",
+  "@exportLog": {
+    "description": "导出日志按钮提示"
+  },
+  "clearAllLogs": "清空所有日志",
+  "@clearAllLogs": {
+    "description": "清空所有日志菜单项"
+  },
+  "clearWeekOldLogs": "清除一周前的日志",
+  "@clearWeekOldLogs": {
+    "description": "清除一周前的日志菜单项"
+  },
+  "refresh": "刷新",
+  "@refresh": {
+    "description": "刷新菜单项"
+  },
+  "searchLog": "搜索日志...",
+  "@searchLog": {
+    "description": "搜索日志输入框提示"
+  },
+  "allLevels": "全部级别",
+  "@allLevels": {
+    "description": "全部级别筛选选项"
+  },
+  "selectDateRange": "选择日期范围",
+  "@selectDateRange": {
+    "description": "选择日期范围按钮"
+  },
+  "totalLogs": "总计日志",
+  "@totalLogs": {
+    "description": "总计日志标签"
+  },
+  "errorCount": "错误",
+  "@errorCount": {
+    "description": "错误数量标签"
+  },
+  "warningCount": "警告",
+  "@warningCount": {
+    "description": "警告数量标签"
+  },
+  "infoCount": "信息",
+  "@infoCount": {
+    "description": "信息数量标签"
+  },
+  "noLogs": "暂无日志记录",
+  "@noLogs": {
+    "description": "无日志记录提示"
+  },
+  "noMatchingLogs": "没有匹配的日志记录",
+  "@noMatchingLogs": {
+    "description": "无匹配日志提示"
+  },
+  "logDetail": "日志详情",
+  "@logDetail": {
+    "description": "日志详情页面标题"
+  },
+  "copy": "复制",
+  "@copy": {
+    "description": "复制按钮"
+  },
+  "share": "分享",
+  "@share": {
+    "description": "分享按钮"
+  },
+  "delete": "删除",
+  "@delete": {
+    "description": "删除按钮"
+  },
+  "message": "消息",
+  "@message": {
+    "description": "消息标签"
+  },
+  "errorType": "错误类型",
+  "@errorType": {
+    "description": "错误类型标签"
+  },
+  "source": "来源",
+  "@source": {
+    "description": "来源标签"
+  },
+  "stackTrace": "堆栈跟踪",
+  "@stackTrace": {
+    "description": "堆栈跟踪标签"
+  },
+  "additionalData": "附加数据",
+  "@additionalData": {
+    "description": "附加数据标签"
+  },
+  "deviceInfo": "设备信息",
+  "@deviceInfo": {
+    "description": "设备信息标签"
+  },
+  "appVersion": "应用版本",
+  "@appVersion": {
+    "description": "应用版本标签"
+  },
+  "deviceModel": "设备型号",
+  "@deviceModel": {
+    "description": "设备型号标签"
+  },
+  "manufacturer": "制造商",
+  "@manufacturer": {
+    "description": "制造商标签"
+  },
+  "systemVersion": "系统版本",
+  "@systemVersion": {
+    "description": "系统版本标签"
+  },
+  "platform": "平台",
+  "@platform": {
+    "description": "平台标签"
+  },
+  "networkType": "网络类型",
+  "@networkType": {
+    "description": "网络类型标签"
+  },
+  "networkStatus": "网络连接",
+  "@networkStatus": {
+    "description": "网络连接标签"
+  },
+  "timezone": "时区",
+  "@timezone": {
+    "description": "时区标签"
+  },
+  "language": "语言",
+  "@language": {
+    "description": "语言标签"
+  },
+  "connected": "已连接",
+  "@connected": {
+    "description": "已连接状态"
+  },
+  "disconnected": "未连接",
+  "@disconnected": {
+    "description": "未连接状态"
+  },
+  "confirmDelete": "确认删除",
+  "@confirmDelete": {
+    "description": "确认删除对话框标题"
+  },
+  "confirmDeleteMessage": "确定要删除这条日志吗？",
+  "@confirmDeleteMessage": {
+    "description": "确认删除对话框内容"
+  },
+  "confirmClearAll": "确认清空",
+  "@confirmClearAll": {
+    "description": "确认清空对话框标题"
+  },
+  "confirmClearAllMessage": "确定要清空所有日志吗？此操作不可恢复。",
+  "@confirmClearAllMessage": {
+    "description": "确认清空对话框内容"
+  },
+  "cancel": "取消",
+  "@cancel": {
+    "description": "取消按钮"
+  },
+  "confirm": "确认",
+  "@confirm": {
+    "description": "确认按钮"
+  },
+  "copiedToClipboard": "已复制到剪贴板",
+  "@copiedToClipboard": {
+    "description": "复制成功提示"
+  },
+  "logExported": "日志已导出",
+  "@logExported": {
+    "description": "导出成功提示"
+  },
+  "logDeleted": "日志已删除",
+  "@logDeleted": {
+    "description": "删除成功提示"
+  },
+  "logsCleared": "日志已清空",
+  "@logsCleared": {
+    "description": "清空成功提示"
+  },
+  "operationFailed": "操作失败",
+  "@operationFailed": {
+    "description": "操作失败提示"
+  },
+  "increment": "增加",
+  "@increment": {
+    "description": "增加按钮"
+  },
+  "decrement": "减少",
+  "@decrement": {
+    "description": "减少按钮"
+  },
+  "reset": "重置",
+  "@reset": {
+    "description": "重置按钮"
+  },
+  "currentCount": "当前计数",
+  "@currentCount": {
+    "description": "当前计数标签"
+  }
+}

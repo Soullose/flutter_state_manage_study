@@ -3,15 +3,17 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_mode/features/locale/locale_provider.dart';
 import 'package:provider_mode/features/theme/theme_provider.dart';
+import 'package:provider_mode/l10n/app_localizations.dart';
 
 class AppPage extends StatelessWidget {
   const AppPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Provider状态管理学习'),
+        title: Text(l10n.appTitle),
         centerTitle: true,
         actions: [
           // 快速切换主题按钮
@@ -24,7 +26,7 @@ class AppPage extends StatelessWidget {
             onPressed: () {
               context.read<ThemeProvider>().toggleTheme();
             },
-            tooltip: '切换主题',
+            tooltip: l10n.toggleTheme,
           ),
         ],
       ),
@@ -32,27 +34,27 @@ class AppPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           // 欢迎卡片
-          _buildWelcomeCard(context),
+          _buildWelcomeCard(context, l10n),
           const SizedBox(height: 24),
 
           // 功能示例分组
-          _buildSectionHeader(context, 'Provider示例'),
+          _buildSectionHeader(context, l10n.providerExamples),
           const SizedBox(height: 12),
-          _buildExampleGrid(context),
+          _buildExampleGrid(context, l10n),
 
           const SizedBox(height: 24),
 
           // 状态概览
-          _buildSectionHeader(context, '当前状态'),
+          _buildSectionHeader(context, l10n.currentStatus),
           const SizedBox(height: 12),
-          _buildStatusCard(context),
+          _buildStatusCard(context, l10n),
         ],
       ),
     );
   }
 
   /// 构建欢迎卡片
-  Widget _buildWelcomeCard(BuildContext context) {
+  Widget _buildWelcomeCard(BuildContext context, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -65,14 +67,14 @@ class AppPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              '欢迎学习Provider状态管理',
+              l10n.welcomeMessage,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
-              '点击下方卡片探索不同的Provider使用场景',
+              l10n.welcomeSubtitle,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
@@ -99,40 +101,40 @@ class AppPage extends StatelessWidget {
   }
 
   /// 构建示例网格
-  Widget _buildExampleGrid(BuildContext context) {
+  Widget _buildExampleGrid(BuildContext context, AppLocalizations l10n) {
     final examples = [
       _ExampleItem(
         icon: Icons.calculate,
-        title: '计数器',
-        subtitle: '基础状态管理',
+        title: l10n.counter,
+        subtitle: l10n.counterSubtitle,
         route: '/providerCounter',
         color: Colors.blue,
       ),
       _ExampleItem(
         icon: Icons.palette,
-        title: '主题切换',
-        subtitle: '亮色/暗色/系统',
+        title: l10n.themeSwitch,
+        subtitle: l10n.themeSwitchSubtitle,
         route: '/theme',
         color: Colors.purple,
       ),
       _ExampleItem(
         icon: Icons.language,
-        title: '多语言',
-        subtitle: '中文/English',
+        title: l10n.multiLanguage,
+        subtitle: l10n.multiLanguageSubtitle,
         route: '/locale',
         color: Colors.orange,
       ),
       _ExampleItem(
         icon: Icons.settings,
-        title: '应用设置',
-        subtitle: '复杂对象管理',
+        title: l10n.appSettings,
+        subtitle: l10n.appSettingsSubtitle,
         route: '/settings',
         color: Colors.teal,
       ),
       _ExampleItem(
         icon: Icons.bug_report,
-        title: '错误日志',
-        subtitle: '异常日志管理',
+        title: l10n.errorLog,
+        subtitle: l10n.errorLogSubtitle,
         route: '/logs',
         color: Colors.red,
       ),
@@ -200,7 +202,7 @@ class AppPage extends StatelessWidget {
   }
 
   /// 构建状态概览卡片
-  Widget _buildStatusCard(BuildContext context) {
+  Widget _buildStatusCard(BuildContext context, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -209,7 +211,7 @@ class AppPage extends StatelessWidget {
             _buildStatusTile(
               context,
               icon: Icons.palette,
-              title: '当前主题',
+              title: l10n.currentTheme,
               value: Consumer<ThemeProvider>(
                 builder: (context, provider, _) =>
                     Text(provider.currentTheme.displayName),
@@ -219,7 +221,7 @@ class AppPage extends StatelessWidget {
             _buildStatusTile(
               context,
               icon: Icons.language,
-              title: '当前语言',
+              title: l10n.currentLanguage,
               value: Consumer<LocaleProvider>(
                 builder: (context, provider, _) =>
                     Text(provider.currentLocale.displayName),

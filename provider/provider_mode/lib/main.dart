@@ -11,6 +11,7 @@ import 'package:provider_mode/features/locale/locale_provider.dart';
 import 'package:provider_mode/features/logs/logs_provider.dart';
 import 'package:provider_mode/features/settings/settings_provider.dart';
 import 'package:provider_mode/features/theme/theme_provider.dart';
+import 'package:provider_mode/l10n/app_localizations.dart';
 
 import 'core/store/mmkv_service.dart';
 
@@ -75,7 +76,8 @@ class MyApp extends StatelessWidget {
           ),
           themeMode: themeProvider.themeMode,
           // 语言配置
-          localizationsDelegates: const [
+          localizationsDelegates: [
+            AppLocalizations.delegate, // Add this line
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
