@@ -1,0 +1,33 @@
+# Qwen3-TTS 模型转换工具依赖
+# Python 3.10+required
+
+# 核心依赖
+torch>=2.1.0
+transformers>=4.40.0
+accelerate>=0.27.0
+safetensors>=0.4.0
+
+# 音频处理
+librosa>=0.10.0
+soundfile>=0.12.0
+scipy>=1.10.0
+
+# 模型转换
+onnx>=1.15.0
+onnxruntime>=1.16.0
+
+# ExecuTorch (可选，用于导出 ExecuTorch 格式)
+# executorch>=0.3.0
+
+# 量化工具
+optimum>=1.16.0
+
+# 工具库
+numpy>=1.24.0
+tqdm>=4.65.0
+huggingface_hub>=0.20.0
+modelscope>=1.11.0
+
+# 配置管理
+pyyaml>=6.0
+omegaconf>=2.3.0

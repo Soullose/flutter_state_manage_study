@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_mode/core/logging/global_exception_handler.dart';
+import 'package:provider_mode/core/logging/log_service.dart';
 import 'package:provider_mode/core/mqtt/mqtt_state.dart';
 import 'package:provider_mode/core/router/app_router.dart';
 import 'package:provider_mode/core/store/shared_preferences_service.dart';
 import 'package:provider_mode/di/injector.dart';
 import 'package:provider_mode/features/locale/locale_provider.dart';
+import 'package:provider_mode/features/logs/logs_provider.dart';
 import 'package:provider_mode/features/settings/settings_provider.dart';
 import 'package:provider_mode/features/theme/theme_provider.dart';
 
@@ -12,21 +15,41 @@ import 'core/store/mmkv_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 初始化依赖注入
   await initDependencies();
+
+  // 初始化存储服务
   injector<SharedPreferencesDb>().init();
   injector<MMKVService>().init();
 
-  runApp(MultiProvider(
-    providers: [
-      // 全局状态Provider
-      ChangeNotifierProvider.value(value: injector<ThemeProvider>()),
-      ChangeNotifierProvider.value(value: injector<LocaleProvider>()),
-      ChangeNotifierProvider.value(value: injector<SettingsProvider>()),
-      // MQTT状态
-      ChangeNotifierProvider.value(value: injector<MqttState>()),
-    ],
-    child: const MyApp(),
-  ));
+  // 初始化日志服务
+  final logService = injector<LogService>();
+  await logService.initialize();
+
+  // 设置全局异常捕获
+  final exceptionHandler = injector<GlobalExceptionHandler>();
+  exceptionHandler.setup();
+
+  // 使用Zone捕获异步错误
+  GlobalExceptionHandler.runWithCatch(
+    () {
+      runApp(MultiProvider(
+        providers: [
+          // 全局状态Provider
+          ChangeNotifierProvider.value(value: injector<ThemeProvider>()),
+          ChangeNotifierProvider.value(value: injector<LocaleProvider>()),
+          ChangeNotifierProvider.value(value: injector<SettingsProvider>()),
+          // MQTT状态
+          ChangeNotifierProvider.value(value: injector<MqttState>()),
+          // 日志管理
+          ChangeNotifierProvider.value(value: injector<LogsProvider>()),
+        ],
+        child: const MyApp(),
+      ));
+    },
+    logService: logService,
+  );
 }
 
 class MyApp extends StatelessWidget {

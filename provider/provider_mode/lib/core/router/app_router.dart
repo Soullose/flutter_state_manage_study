@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider_mode/app.dart';
 import 'package:provider_mode/features/counter/view/counter_page.dart';
 import 'package:provider_mode/features/locale/view/locale_page.dart';
+import 'package:provider_mode/features/logs/view/logs_page.dart';
 import 'package:provider_mode/features/settings/view/settings_page.dart';
 import 'package:provider_mode/features/theme/view/theme_page.dart';
 
@@ -65,6 +66,13 @@ class AppRouter {
             path: 'settings',
             pageBuilder: (context, state) => CustomTransitionPage(
               child: const SettingsPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          GoRoute(
+            path: 'logs',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const LogsPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),

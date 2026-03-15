@@ -1,5 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:provider_mode/core/event/event_bus.dart';
+import 'package:provider_mode/core/logging/global_exception_handler.dart';
+import 'package:provider_mode/core/logging/log_file_service.dart';
+import 'package:provider_mode/core/logging/log_service.dart';
 import 'package:provider_mode/core/mqtt/mqtt_server_client_service.dart';
 import 'package:provider_mode/core/mqtt/mqtt_state.dart';
 import 'package:provider_mode/core/mqtt/mqtt_state_manager.dart';
@@ -7,6 +10,7 @@ import 'package:provider_mode/core/store/mmkv_service.dart';
 import 'package:provider_mode/core/store/shared_preferences_service.dart';
 import 'package:provider_mode/features/counter/counter_provider.dart';
 import 'package:provider_mode/features/locale/locale_provider.dart';
+import 'package:provider_mode/features/logs/logs_provider.dart';
 import 'package:provider_mode/features/settings/settings_provider.dart';
 import 'package:provider_mode/features/theme/theme_provider.dart';
 
@@ -32,4 +36,14 @@ Future<void> initDependencies() async {
   injector.registerLazySingleton(
       () => MqttStateManager(injector<EventBus>(), injector<MqttState>()));
   injector.registerFactory(() => MqttServerClientService());
+
+  // 日志系统
+  injector.registerFactory(() => LogFileService());
+  injector.registerLazySingleton(() => LogService());
+  injector.registerLazySingleton(() => GlobalExceptionHandler(
+        logService: injector<LogService>(),
+        printToConsole: true,
+        logToFile: true,
+      ));
+  injector.registerFactory(() => LogsProvider(injector<LogService>()));
 }

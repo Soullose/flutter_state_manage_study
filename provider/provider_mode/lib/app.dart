@@ -129,6 +129,13 @@ class AppPage extends StatelessWidget {
         route: '/settings',
         color: Colors.teal,
       ),
+      _ExampleItem(
+        icon: Icons.bug_report,
+        title: '错误日志',
+        subtitle: '异常日志管理',
+        route: '/logs',
+        color: Colors.red,
+      ),
     ];
 
     return GridView.builder(
