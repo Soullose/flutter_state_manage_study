@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_mode/core/logging/global_exception_handler.dart';
 import 'package:provider_mode/core/logging/log_service.dart';
@@ -74,6 +75,11 @@ class MyApp extends StatelessWidget {
           ),
           themeMode: themeProvider.themeMode,
           // 语言配置
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
           locale: localeProvider.locale,
           supportedLocales: localeProvider.supportedLocales,
         );
