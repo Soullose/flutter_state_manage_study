@@ -48,9 +48,6 @@ class GlobalExceptionHandler {
 
   /// 处理Flutter框架错误
   void _handleFlutterError(FlutterErrorDetails details) {
-    // 在调试模式下，先调用原始处理器显示错误界面
-    _originalFlutterOnError?.call(details);
-
     // 打印到控制台
     if (printToConsole) {
       debugPrint('==================== FLUTTER ERROR ====================');
@@ -166,7 +163,7 @@ class GlobalExceptionHandler {
       {required LogService logService}) {
     runZonedGuarded(
       callback,
-      (error, stackTrace) {
+      (error, stackTrace) async {
         debugPrint('==================== ZONE ERROR ====================');
         debugPrint('Error: $error');
         debugPrint('Stack trace: $stackTrace');
