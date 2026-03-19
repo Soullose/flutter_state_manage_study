@@ -277,4 +277,156 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get currentCount => '当前计数';
+
+  @override
+  String get resetToDefault => '重置为默认';
+
+  @override
+  String get themeSettings => '主题设置';
+
+  @override
+  String get providerUsageInfo => 'Provider使用说明';
+
+  @override
+  String get providerUsageDetails =>
+      '• 使用 ChangeNotifier 管理主题状态\n• 主题更改会自动通知所有监听者\n• 主题偏好持久化存储\n• 支持亮色、暗色和跟随系统三种模式';
+
+  @override
+  String cacheSize(int size) {
+    return '当前缓存: $size MB';
+  }
+
+  @override
+  String get clearCacheButton => '清理';
+
+  @override
+  String get resetSettings => '重置设置';
+
+  @override
+  String get resetSettingsConfirm => '确定要将所有设置恢复为默认值吗？';
+
+  @override
+  String get settingsReset => '设置已重置';
+
+  @override
+  String get clearCacheTitle => '清理缓存';
+
+  @override
+  String get clearCacheConfirm => '确定要清理所有缓存数据吗？';
+
+  @override
+  String get cacheCleared => '缓存已清理';
+
+  @override
+  String get complexStateManagementInfo => '复杂状态管理说明';
+
+  @override
+  String get complexStateManagementDetails =>
+      '• AppSettings 使用 Equatable 方便比较\n• 使用 copyWith 创建不可变对象的副本\n• 设置以JSON格式持久化存储\n• 每次修改都会保存到本地';
+
+  @override
+  String get localeUsageInfo => '国际化使用说明';
+
+  @override
+  String get localeUsageDetails =>
+      '• LocaleProvider 管理应用语言状态\n• 返回null表示跟随系统语言设置\n• 需要配合MaterialApp.locale使用\n• 完整国际化需要arb文件和intl包';
+
+  @override
+  String get retry => '重试';
+
+  @override
+  String get appRunningNormally => '应用运行正常';
+
+  @override
+  String get logLevel => '日志级别';
+
+  @override
+  String get all => '全部';
+
+  @override
+  String get errorLevel => '错误';
+
+  @override
+  String get warningLevel => '警告';
+
+  @override
+  String get infoLevel => '信息';
+
+  @override
+  String get debugLevel => '调试';
+
+  @override
+  String get selectDate => '选择日期';
+
+  @override
+  String get clearFilter => '清除筛选';
+
+  @override
+  String get confirmClearWeekLogs => '确定要清除一周前的日志吗？';
+
+  @override
+  String get weekOldLogsCleared => '一周前的日志已清除';
+
+  @override
+  String get testException => '测试异常';
+
+  @override
+  String get testExceptionMessage => '这是一个测试异常';
+
+  @override
+  String get generateError => '生成错误';
+
+  @override
+  String get generateWarning => '生成警告';
+
+  @override
+  String get generateInfo => '生成信息';
+
+  @override
+  String get testErrorGenerated => '测试错误已生成';
+
+  @override
+  String get testWarningGenerated => '测试警告已生成';
+
+  @override
+  String get testInfoGenerated => '测试信息已生成';
+
+  @override
+  String get selectExportFormat => '选择导出格式：';
+
+  @override
+  String get readableText => '可读文本';
+
+  @override
+  String get exporting => '正在导出...';
+
+  @override
+  String get logExportSubject => '错误日志导出';
+
+  @override
+  String get exportFailedOrNoLogs => '导出失败或没有日志可导出';
+
+  @override
+  String get testLogFunction => '测试日志功能';
+
+  @override
+  String get testErrorLog => '测试错误日志';
+
+  @override
+  String get testWarningLog => '测试警告日志';
+
+  @override
+  String get testInfoLog => '测试信息日志';
+
+  @override
+  String get throwTestException => '抛出测试异常';
+
+  @override
+  String get time => '时间';
+
+  @override
+  String get errorMessage => '错误消息';
+
+  @override
+  String get logDetailSubject => '错误日志详情';
 }

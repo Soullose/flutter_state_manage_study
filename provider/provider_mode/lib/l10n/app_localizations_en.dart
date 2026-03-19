@@ -280,4 +280,159 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get currentCount => 'Current Count';
+
+  @override
+  String get resetToDefault => 'Reset to Default';
+
+  @override
+  String get themeSettings => 'Theme Settings';
+
+  @override
+  String get providerUsageInfo => 'Provider Usage Info';
+
+  @override
+  String get providerUsageDetails =>
+      '• Use ChangeNotifier to manage theme state\n• Theme changes automatically notify all listeners\n• Theme preference is persisted\n• Supports Light, Dark and System modes';
+
+  @override
+  String cacheSize(int size) {
+    return 'Current cache: $size MB';
+  }
+
+  @override
+  String get clearCacheButton => 'Clear';
+
+  @override
+  String get resetSettings => 'Reset Settings';
+
+  @override
+  String get resetSettingsConfirm =>
+      'Are you sure you want to reset all settings to default?';
+
+  @override
+  String get settingsReset => 'Settings reset';
+
+  @override
+  String get clearCacheTitle => 'Clear Cache';
+
+  @override
+  String get clearCacheConfirm =>
+      'Are you sure you want to clear all cache data?';
+
+  @override
+  String get cacheCleared => 'Cache cleared';
+
+  @override
+  String get complexStateManagementInfo => 'Complex State Management Info';
+
+  @override
+  String get complexStateManagementDetails =>
+      '• AppSettings uses Equatable for easy comparison\n• Use copyWith to create immutable object copies\n• Settings are persisted in JSON format\n• Each change is saved locally';
+
+  @override
+  String get localeUsageInfo => 'Internationalization Info';
+
+  @override
+  String get localeUsageDetails =>
+      '• LocaleProvider manages app language state\n• Returns null to follow system language\n• Works with MaterialApp.locale\n• Full i18n requires arb files and intl package';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get appRunningNormally => 'App is running normally';
+
+  @override
+  String get logLevel => 'Log Level';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get errorLevel => 'Error';
+
+  @override
+  String get warningLevel => 'Warning';
+
+  @override
+  String get infoLevel => 'Info';
+
+  @override
+  String get debugLevel => 'Debug';
+
+  @override
+  String get selectDate => 'Select Date';
+
+  @override
+  String get clearFilter => 'Clear Filter';
+
+  @override
+  String get confirmClearWeekLogs =>
+      'Are you sure you want to clear logs older than a week?';
+
+  @override
+  String get weekOldLogsCleared => 'Week-old logs cleared';
+
+  @override
+  String get testException => 'Test Exception';
+
+  @override
+  String get testExceptionMessage => 'This is a test exception';
+
+  @override
+  String get generateError => 'Generate Error';
+
+  @override
+  String get generateWarning => 'Generate Warning';
+
+  @override
+  String get generateInfo => 'Generate Info';
+
+  @override
+  String get testErrorGenerated => 'Test error generated';
+
+  @override
+  String get testWarningGenerated => 'Test warning generated';
+
+  @override
+  String get testInfoGenerated => 'Test info generated';
+
+  @override
+  String get selectExportFormat => 'Select export format:';
+
+  @override
+  String get readableText => 'Readable Text';
+
+  @override
+  String get exporting => 'Exporting...';
+
+  @override
+  String get logExportSubject => 'Error Log Export';
+
+  @override
+  String get exportFailedOrNoLogs => 'Export failed or no logs to export';
+
+  @override
+  String get testLogFunction => 'Test Log Function';
+
+  @override
+  String get testErrorLog => 'Test Error Log';
+
+  @override
+  String get testWarningLog => 'Test Warning Log';
+
+  @override
+  String get testInfoLog => 'Test Info Log';
+
+  @override
+  String get throwTestException => 'Throw Test Exception';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get errorMessage => 'Error Message';
+
+  @override
+  String get logDetailSubject => 'Error Log Detail';
 }

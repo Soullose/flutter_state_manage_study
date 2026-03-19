@@ -10,6 +10,7 @@ import 'package:share_plus/share_plus.dart';
 
 import 'package:provider_mode/core/logging/logging.dart';
 import 'package:provider_mode/features/logs/logs_provider.dart';
+import 'package:provider_mode/l10n/app_localizations.dart';
 import 'log_detail_page.dart';
 
 /// 日志管理页面
@@ -42,39 +43,40 @@ class _LogsPageState extends State<LogsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('错误日志'),
+        title: Text(l10n.errorLog),
         actions: [
           // 导出按钮
           IconButton(
             icon: const Icon(Icons.file_upload),
-            tooltip: '导出日志',
+            tooltip: l10n.exportLog,
             onPressed: () => _exportLogs(context),
           ),
           // 更多选项
           PopupMenuButton<String>(
-            onSelected: (value) => _handleMenuAction(context, value),
+            onSelected: (value) => _handleMenuAction(context, value, l10n),
             itemBuilder: (context) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'clear_all',
                 child: ListTile(
-                  leading: Icon(Icons.delete_forever, color: Colors.red),
-                  title: Text('清空所有日志'),
+                  leading: const Icon(Icons.delete_forever, color: Colors.red),
+                  title: Text(l10n.clearAllLogs),
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'clear_before_week',
                 child: ListTile(
-                  leading: Icon(Icons.delete_sweep),
-                  title: Text('清除一周前的日志'),
+                  leading: const Icon(Icons.delete_sweep),
+                  title: Text(l10n.clearWeekOldLogs),
                 ),
               ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'refresh',
                 child: ListTile(
-                  leading: Icon(Icons.refresh),
-                  title: Text('刷新'),
+                  leading: const Icon(Icons.refresh),
+                  title: Text(l10n.refresh),
                 ),
               ),
             ],
@@ -84,9 +86,9 @@ class _LogsPageState extends State<LogsPage> {
       body: Column(
         children: [
           // 搜索和筛选栏
-          _buildSearchAndFilterBar(context),
+          _buildSearchAndFilterBar(context, l10n),
           // 统计信息卡片
-          _buildStatisticsCard(context),
+          _buildStatisticsCard(context, l10n),
           // 日志列表
           Expanded(
             child: Consumer<LogsProvider>(
@@ -107,7 +109,7 @@ class _LogsPageState extends State<LogsPage> {
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => provider.refresh(),
-                          child: const Text('重试'),
+                          child: Text(l10n.retry),
                         ),
                       ],
                     ),
@@ -115,15 +117,16 @@ class _LogsPageState extends State<LogsPage> {
                 }
 
                 if (provider.logs.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.check_circle_outline,
+                        const Icon(Icons.check_circle_outline,
                             size: 64, color: Colors.green),
-                        SizedBox(height: 16),
-                        Text('暂无日志记录', style: TextStyle(fontSize: 16)),
-                        Text('应用运行正常', style: TextStyle(color: Colors.grey)),
+                        const SizedBox(height: 16),
+                        Text(l10n.noLogs, style: const TextStyle(fontSize: 16)),
+                        Text(l10n.appRunningNormally,
+                            style: const TextStyle(color: Colors.grey)),
                       ],
                     ),
                   );
@@ -169,7 +172,7 @@ class _LogsPageState extends State<LogsPage> {
   }
 
   /// 构建搜索和筛选栏
-  Widget _buildSearchAndFilterBar(BuildContext context) {
+  Widget _buildSearchAndFilterBar(BuildContext context, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -188,7 +191,7 @@ class _LogsPageState extends State<LogsPage> {
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: '搜索日志...',
+              hintText: l10n.searchLog,
               prefixIcon: const Icon(Icons.search),
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
@@ -217,18 +220,18 @@ class _LogsPageState extends State<LogsPage> {
             children: [
               // 级别筛选
               Expanded(
-                child: _buildLevelFilterChip(context),
+                child: _buildLevelFilterChip(context, l10n),
               ),
               const SizedBox(width: 8),
               // 日期筛选
               Expanded(
-                child: _buildDateFilterButton(context),
+                child: _buildDateFilterButton(context, l10n),
               ),
               const SizedBox(width: 8),
               // 清除筛选
               IconButton(
                 icon: const Icon(Icons.filter_alt_off),
-                tooltip: '清除筛选',
+                tooltip: l10n.clearFilter,
                 onPressed: () {
                   _searchController.clear();
                   setState(() {
@@ -246,11 +249,11 @@ class _LogsPageState extends State<LogsPage> {
   }
 
   /// 构建级别筛选下拉框
-  Widget _buildLevelFilterChip(BuildContext context) {
+  Widget _buildLevelFilterChip(BuildContext context, AppLocalizations l10n) {
     return DropdownButtonFormField<LogLevel?>(
       value: _selectedLevel,
       decoration: InputDecoration(
-        labelText: '日志级别',
+        labelText: l10n.logLevel,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -258,12 +261,16 @@ class _LogsPageState extends State<LogsPage> {
         filled: true,
         fillColor: Theme.of(context).colorScheme.surface,
       ),
-      items: const [
-        DropdownMenuItem(value: null, child: Text('全部')),
-        DropdownMenuItem(value: LogLevel.error, child: Text('🔴 错误')),
-        DropdownMenuItem(value: LogLevel.warning, child: Text('🟡 警告')),
-        DropdownMenuItem(value: LogLevel.info, child: Text('🔵 信息')),
-        DropdownMenuItem(value: LogLevel.debug, child: Text('⚪ 调试')),
+      items: [
+        DropdownMenuItem(value: null, child: Text(l10n.all)),
+        DropdownMenuItem(
+            value: LogLevel.error, child: Text('🔴 ${l10n.errorLevel}')),
+        DropdownMenuItem(
+            value: LogLevel.warning, child: Text('🟡 ${l10n.warningLevel}')),
+        DropdownMenuItem(
+            value: LogLevel.info, child: Text('🔵 ${l10n.infoLevel}')),
+        DropdownMenuItem(
+            value: LogLevel.debug, child: Text('⚪ ${l10n.debugLevel}')),
       ],
       onChanged: (value) {
         setState(() {
@@ -275,8 +282,8 @@ class _LogsPageState extends State<LogsPage> {
   }
 
   /// 构建日期筛选按钮
-  Widget _buildDateFilterButton(BuildContext context) {
-    String buttonText = '选择日期';
+  Widget _buildDateFilterButton(BuildContext context, AppLocalizations l10n) {
+    String buttonText = l10n.selectDate;
     if (_selectedDateRange != null) {
       buttonText =
           '${_selectedDateRange!.start.month}/${_selectedDateRange!.start.day} - ${_selectedDateRange!.end.month}/${_selectedDateRange!.end.day}';
@@ -304,7 +311,7 @@ class _LogsPageState extends State<LogsPage> {
   }
 
   /// 构建统计信息卡片
-  Widget _buildStatisticsCard(BuildContext context) {
+  Widget _buildStatisticsCard(BuildContext context, AppLocalizations l10n) {
     return Consumer<LogsProvider>(
       builder: (context, provider, child) {
         final stats = provider.statistics;
@@ -322,13 +329,14 @@ class _LogsPageState extends State<LogsPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              _buildStatItem(context, l10n.totalLogs,
+                  stats.totalLogs.toString(), Colors.blue),
+              _buildStatItem(context, l10n.errorCount,
+                  stats.errorCount.toString(), Colors.red),
+              _buildStatItem(context, l10n.warningCount,
+                  stats.warningCount.toString(), Colors.orange),
               _buildStatItem(
-                  context, '总计', stats.totalLogs.toString(), Colors.blue),
-              _buildStatItem(
-                  context, '错误', stats.errorCount.toString(), Colors.red),
-              _buildStatItem(
-                  context, '警告', stats.warningCount.toString(), Colors.orange),
-              _buildStatItem(context, '大小', stats.formattedSize, Colors.grey),
+                  context, l10n.storage, stats.formattedSize, Colors.grey),
             ],
           ),
         );
@@ -429,25 +437,26 @@ class _LogsPageState extends State<LogsPage> {
   /// 导出日志
   Future<void> _exportLogs(BuildContext context) async {
     final provider = context.read<LogsProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     // 显示导出选项对话框
     final exportFormat = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('导出日志'),
-        content: const Text('选择导出格式：'),
+        title: Text(l10n.exportLog),
+        content: Text(l10n.selectExportFormat),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('JSON格式'),
+            child: const Text('JSON'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('可读文本'),
+            child: Text(l10n.readableText),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, null),
-            child: const Text('取消'),
+            child: Text(l10n.cancel),
           ),
         ],
       ),
@@ -458,7 +467,7 @@ class _LogsPageState extends State<LogsPage> {
     // 显示加载指示器
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('正在导出...')),
+        SnackBar(content: Text(l10n.exporting)),
       );
     }
 
@@ -468,17 +477,18 @@ class _LogsPageState extends State<LogsPage> {
       // 分享文件
       await Share.shareXFiles(
         [XFile(file.path)],
-        subject: '错误日志导出',
+        subject: l10n.logExportSubject,
       );
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('导出失败或没有日志可导出')),
+        SnackBar(content: Text(l10n.exportFailedOrNoLogs)),
       );
     }
   }
 
   /// 处理菜单操作
-  Future<void> _handleMenuAction(BuildContext context, String action) async {
+  Future<void> _handleMenuAction(
+      BuildContext context, String action, AppLocalizations l10n) async {
     final provider = context.read<LogsProvider>();
 
     switch (action) {
@@ -486,17 +496,17 @@ class _LogsPageState extends State<LogsPage> {
         final confirmed = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('确认清空'),
-            content: const Text('确定要清空所有日志吗？此操作不可恢复。'),
+            title: Text(l10n.confirmClearAll),
+            content: Text(l10n.confirmClearAllMessage),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('取消'),
+                child: Text(l10n.cancel),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
                 style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('清空'),
+                child: Text(l10n.clearAllLogs),
               ),
             ],
           ),
@@ -506,7 +516,7 @@ class _LogsPageState extends State<LogsPage> {
           final count = await provider.clearAllLogs();
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('已清空 $count 个日志文件')),
+              SnackBar(content: Text(l10n.logsCleared)),
             );
           }
         }
@@ -517,7 +527,7 @@ class _LogsPageState extends State<LogsPage> {
         final count = await provider.clearLogsBefore(weekAgo);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('已清除 $count 个日志文件')),
+            SnackBar(content: Text(l10n.weekOldLogsCleared)),
           );
         }
         break;
@@ -530,16 +540,17 @@ class _LogsPageState extends State<LogsPage> {
 
   /// 显示测试对话框（调试模式）
   void _showTestDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('测试日志功能'),
+        title: Text(l10n.testLogFunction),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: const Icon(Icons.error, color: Colors.red),
-              title: const Text('测试错误日志'),
+              title: Text(l10n.testErrorLog),
               onTap: () {
                 Navigator.pop(context);
                 _testErrorLog();
@@ -547,7 +558,7 @@ class _LogsPageState extends State<LogsPage> {
             ),
             ListTile(
               leading: const Icon(Icons.warning, color: Colors.orange),
-              title: const Text('测试警告日志'),
+              title: Text(l10n.testWarningLog),
               onTap: () {
                 Navigator.pop(context);
                 _testWarningLog();
@@ -555,7 +566,7 @@ class _LogsPageState extends State<LogsPage> {
             ),
             ListTile(
               leading: const Icon(Icons.info, color: Colors.blue),
-              title: const Text('测试信息日志'),
+              title: Text(l10n.testInfoLog),
               onTap: () {
                 Navigator.pop(context);
                 _testInfoLog();
@@ -563,10 +574,10 @@ class _LogsPageState extends State<LogsPage> {
             ),
             ListTile(
               leading: const Icon(Icons.bug_report),
-              title: const Text('抛出测试异常'),
+              title: Text(l10n.throwTestException),
               onTap: () {
                 Navigator.pop(context);
-                throw Exception('这是一个测试异常');
+                throw Exception(l10n.testExceptionMessage);
               },
             ),
           ],

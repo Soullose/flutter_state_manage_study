@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_mode/features/theme/models/app_theme.dart';
 import 'package:provider_mode/features/theme/theme_provider.dart';
+import 'package:provider_mode/l10n/app_localizations.dart';
 
 /// 主题设置页面
 ///
@@ -11,9 +12,10 @@ class ThemePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('主题设置'),
+        title: Text(l10n.themeSettings),
         centerTitle: true,
       ),
       body: Consumer<ThemeProvider>(
@@ -22,13 +24,13 @@ class ThemePage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               // 当前主题展示卡片
-              _buildCurrentThemeCard(context, themeProvider),
+              _buildCurrentThemeCard(context, themeProvider, l10n),
               const SizedBox(height: 24),
               // 主题选择列表
-              _buildThemeSelectionList(context, themeProvider),
+              _buildThemeSelectionList(context, themeProvider, l10n),
               const SizedBox(height: 24),
               // 说明卡片
-              _buildInfoCard(context),
+              _buildInfoCard(context, l10n),
             ],
           );
         },
@@ -37,7 +39,8 @@ class ThemePage extends StatelessWidget {
   }
 
   /// 构建当前主题展示卡片
-  Widget _buildCurrentThemeCard(BuildContext context, ThemeProvider provider) {
+  Widget _buildCurrentThemeCard(
+      BuildContext context, ThemeProvider provider, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -50,7 +53,7 @@ class ThemePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '当前主题',
+              l10n.currentTheme,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 8),
@@ -68,7 +71,7 @@ class ThemePage extends StatelessWidget {
 
   /// 构建主题选择列表
   Widget _buildThemeSelectionList(
-      BuildContext context, ThemeProvider provider) {
+      BuildContext context, ThemeProvider provider, AppLocalizations l10n) {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +79,7 @@ class ThemePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              '选择主题',
+              l10n.selectTheme,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -120,7 +123,7 @@ class ThemePage extends StatelessWidget {
   }
 
   /// 构建说明卡片
-  Widget _buildInfoCard(BuildContext context) {
+  Widget _buildInfoCard(BuildContext context, AppLocalizations l10n) {
     return Card(
       color: Theme.of(context).colorScheme.primaryContainer,
       child: Padding(
@@ -136,7 +139,7 @@ class ThemePage extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Provider使用说明',
+                  l10n.providerUsageInfo,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
                         fontWeight: FontWeight.bold,
@@ -146,10 +149,7 @@ class ThemePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              '''• ThemeProvider 继承自 ChangeNotifier
-• 使用 Consumer<ThemeProvider> 监听状态变化
-• 调用 notifyListeners() 通知UI更新
-• 主题设置会持久化存储到本地''',
+              l10n.providerUsageDetails,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),

@@ -637,6 +637,300 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'当前计数'**
   String get currentCount;
+
+  /// 重置为默认按钮提示
+  ///
+  /// In zh, this message translates to:
+  /// **'重置为默认'**
+  String get resetToDefault;
+
+  /// 主题设置页面标题
+  ///
+  /// In zh, this message translates to:
+  /// **'主题设置'**
+  String get themeSettings;
+
+  /// Provider使用说明标题
+  ///
+  /// In zh, this message translates to:
+  /// **'Provider使用说明'**
+  String get providerUsageInfo;
+
+  /// Provider使用说明详情
+  ///
+  /// In zh, this message translates to:
+  /// **'• 使用 ChangeNotifier 管理主题状态\n• 主题更改会自动通知所有监听者\n• 主题偏好持久化存储\n• 支持亮色、暗色和跟随系统三种模式'**
+  String get providerUsageDetails;
+
+  /// 缓存大小显示
+  ///
+  /// In zh, this message translates to:
+  /// **'当前缓存: {size} MB'**
+  String cacheSize(int size);
+
+  /// 清理缓存按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'清理'**
+  String get clearCacheButton;
+
+  /// 重置设置对话框标题
+  ///
+  /// In zh, this message translates to:
+  /// **'重置设置'**
+  String get resetSettings;
+
+  /// 重置设置确认内容
+  ///
+  /// In zh, this message translates to:
+  /// **'确定要将所有设置恢复为默认值吗？'**
+  String get resetSettingsConfirm;
+
+  /// 设置已重置提示
+  ///
+  /// In zh, this message translates to:
+  /// **'设置已重置'**
+  String get settingsReset;
+
+  /// 清理缓存对话框标题
+  ///
+  /// In zh, this message translates to:
+  /// **'清理缓存'**
+  String get clearCacheTitle;
+
+  /// 清理缓存确认内容
+  ///
+  /// In zh, this message translates to:
+  /// **'确定要清理所有缓存数据吗？'**
+  String get clearCacheConfirm;
+
+  /// 缓存已清理提示
+  ///
+  /// In zh, this message translates to:
+  /// **'缓存已清理'**
+  String get cacheCleared;
+
+  /// 复杂状态管理说明标题
+  ///
+  /// In zh, this message translates to:
+  /// **'复杂状态管理说明'**
+  String get complexStateManagementInfo;
+
+  /// 复杂状态管理说明详情
+  ///
+  /// In zh, this message translates to:
+  /// **'• AppSettings 使用 Equatable 方便比较\n• 使用 copyWith 创建不可变对象的副本\n• 设置以JSON格式持久化存储\n• 每次修改都会保存到本地'**
+  String get complexStateManagementDetails;
+
+  /// 国际化使用说明标题
+  ///
+  /// In zh, this message translates to:
+  /// **'国际化使用说明'**
+  String get localeUsageInfo;
+
+  /// 国际化使用说明详情
+  ///
+  /// In zh, this message translates to:
+  /// **'• LocaleProvider 管理应用语言状态\n• 返回null表示跟随系统语言设置\n• 需要配合MaterialApp.locale使用\n• 完整国际化需要arb文件和intl包'**
+  String get localeUsageDetails;
+
+  /// 重试按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'重试'**
+  String get retry;
+
+  /// 应用运行正常提示
+  ///
+  /// In zh, this message translates to:
+  /// **'应用运行正常'**
+  String get appRunningNormally;
+
+  /// 日志级别标签
+  ///
+  /// In zh, this message translates to:
+  /// **'日志级别'**
+  String get logLevel;
+
+  /// 全部选项
+  ///
+  /// In zh, this message translates to:
+  /// **'全部'**
+  String get all;
+
+  /// 错误级别
+  ///
+  /// In zh, this message translates to:
+  /// **'错误'**
+  String get errorLevel;
+
+  /// 警告级别
+  ///
+  /// In zh, this message translates to:
+  /// **'警告'**
+  String get warningLevel;
+
+  /// 信息级别
+  ///
+  /// In zh, this message translates to:
+  /// **'信息'**
+  String get infoLevel;
+
+  /// 调试级别
+  ///
+  /// In zh, this message translates to:
+  /// **'调试'**
+  String get debugLevel;
+
+  /// 选择日期按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'选择日期'**
+  String get selectDate;
+
+  /// 清除筛选按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'清除筛选'**
+  String get clearFilter;
+
+  /// 确认清除一周前日志内容
+  ///
+  /// In zh, this message translates to:
+  /// **'确定要清除一周前的日志吗？'**
+  String get confirmClearWeekLogs;
+
+  /// 一周前日志已清除提示
+  ///
+  /// In zh, this message translates to:
+  /// **'一周前的日志已清除'**
+  String get weekOldLogsCleared;
+
+  /// 测试异常标题
+  ///
+  /// In zh, this message translates to:
+  /// **'测试异常'**
+  String get testException;
+
+  /// 测试异常消息
+  ///
+  /// In zh, this message translates to:
+  /// **'这是一个测试异常'**
+  String get testExceptionMessage;
+
+  /// 生成错误按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'生成错误'**
+  String get generateError;
+
+  /// 生成警告按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'生成警告'**
+  String get generateWarning;
+
+  /// 生成信息按钮
+  ///
+  /// In zh, this message translates to:
+  /// **'生成信息'**
+  String get generateInfo;
+
+  /// 测试错误已生成提示
+  ///
+  /// In zh, this message translates to:
+  /// **'测试错误已生成'**
+  String get testErrorGenerated;
+
+  /// 测试警告已生成提示
+  ///
+  /// In zh, this message translates to:
+  /// **'测试警告已生成'**
+  String get testWarningGenerated;
+
+  /// 测试信息已生成提示
+  ///
+  /// In zh, this message translates to:
+  /// **'测试信息已生成'**
+  String get testInfoGenerated;
+
+  /// 选择导出格式提示
+  ///
+  /// In zh, this message translates to:
+  /// **'选择导出格式：'**
+  String get selectExportFormat;
+
+  /// 可读文本格式
+  ///
+  /// In zh, this message translates to:
+  /// **'可读文本'**
+  String get readableText;
+
+  /// 正在导出提示
+  ///
+  /// In zh, this message translates to:
+  /// **'正在导出...'**
+  String get exporting;
+
+  /// 日志导出主题
+  ///
+  /// In zh, this message translates to:
+  /// **'错误日志导出'**
+  String get logExportSubject;
+
+  /// 导出失败或没有日志提示
+  ///
+  /// In zh, this message translates to:
+  /// **'导出失败或没有日志可导出'**
+  String get exportFailedOrNoLogs;
+
+  /// 测试日志功能标题
+  ///
+  /// In zh, this message translates to:
+  /// **'测试日志功能'**
+  String get testLogFunction;
+
+  /// 测试错误日志
+  ///
+  /// In zh, this message translates to:
+  /// **'测试错误日志'**
+  String get testErrorLog;
+
+  /// 测试警告日志
+  ///
+  /// In zh, this message translates to:
+  /// **'测试警告日志'**
+  String get testWarningLog;
+
+  /// 测试信息日志
+  ///
+  /// In zh, this message translates to:
+  /// **'测试信息日志'**
+  String get testInfoLog;
+
+  /// 抛出测试异常
+  ///
+  /// In zh, this message translates to:
+  /// **'抛出测试异常'**
+  String get throwTestException;
+
+  /// 时间标签
+  ///
+  /// In zh, this message translates to:
+  /// **'时间'**
+  String get time;
+
+  /// 错误消息标签
+  ///
+  /// In zh, this message translates to:
+  /// **'错误消息'**
+  String get errorMessage;
+
+  /// 日志详情分享主题
+  ///
+  /// In zh, this message translates to:
+  /// **'错误日志详情'**
+  String get logDetailSubject;
 }
 
 class _AppLocalizationsDelegate

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_mode/features/locale/models/app_locale.dart';
 import 'package:provider_mode/features/locale/locale_provider.dart';
+import 'package:provider_mode/l10n/app_localizations.dart';
 
 /// 语言设置页面
 ///
@@ -11,9 +12,10 @@ class LocalePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('语言设置'),
+        title: Text(l10n.selectLanguage),
         centerTitle: true,
       ),
       body: Consumer<LocaleProvider>(
@@ -22,13 +24,13 @@ class LocalePage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               // 当前语言展示卡片
-              _buildCurrentLocaleCard(context, localeProvider),
+              _buildCurrentLocaleCard(context, localeProvider, l10n),
               const SizedBox(height: 24),
               // 语言选择列表
-              _buildLocaleSelectionList(context, localeProvider),
+              _buildLocaleSelectionList(context, localeProvider, l10n),
               const SizedBox(height: 24),
               // 说明卡片
-              _buildInfoCard(context),
+              _buildInfoCard(context, l10n),
             ],
           );
         },
@@ -38,7 +40,7 @@ class LocalePage extends StatelessWidget {
 
   /// 构建当前语言展示卡片
   Widget _buildCurrentLocaleCard(
-      BuildContext context, LocaleProvider provider) {
+      BuildContext context, LocaleProvider provider, AppLocalizations l10n) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -50,7 +52,7 @@ class LocalePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              '当前语言',
+              l10n.currentLanguage,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 8),
@@ -68,7 +70,7 @@ class LocalePage extends StatelessWidget {
 
   /// 构建语言选择列表
   Widget _buildLocaleSelectionList(
-      BuildContext context, LocaleProvider provider) {
+      BuildContext context, LocaleProvider provider, AppLocalizations l10n) {
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +78,7 @@ class LocalePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              '选择语言 / Select Language',
+              l10n.selectLanguage,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -119,7 +121,7 @@ class LocalePage extends StatelessWidget {
   }
 
   /// 构建说明卡片
-  Widget _buildInfoCard(BuildContext context) {
+  Widget _buildInfoCard(BuildContext context, AppLocalizations l10n) {
     return Card(
       color: Theme.of(context).colorScheme.primaryContainer,
       child: Padding(
@@ -135,7 +137,7 @@ class LocalePage extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '国际化使用说明',
+                  l10n.localeUsageInfo,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
                         fontWeight: FontWeight.bold,
@@ -145,10 +147,7 @@ class LocalePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              '''• LocaleProvider 管理应用语言状态
-• 返回null表示跟随系统语言设置
-• 需要配合MaterialApp.locale使用
-• 完整国际化需要arb文件和intl包''',
+              l10n.localeUsageDetails,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),

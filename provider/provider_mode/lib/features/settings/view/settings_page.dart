@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_mode/features/settings/settings_provider.dart';
+import 'package:provider_mode/l10n/app_localizations.dart';
 
 /// 应用设置页面
 ///
@@ -10,15 +11,16 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('应用设置'),
+        title: Text(l10n.appSettings),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: '重置为默认',
-            onPressed: () => _showResetDialog(context),
+            tooltip: l10n.resetToDefault,
+            onPressed: () => _showResetDialog(context, l10n),
           ),
         ],
       ),
@@ -29,28 +31,28 @@ class SettingsPage extends StatelessWidget {
           return ListView(
             children: [
               // 通知设置分组
-              _buildSectionHeader(context, '通知设置'),
+              _buildSectionHeader(context, l10n.notificationSettings),
               _buildSwitchTile(
                 context,
                 icon: Icons.notifications,
-                title: '推送通知',
-                subtitle: '接收应用推送消息',
+                title: l10n.pushNotification,
+                subtitle: l10n.pushNotificationSubtitle,
                 value: settings.notificationsEnabled,
                 onChanged: (_) => settingsProvider.toggleNotifications(),
               ),
               _buildSwitchTile(
                 context,
                 icon: Icons.volume_up,
-                title: '声音',
-                subtitle: '播放提示音',
+                title: l10n.sound,
+                subtitle: l10n.soundSubtitle,
                 value: settings.soundEnabled,
                 onChanged: (_) => settingsProvider.toggleSound(),
               ),
               _buildSwitchTile(
                 context,
                 icon: Icons.vibration,
-                title: '振动',
-                subtitle: '触觉反馈',
+                title: l10n.vibration,
+                subtitle: l10n.vibrationSubtitle,
                 value: settings.vibrationEnabled,
                 onChanged: (_) => settingsProvider.toggleVibration(),
               ),
@@ -58,20 +60,20 @@ class SettingsPage extends StatelessWidget {
               const Divider(height: 32),
 
               // 隐私设置分组
-              _buildSectionHeader(context, '隐私设置'),
+              _buildSectionHeader(context, l10n.privacySettings),
               _buildSwitchTile(
                 context,
                 icon: Icons.update,
-                title: '自动检查更新',
-                subtitle: '启动时检查新版本',
+                title: l10n.autoUpdateCheck,
+                subtitle: l10n.autoUpdateCheckSubtitle,
                 value: settings.autoUpdateCheck,
                 onChanged: (_) => settingsProvider.toggleAutoUpdateCheck(),
               ),
               _buildSwitchTile(
                 context,
                 icon: Icons.analytics,
-                title: '数据统计',
-                subtitle: '帮助改进应用体验',
+                title: l10n.analytics,
+                subtitle: l10n.analyticsSubtitle,
                 value: settings.analyticsEnabled,
                 onChanged: (_) => settingsProvider.toggleAnalytics(),
               ),
@@ -79,13 +81,13 @@ class SettingsPage extends StatelessWidget {
               const Divider(height: 32),
 
               // 存储设置分组
-              _buildSectionHeader(context, '存储'),
-              _buildCacheTile(context, settingsProvider),
+              _buildSectionHeader(context, l10n.storage),
+              _buildCacheTile(context, settingsProvider, l10n),
 
               const Divider(height: 32),
 
               // 说明卡片
-              _buildInfoCard(context),
+              _buildInfoCard(context, l10n),
             ],
           );
         },
@@ -129,23 +131,24 @@ class SettingsPage extends StatelessWidget {
   }
 
   /// 构建缓存清理选项
-  Widget _buildCacheTile(BuildContext context, SettingsProvider provider) {
+  Widget _buildCacheTile(
+      BuildContext context, SettingsProvider provider, AppLocalizations l10n) {
     return ListTile(
       leading: const Icon(Icons.cleaning_services),
-      title: const Text('清理缓存'),
-      subtitle: Text('当前缓存: ${provider.settings.cacheSizeMB} MB'),
+      title: Text(l10n.cache),
+      subtitle: Text(l10n.cacheSize(provider.settings.cacheSizeMB)),
       trailing: TextButton(
         onPressed: provider.settings.cacheSizeMB > 0
-            ? () => _showClearCacheDialog(context, provider)
+            ? () => _showClearCacheDialog(context, provider, l10n)
             : null,
-        child: const Text('清理'),
+        child: Text(l10n.clearCacheButton),
       ),
       onTap: () => provider.calculateCacheSize(),
     );
   }
 
   /// 构建说明卡片
-  Widget _buildInfoCard(BuildContext context) {
+  Widget _buildInfoCard(BuildContext context, AppLocalizations l10n) {
     return Card(
       margin: const EdgeInsets.all(16),
       color: Theme.of(context).colorScheme.primaryContainer,
@@ -162,7 +165,7 @@ class SettingsPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '复杂状态管理说明',
+                  l10n.complexStateManagementInfo,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
                         fontWeight: FontWeight.bold,
@@ -172,10 +175,7 @@ class SettingsPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              '''• AppSettings 使用 Equatable 方便比较
-• 使用 copyWith 创建不可变对象的副本
-• 设置以JSON格式持久化存储
-• 每次修改都会保存到本地''',
+              l10n.complexStateManagementDetails,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
@@ -187,26 +187,26 @@ class SettingsPage extends StatelessWidget {
   }
 
   /// 显示重置确认对话框
-  void _showResetDialog(BuildContext context) {
+  void _showResetDialog(BuildContext context, AppLocalizations l10n) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('重置设置'),
-        content: const Text('确定要将所有设置恢复为默认值吗？'),
+        title: Text(l10n.resetSettings),
+        content: Text(l10n.resetSettingsConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
               context.read<SettingsProvider>().resetToDefaults();
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('设置已重置')),
+                SnackBar(content: Text(l10n.settingsReset)),
               );
             },
-            child: const Text('确定'),
+            child: Text(l10n.confirm),
           ),
         ],
       ),
@@ -214,16 +214,17 @@ class SettingsPage extends StatelessWidget {
   }
 
   /// 显示清理缓存确认对话框
-  void _showClearCacheDialog(BuildContext context, SettingsProvider provider) {
+  void _showClearCacheDialog(
+      BuildContext context, SettingsProvider provider, AppLocalizations l10n) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('清理缓存'),
-        content: const Text('确定要清理所有缓存数据吗？'),
+        title: Text(l10n.clearCacheTitle),
+        content: Text(l10n.clearCacheConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -240,11 +241,11 @@ class SettingsPage extends StatelessWidget {
               if (context.mounted) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('缓存已清理')),
+                  SnackBar(content: Text(l10n.cacheCleared)),
                 );
               }
             },
-            child: const Text('确定'),
+            child: Text(l10n.confirm),
           ),
         ],
       ),

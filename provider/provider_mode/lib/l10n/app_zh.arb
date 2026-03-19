@@ -362,5 +362,210 @@
   "currentCount": "当前计数",
   "@currentCount": {
     "description": "当前计数标签"
+  },
+  "resetToDefault": "重置为默认",
+  "@resetToDefault": {
+    "description": "重置为默认按钮提示"
+  },
+  "themeSettings": "主题设置",
+  "@themeSettings": {
+    "description": "主题设置页面标题"
+  },
+  "providerUsageInfo": "Provider使用说明",
+  "@providerUsageInfo": {
+    "description": "Provider使用说明标题"
+  },
+  "providerUsageDetails": "• 使用 ChangeNotifier 管理主题状态\n• 主题更改会自动通知所有监听者\n• 主题偏好持久化存储\n• 支持亮色、暗色和跟随系统三种模式",
+  "@providerUsageDetails": {
+    "description": "Provider使用说明详情"
+  },
+  "cacheSize": "当前缓存: {size} MB",
+  "@cacheSize": {
+    "description": "缓存大小显示",
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "clearCacheButton": "清理",
+  "@clearCacheButton": {
+    "description": "清理缓存按钮"
+  },
+  "resetSettings": "重置设置",
+  "@resetSettings": {
+    "description": "重置设置对话框标题"
+  },
+  "resetSettingsConfirm": "确定要将所有设置恢复为默认值吗？",
+  "@resetSettingsConfirm": {
+    "description": "重置设置确认内容"
+  },
+  "settingsReset": "设置已重置",
+  "@settingsReset": {
+    "description": "设置已重置提示"
+  },
+  "clearCacheTitle": "清理缓存",
+  "@clearCacheTitle": {
+    "description": "清理缓存对话框标题"
+  },
+  "clearCacheConfirm": "确定要清理所有缓存数据吗？",
+  "@clearCacheConfirm": {
+    "description": "清理缓存确认内容"
+  },
+  "cacheCleared": "缓存已清理",
+  "@cacheCleared": {
+    "description": "缓存已清理提示"
+  },
+  "complexStateManagementInfo": "复杂状态管理说明",
+  "@complexStateManagementInfo": {
+    "description": "复杂状态管理说明标题"
+  },
+  "complexStateManagementDetails": "• AppSettings 使用 Equatable 方便比较\n• 使用 copyWith 创建不可变对象的副本\n• 设置以JSON格式持久化存储\n• 每次修改都会保存到本地",
+  "@complexStateManagementDetails": {
+    "description": "复杂状态管理说明详情"
+  },
+  "localeUsageInfo": "国际化使用说明",
+  "@localeUsageInfo": {
+    "description": "国际化使用说明标题"
+  },
+  "localeUsageDetails": "• LocaleProvider 管理应用语言状态\n• 返回null表示跟随系统语言设置\n• 需要配合MaterialApp.locale使用\n• 完整国际化需要arb文件和intl包",
+  "@localeUsageDetails": {
+    "description": "国际化使用说明详情"
+  },
+  "retry": "重试",
+  "@retry": {
+    "description": "重试按钮"
+  },
+  "appRunningNormally": "应用运行正常",
+  "@appRunningNormally": {
+    "description": "应用运行正常提示"
+  },
+  "logLevel": "日志级别",
+  "@logLevel": {
+    "description": "日志级别标签"
+  },
+  "all": "全部",
+  "@all": {
+    "description": "全部选项"
+  },
+  "errorLevel": "错误",
+  "@errorLevel": {
+    "description": "错误级别"
+  },
+  "warningLevel": "警告",
+  "@warningLevel": {
+    "description": "警告级别"
+  },
+  "infoLevel": "信息",
+  "@infoLevel": {
+    "description": "信息级别"
+  },
+  "debugLevel": "调试",
+  "@debugLevel": {
+    "description": "调试级别"
+  },
+  "selectDate": "选择日期",
+  "@selectDate": {
+    "description": "选择日期按钮"
+  },
+  "clearFilter": "清除筛选",
+  "@clearFilter": {
+    "description": "清除筛选按钮"
+  },
+  "confirmClearWeekLogs": "确定要清除一周前的日志吗？",
+  "@confirmClearWeekLogs": {
+    "description": "确认清除一周前日志内容"
+  },
+  "weekOldLogsCleared": "一周前的日志已清除",
+  "@weekOldLogsCleared": {
+    "description": "一周前日志已清除提示"
+  },
+  "testException": "测试异常",
+  "@testException": {
+    "description": "测试异常标题"
+  },
+  "testExceptionMessage": "点击按钮生成不同类型的测试日志",
+  "@testExceptionMessage": {
+    "description": "测试异常说明"
+  },
+  "generateError": "生成错误",
+  "@generateError": {
+    "description": "生成错误按钮"
+  },
+  "generateWarning": "生成警告",
+  "@generateWarning": {
+    "description": "生成警告按钮"
+  },
+  "generateInfo": "生成信息",
+  "@generateInfo": {
+    "description": "生成信息按钮"
+  },
+  "testErrorGenerated": "测试错误已生成",
+  "@testErrorGenerated": {
+    "description": "测试错误已生成提示"
+  },
+  "testWarningGenerated": "测试警告已生成",
+  "@testWarningGenerated": {
+    "description": "测试警告已生成提示"
+  },
+  "testInfoGenerated": "测试信息已生成",
+  "@testInfoGenerated": {
+    "description": "测试信息已生成提示"
+  },
+  "selectExportFormat": "选择导出格式：",
+  "@selectExportFormat": {
+    "description": "选择导出格式提示"
+  },
+  "readableText": "可读文本",
+  "@readableText": {
+    "description": "可读文本格式"
+  },
+  "exporting": "正在导出...",
+  "@exporting": {
+    "description": "正在导出提示"
+  },
+  "logExportSubject": "错误日志导出",
+  "@logExportSubject": {
+    "description": "日志导出主题"
+  },
+  "exportFailedOrNoLogs": "导出失败或没有日志可导出",
+  "@exportFailedOrNoLogs": {
+    "description": "导出失败或没有日志提示"
+  },
+  "testLogFunction": "测试日志功能",
+  "@testLogFunction": {
+    "description": "测试日志功能标题"
+  },
+  "testErrorLog": "测试错误日志",
+  "@testErrorLog": {
+    "description": "测试错误日志"
+  },
+  "testWarningLog": "测试警告日志",
+  "@testWarningLog": {
+    "description": "测试警告日志"
+  },
+  "testInfoLog": "测试信息日志",
+  "@testInfoLog": {
+    "description": "测试信息日志"
+  },
+  "throwTestException": "抛出测试异常",
+  "@throwTestException": {
+    "description": "抛出测试异常"
+  },
+  "testExceptionMessage": "这是一个测试异常",
+  "@testExceptionMessage": {
+    "description": "测试异常消息"
+  },
+  "time": "时间",
+  "@time": {
+    "description": "时间标签"
+  },
+  "errorMessage": "错误消息",
+  "@errorMessage": {
+    "description": "错误消息标签"
+  },
+  "logDetailSubject": "错误日志详情",
+  "@logDetailSubject": {
+    "description": "日志详情分享主题"
   }
 }
