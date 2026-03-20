@@ -19,6 +19,7 @@ samples, guidance on mobile development, and a full API reference.
 ```shell
 dart run build_runner watch
 dart run build_runner build
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 ### 使用custom_lint

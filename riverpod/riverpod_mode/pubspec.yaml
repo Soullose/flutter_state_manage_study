@@ -53,7 +53,7 @@ dependencies:
   flutter_image_compress: ^2.3.0
   flutter_launcher_icons: ^0.14.2
   flutter_native_splash: ^2.4.3
-  fluttertoast: ^8.2.10
+  fluttertoast: ^9.0.0
   flutter_screenutil: ^5.9.3
   connectivity_plus: ^6.1.4
   freezed: ^3.2.3
