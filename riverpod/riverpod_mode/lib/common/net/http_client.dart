@@ -9,9 +9,29 @@ import 'interceptors/response_interceptors.dart';
 
 part 'http_client.g.dart';
 
-const contentTypeJson = "application/json";
-const contentTypeForm = "application/x-www-form-urlencoded";
+/// 提供 Dio 实例的 Provider
+@riverpod
+Dio dio(Ref ref) {
+  final dio = Dio();
 
+  // 配置拦截器
+  dio.interceptors.addAll([
+    HeaderInterceptor(),
+    ErrorInterceptors(),
+    ResponseInterceptors(),
+  ]);
+
+  // 在 debug 模式下添加日志
+  if (kDebugMode) {
+    dio.interceptors.add(
+      LogInterceptor(requestBody: true, responseBody: true, error: true),
+    );
+  }
+
+  return dio;
+}
+
+/// 网络请求方法
 @riverpod
 Future<ResultData?> netFetch(
   Ref ref, {
@@ -23,63 +43,68 @@ Future<ResultData?> netFetch(
   Map<String, dynamic>? header,
   ProgressCallback? onSendProgress,
   ProgressCallback? onReceiveProgress,
-  noTip = false,
+  bool noTip = false, // 保留参数以保持兼容性
 }) async {
-  const methodValues = {
-    DioMethod.get: 'get',
-    DioMethod.post: 'post',
-    DioMethod.put: 'put',
-    DioMethod.delete: 'delete',
-    DioMethod.patch: 'patch',
-    DioMethod.head: 'head',
+  final dio = ref.watch(dioProvider);
+
+  final methodValues = {
+    DioMethod.get: 'GET',
+    DioMethod.post: 'POST',
+    DioMethod.put: 'PUT',
+    DioMethod.delete: 'DELETE',
+    DioMethod.patch: 'PATCH',
+    DioMethod.head: 'HEAD',
   };
 
-  final dio = Dio();
-  dio.interceptors.add(HeaderInterceptors());
-  // dio.interceptors.add(CookieInterceptors(ref: ref));
-  // dio.interceptors.add(TokenInterceptors(ref: ref));
-  dio.interceptors.add(ErrorInterceptors());
-  dio.interceptors.add(ResponseInterceptors());
-
   options ??= Options(method: methodValues[method]);
-  // print(options.headers);
-
-  resultError(DioException e) {
-    Response? errorResponse;
-    if (e.response != null) {
-      errorResponse = e.response;
-    } else {
-      errorResponse = Response(
-        statusCode: 999,
-        requestOptions: RequestOptions(path: url),
-      );
-    }
-    if (e.type == DioExceptionType.connectionTimeout ||
-        e.type == DioExceptionType.receiveTimeout) {
-      errorResponse!.statusCode = -2;
-    }
-    return ResultData(e.message, false, errorResponse!.statusCode);
+  if (header != null) {
+    options.headers ??= {};
+    options.headers!.addAll(header);
   }
 
-  Response response;
-
   try {
-    response = await dio.request(
+    final response = await dio.request(
       url,
       queryParameters: params,
       data: data,
       options: options,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
     );
+
     if (kDebugMode) {
-      print('response1:${response.data}');
+      debugPrint('response: ${response.data}');
     }
-    if (response.data is DioException) {
-      return resultError(response.data);
+
+    if (response.data is ResultData) {
+      return response.data as ResultData;
     }
-    return response.data;
+
+    return ResultData(
+      data: response.data,
+      success: true,
+      code: response.statusCode,
+    );
   } on DioException catch (e) {
-    return resultError(e);
+    return _handleError(e, url);
   }
+}
+
+/// 处理错误
+ResultData _handleError(DioException e, String url) {
+  int code = e.response?.statusCode ?? -1;
+
+  if (e.type == DioExceptionType.connectionTimeout ||
+      e.type == DioExceptionType.receiveTimeout) {
+    code = -2;
+  }
+
+  return ResultData(
+    data: null,
+    success: false,
+    code: code,
+    message: e.message ?? '请求失败',
+  );
 }
 
 enum DioMethod { get, post, put, delete, patch, head }

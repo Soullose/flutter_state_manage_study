@@ -13,9 +13,9 @@ part 'http_manager.g.dart';
 
 @riverpod
 class HttpManager extends _$HttpManager {
-  static const Duration _defaultConnectTimeout = Duration(seconds: 5);
-  static const Duration _defaultReceiveTimeout = Duration(seconds: 3);
-  static const Duration _defaultTimeout = Duration(seconds: 3);
+  static const Duration _defaultConnectTimeout = Duration(seconds: 10);
+  static const Duration _defaultReceiveTimeout = Duration(seconds: 10);
+  static const Duration _defaultSendTimeout = Duration(seconds: 10);
   // static const int _maxRetries = 3;
 
   // 定义API错误码
@@ -23,25 +23,12 @@ class HttpManager extends _$HttpManager {
   static const int authErrorCode = 401;
   static const int serverErrorCode = 400;
 
-  // 请求配置
-  // static const Map<String, String> _defaultHeaders = {
-  //   'Content-Type': contentTypeJson,
-  //   'Accept': contentTypeJson,
-  // };
-
-  // static const String contentTypeJson = "application/json";
-  // static const String contentTypeForm = "application/x-www-form-urlencoded";
-
   // 取消令牌存储
   final Map<String, CancelToken> _cancelTokens = {};
-
-  // 缓存管理
-  // final Cache _cache = Cache();
 
   @override
   FutureOr<void> build() {
     _setupDio();
-    // return null;
   }
 
   final _dio = Dio();
@@ -49,15 +36,19 @@ class HttpManager extends _$HttpManager {
   void _setupDio() {
     // 基础配置
     _dio.options
-      // ..baseUrl = 'YOUR_BASE_URL'
       ..connectTimeout = _defaultConnectTimeout
       ..receiveTimeout = _defaultReceiveTimeout
-      ..sendTimeout = _defaultTimeout;
-      // ..headers = _defaultHeaders;
+      ..sendTimeout = _defaultSendTimeout;
 
     // 拦截器配置
     _dio.interceptors.addAll([
-      HeaderInterceptors(),
+      HeaderInterceptor(
+        config: const HeaderInterceptorConfig(
+          connectTimeout: _defaultConnectTimeout,
+          receiveTimeout: _defaultReceiveTimeout,
+          sendTimeout: _defaultSendTimeout,
+        ),
+      ),
       CookieInterceptors(ref: ref),
       // TokenInterceptors(ref: ref),
       ErrorInterceptors(),
@@ -82,7 +73,7 @@ class HttpManager extends _$HttpManager {
     return !args.isResponse || !args.hasUint8ListData;
   }
 
-  // 改进的网络请求方法
+  /// 网络请求方法
   Future<ResultData?> netFetch(
     String url, {
     DioMethod method = DioMethod.get,
@@ -98,12 +89,6 @@ class HttpManager extends _$HttpManager {
     bool noTip = false,
     ResponseType? responseType = ResponseType.json,
   }) async {
-    // 检查缓存
-    // if (useCache) {
-    //   final cachedData = await _cache.get(url);
-    //   if (cachedData != null) return cachedData;
-    // }
-
     // 处理取消令牌
     if (cancelToken != null) {
       _cancelTokens[cancelToken]?.cancel('Request cancelled');
@@ -111,17 +96,18 @@ class HttpManager extends _$HttpManager {
     }
 
     final methodValues = {
-      DioMethod.get: 'get',
-      DioMethod.post: 'post',
-      DioMethod.put: 'put',
-      DioMethod.delete: 'delete',
-      DioMethod.patch: 'patch',
-      DioMethod.head: 'head'
+      DioMethod.get: 'GET',
+      DioMethod.post: 'POST',
+      DioMethod.put: 'PUT',
+      DioMethod.delete: 'DELETE',
+      DioMethod.patch: 'PATCH',
+      DioMethod.head: 'HEAD',
     };
 
-    options ??=
-        Options(method: methodValues[method], responseType: responseType)
-          ..headers?.addAll(header ?? {});
+    options ??= Options(
+      method: methodValues[method],
+      responseType: responseType,
+    )..headers?.addAll(header ?? {});
 
     try {
       final response = await _dio.request(
@@ -134,24 +120,17 @@ class HttpManager extends _$HttpManager {
         onReceiveProgress: onReceiveProgress,
       );
 
-      // // 存储缓存
-      // if (useCache && response.statusCode == successCode) {
-      //   await _cache.set(url, resultData, duration: _cacheDuration);
-      // }
-
       return response.data;
     } on DioException catch (e) {
       return _handleError(e, url);
     } catch (e) {
-      return ResultData(e.toString(), false, -1);
+      return ResultData(
+        data: null,
+        success: false,
+        code: -1,
+        message: e.toString(),
+      );
     }
-  }
-
-  ResultData _handleResponse(Response response) {
-    if (response.statusCode == successCode) {
-      return ResultData(response.data, true, successCode);
-    }
-    return ResultData(response.data, false, response.statusCode ?? -1);
   }
 
   ResultData _handleError(DioException e, String url) {
@@ -161,73 +140,25 @@ class HttpManager extends _$HttpManager {
       requestOptions: RequestOptions(path: url),
     );
 
+    int code = errorResponse.statusCode ?? -1;
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout) {
-      errorResponse.statusCode = -2;
+      code = -2;
     }
 
-    return ResultData(e.message, false, errorResponse.statusCode ?? -1);
+    return ResultData(
+      data: null,
+      success: false,
+      code: code,
+      message: e.message ?? '请求失败',
+    );
   }
 
-  // 取消请求
+  /// 取消请求
   void cancelRequest(String token) {
     _cancelTokens[token]?.cancel('Request cancelled');
     _cancelTokens.remove(token);
   }
-
-// 清除所有缓存
-// Future<void> clearCache() => _cache.clear();
-
-// 清除特定URL的缓存
-// Future<void> removeCacheForUrl(String url) => _cache.remove(url);
 }
 
-// 简单的缓存实现
-// class Cache {
-//   final Map<String, _CacheItem> _cache = {};
-//
-//   Future<ResultData?> get(String key) async {
-//     final item = _cache[key];
-//     if (item != null && !item.isExpired) {
-//       return item.data;
-//     }
-//     _cache.remove(key);
-//     return null;
-//   }
-//
-//   Future<void> set(
-//     String key,
-//     ResultData value, {
-//     Duration duration = const Duration(minutes: 5),
-//   }) async {
-//     _cache[key] = _CacheItem(
-//       data: value,
-//       expiryTime: DateTime.now().add(duration),
-//     );
-//   }
-//
-//   Future<void> remove(String key) async => _cache.remove(key);
-//
-//   Future<void> clear() async => _cache.clear();
-// }
-
-// class _CacheItem {
-//   final ResultData data;
-//   final DateTime expiryTime;
-//
-//   _CacheItem({
-//     required this.data,
-//     required this.expiryTime,
-//   });
-//
-//   bool get isExpired => DateTime.now().isAfter(expiryTime);
-// }
-
-enum DioMethod {
-  get,
-  post,
-  put,
-  delete,
-  patch,
-  head,
-}
+enum DioMethod { get, post, put, delete, patch, head }
