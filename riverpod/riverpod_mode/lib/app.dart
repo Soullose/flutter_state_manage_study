@@ -45,6 +45,13 @@ const List<FeatureItem> _features = [
     route: '/riverpodTimer',
     color: Colors.green,
   ),
+  FeatureItem(
+    title: '主题设置',
+    description: '颜色主题切换，支持预置主题和图片生成主题',
+    icon: Icons.palette_outlined,
+    route: '/themeSettings',
+    color: Colors.purple,
+  ),
 ];
 
 /// 首页

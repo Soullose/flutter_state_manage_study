@@ -3,9 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:riverpod_mode/common/storage/mmkv/provider/mmkv_service_provider.dart';
-import 'package:riverpod_mode/common/theme/dark_theme_provider.dart';
-import 'package:riverpod_mode/common/theme/light_theme_provider.dart';
 import 'package:riverpod_mode/common/theme/switch_theme_mode.dart';
+import 'package:riverpod_mode/common/theme/theme_config_provider.dart';
 import 'package:riverpod_mode/route/app_router.dart';
 
 import 'common/state_logger.dart';
