@@ -9,5 +9,9 @@ class SwitchThemeMode extends _$SwitchThemeMode {
   ThemeMode build() {
     return ThemeMode.system;
   }
-}
 
+  /// 切换主题模式
+  void toggle() {
+    state = state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+  }
+}

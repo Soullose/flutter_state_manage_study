@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app.dart';
+import '../features/timer/presentation/pages/timer_page.dart';
 import 'index.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
-
 
   static final GoRouter _router = GoRouter(
     navigatorKey: _rootNavigatorKey,
@@ -21,18 +21,20 @@ class AppRouter {
               child: const CounterPage(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
-                const begin = Offset(0.0, 1.0);
-                const end = Offset.zero;
-                const curve = Curves.ease;
+                    const begin = Offset(0.0, 1.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
 
-                var tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
+                    var tween = Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve));
 
-                return SlideTransition(
-                  position: animation.drive(tween),
-                  child: child,
-                );
-              },
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
             ),
           ),
           GoRoute(
@@ -41,18 +43,42 @@ class AppRouter {
               child: const SettingView(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
-                const begin = Offset(0.0, 1.0);
-                const end = Offset.zero;
-                const curve = Curves.ease;
+                    const begin = Offset(0.0, 1.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
 
-                var tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
+                    var tween = Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve));
 
-                return SlideTransition(
-                  position: animation.drive(tween),
-                  child: child,
-                );
-              },
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
+            ),
+          ),
+          GoRoute(
+            path: 'riverpodTimer',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const TimerPage(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(0.0, 1.0);
+                    const end = Offset.zero;
+                    const curve = Curves.ease;
+
+                    var tween = Tween(
+                      begin: begin,
+                      end: end,
+                    ).chain(CurveTween(curve: curve));
+
+                    return SlideTransition(
+                      position: animation.drive(tween),
+                      child: child,
+                    );
+                  },
             ),
           ),
         ],
@@ -60,9 +86,9 @@ class AppRouter {
     ],
   );
 
-// GoRouter routes() {
-//   return GoRouter(routes: routes,refreshListenable: );
-// }
+  // GoRouter routes() {
+  //   return GoRouter(routes: routes,refreshListenable: );
+  // }
 
   static GoRouter get router => _router;
 }

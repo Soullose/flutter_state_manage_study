@@ -15,7 +15,18 @@ class SettingView extends ConsumerWidget {
       print('setting---:$setting');
     }
     return Scaffold(
-      appBar: AppBar(title: const Text('Setting example')),
+      appBar: AppBar(
+        title: const Text('Setting example'),
+        centerTitle: true,
+        leading: const Hero(
+          tag: 'hero_/riverpodSetting',
+          flightShuttleBuilder: _flightShuttleBuilder,
+          child: Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: Icon(Icons.settings_outlined),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -64,6 +75,20 @@ class SettingView extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  static Widget _flightShuttleBuilder(
+    BuildContext context,
+    Animation<double> animation,
+    HeroFlightDirection flightDirection,
+    BuildContext fromHeroContext,
+    BuildContext toHeroContext,
+  ) {
+    return Icon(
+      Icons.settings_outlined,
+      size: 24,
+      color: Theme.of(fromHeroContext).colorScheme.onSurface,
     );
   }
 }
