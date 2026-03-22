@@ -13,16 +13,19 @@ class CounterPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Counter example'),
-        centerTitle: true,
-        leading: const Hero(
-          tag: 'hero_/riverpodCounter',
-          flightShuttleBuilder: _flightShuttleBuilder,
-          child: Padding(
-            padding: EdgeInsets.only(left: 16),
-            child: Icon(Icons.add_circle_outline),
-          ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Hero(
+              tag: 'hero_/riverpodCounter',
+              flightShuttleBuilder: _flightShuttleBuilder,
+              child: const Icon(Icons.add_circle_outline),
+            ),
+            const SizedBox(width: 8),
+            const Text('Counter example'),
+          ],
         ),
+        centerTitle: true,
       ),
       body: Center(
         child: Column(

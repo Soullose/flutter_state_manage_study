@@ -16,16 +16,19 @@ class SettingView extends ConsumerWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Setting example'),
-        centerTitle: true,
-        leading: const Hero(
-          tag: 'hero_/riverpodSetting',
-          flightShuttleBuilder: _flightShuttleBuilder,
-          child: Padding(
-            padding: EdgeInsets.only(left: 16),
-            child: Icon(Icons.settings_outlined),
-          ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Hero(
+              tag: 'hero_/riverpodSetting',
+              flightShuttleBuilder: _flightShuttleBuilder,
+              child: const Icon(Icons.settings_outlined),
+            ),
+            const SizedBox(width: 8),
+            const Text('Setting example'),
+          ],
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(

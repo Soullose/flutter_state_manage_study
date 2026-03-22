@@ -13,16 +13,19 @@ class TimerPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('计时器'),
-        centerTitle: true,
-        leading: const Hero(
-          tag: 'hero_/riverpodTimer',
-          flightShuttleBuilder: _flightShuttleBuilder,
-          child: Padding(
-            padding: EdgeInsets.only(left: 16),
-            child: Icon(Icons.timer_outlined),
-          ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Hero(
+              tag: 'hero_/riverpodTimer',
+              flightShuttleBuilder: _flightShuttleBuilder,
+              child: const Icon(Icons.timer_outlined),
+            ),
+            const SizedBox(width: 8),
+            const Text('计时器'),
+          ],
         ),
+        centerTitle: true,
       ),
       body: Center(
         child: timerStateAsync.when(
