@@ -14,6 +14,12 @@ import 'index.dart';
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
+  /// 首页导航键
+  static final _homeNavigatorKey = GlobalKey<NavigatorState>();
+
+  /// 我的页面导航键
+  static final _profileNavigatorKey = GlobalKey<NavigatorState>();
+
   static final GoRouter _router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/',
@@ -22,50 +28,64 @@ class AppRouter {
       ShellRoute(
         builder: (context, state, child) => MainShell(child: child),
         routes: [
-          /// 首页
-          GoRoute(
-            path: '/',
-            builder: (context, state) => const AppPage(),
+          /// 首页分支 - 使用独立的 Navigator
+          ShellRoute(
+            navigatorKey: _homeNavigatorKey,
+            builder: (context, state, child) => child,
             routes: [
               GoRoute(
-                path: 'riverpodCounter',
-                pageBuilder: _buildSlideTransitionPage(const CounterPage()),
-              ),
-              GoRoute(
-                path: 'riverpodSetting',
-                pageBuilder: _buildSlideTransitionPage(const SettingView()),
-              ),
-              GoRoute(
-                path: 'riverpodTimer',
-                pageBuilder: _buildSlideTransitionPage(const TimerPage()),
-              ),
-              GoRoute(
-                path: 'themeSettings',
-                pageBuilder: _buildSlideTransitionPage(
-                  const ThemeSettingsPage(),
-                ),
+                path: '/',
+                builder: (context, state) => const AppPage(),
+                routes: [
+                  GoRoute(
+                    path: 'riverpodCounter',
+                    pageBuilder: _buildSlideTransitionPage(const CounterPage()),
+                  ),
+                  GoRoute(
+                    path: 'riverpodSetting',
+                    pageBuilder: _buildSlideTransitionPage(const SettingView()),
+                  ),
+                  GoRoute(
+                    path: 'riverpodTimer',
+                    pageBuilder: _buildSlideTransitionPage(const TimerPage()),
+                  ),
+                  GoRoute(
+                    path: 'themeSettings',
+                    pageBuilder: _buildSlideTransitionPage(
+                      const ThemeSettingsPage(),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
 
-          /// 我的页面
-          GoRoute(
-            path: '/profile',
-            builder: (context, state) => const ProfilePage(),
+          /// 我的页面分支 - 使用独立的 Navigator
+          ShellRoute(
+            navigatorKey: _profileNavigatorKey,
+            builder: (context, state, child) => child,
             routes: [
               GoRoute(
-                path: 'privacy',
-                pageBuilder: _buildSlideTransitionPage(const PrivacyPage()),
-              ),
-              GoRoute(
-                path: 'agreement',
-                pageBuilder: _buildSlideTransitionPage(
-                  const UserAgreementPage(),
-                ),
-              ),
-              GoRoute(
-                path: 'licenses',
-                pageBuilder: _buildSlideTransitionPage(const LicensesPage()),
+                path: '/profile',
+                builder: (context, state) => const ProfilePage(),
+                routes: [
+                  GoRoute(
+                    path: 'privacy',
+                    pageBuilder: _buildSlideTransitionPage(const PrivacyPage()),
+                  ),
+                  GoRoute(
+                    path: 'agreement',
+                    pageBuilder: _buildSlideTransitionPage(
+                      const UserAgreementPage(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'licenses',
+                    pageBuilder: _buildSlideTransitionPage(
+                      const LicensesPage(),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
