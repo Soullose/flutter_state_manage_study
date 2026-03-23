@@ -14,82 +14,56 @@ import 'index.dart';
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-  /// 首页导航键
-  static final _homeNavigatorKey = GlobalKey<NavigatorState>();
-
-  /// 我的页面导航键
-  static final _profileNavigatorKey = GlobalKey<NavigatorState>();
-
   static final GoRouter _router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/',
     routes: <RouteBase>[
-      /// ShellRoute 用于底部导航栏
+      /// ShellRoute 用于底部导航栏，只包含首页和我的页面
+      /// 子路由放在 ShellRoute 外部，这样子页面不会显示底部导航栏
       ShellRoute(
         builder: (context, state, child) => MainShell(child: child),
         routes: [
-          /// 首页分支 - 使用独立的 Navigator
-          ShellRoute(
-            navigatorKey: _homeNavigatorKey,
-            builder: (context, state, child) => child,
-            routes: [
-              GoRoute(
-                path: '/',
-                builder: (context, state) => const AppPage(),
-                routes: [
-                  GoRoute(
-                    path: 'riverpodCounter',
-                    pageBuilder: _buildSlideTransitionPage(const CounterPage()),
-                  ),
-                  GoRoute(
-                    path: 'riverpodSetting',
-                    pageBuilder: _buildSlideTransitionPage(const SettingView()),
-                  ),
-                  GoRoute(
-                    path: 'riverpodTimer',
-                    pageBuilder: _buildSlideTransitionPage(const TimerPage()),
-                  ),
-                  GoRoute(
-                    path: 'themeSettings',
-                    pageBuilder: _buildSlideTransitionPage(
-                      const ThemeSettingsPage(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          /// 首页（不带子路由）
+          GoRoute(path: '/', builder: (context, state) => const AppPage()),
 
-          /// 我的页面分支 - 使用独立的 Navigator
-          ShellRoute(
-            navigatorKey: _profileNavigatorKey,
-            builder: (context, state, child) => child,
-            routes: [
-              GoRoute(
-                path: '/profile',
-                builder: (context, state) => const ProfilePage(),
-                routes: [
-                  GoRoute(
-                    path: 'privacy',
-                    pageBuilder: _buildSlideTransitionPage(const PrivacyPage()),
-                  ),
-                  GoRoute(
-                    path: 'agreement',
-                    pageBuilder: _buildSlideTransitionPage(
-                      const UserAgreementPage(),
-                    ),
-                  ),
-                  GoRoute(
-                    path: 'licenses',
-                    pageBuilder: _buildSlideTransitionPage(
-                      const LicensesPage(),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          /// 我的页面（不带子路由）
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const ProfilePage(),
           ),
         ],
+      ),
+
+      /// 首页的子路由（独立路由，不显示底部导航栏）
+      GoRoute(
+        path: '/riverpodCounter',
+        pageBuilder: _buildSlideTransitionPage(const CounterPage()),
+      ),
+      GoRoute(
+        path: '/riverpodSetting',
+        pageBuilder: _buildSlideTransitionPage(const SettingView()),
+      ),
+      GoRoute(
+        path: '/riverpodTimer',
+        pageBuilder: _buildSlideTransitionPage(const TimerPage()),
+      ),
+      GoRoute(
+        path: '/themeSettings',
+        pageBuilder: _buildSlideTransitionPage(const ThemeSettingsPage()),
+      ),
+
+      /// 我的页面的子路由（独立路由，不显示底部导航栏）
+      GoRoute(
+        path: '/profile/privacy',
+        pageBuilder: _buildSlideTransitionPage(const PrivacyPage()),
+      ),
+      GoRoute(
+        path: '/profile/agreement',
+        pageBuilder: _buildSlideTransitionPage(const UserAgreementPage()),
+      ),
+      GoRoute(
+        path: '/profile/licenses',
+        pageBuilder: _buildSlideTransitionPage(const LicensesPage()),
       ),
     ],
   );
