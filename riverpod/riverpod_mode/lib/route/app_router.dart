@@ -3,12 +3,15 @@ import 'package:go_router/go_router.dart';
 
 import '../app.dart';
 import '../common/widgets/main_shell.dart';
+import '../core/error_log/models/error_log_entry.dart';
 import '../features/timer/presentation/pages/timer_page.dart';
 import '../features/theme/pages/theme_settings_page.dart';
 import '../features/profile/pages/profile_page.dart';
 import '../features/profile/pages/privacy_page.dart';
 import '../features/profile/pages/user_agreement_page.dart';
 import '../features/profile/pages/licenses_page.dart';
+import '../features/error_log/pages/error_log_page.dart';
+import '../features/error_log/pages/error_log_detail_page.dart';
 import 'index.dart';
 
 class AppRouter {
@@ -64,6 +67,47 @@ class AppRouter {
       GoRoute(
         path: '/profile/licenses',
         pageBuilder: _buildSlideTransitionPage(const LicensesPage()),
+      ),
+
+      /// 错误日志页面
+      GoRoute(
+        path: '/errorLog',
+        pageBuilder: _buildSlideTransitionPage(const ErrorLogPage()),
+      ),
+      GoRoute(
+        path: '/errorLog/:id',
+        pageBuilder: (context, state) {
+          final log = state.extra as ErrorLogEntry?;
+          if (log == null) {
+            return CustomTransitionPage(
+              child: Scaffold(
+                appBar: AppBar(title: const Text('错误')),
+                body: const Center(child: Text('未找到错误日志')),
+              ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+            );
+          }
+          return CustomTransitionPage(
+            child: ErrorLogDetailPage(log: log),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(0.0, 1.0);
+                  const end = Offset.zero;
+                  const curve = Curves.ease;
+                  final tween = Tween(
+                    begin: begin,
+                    end: end,
+                  ).chain(CurveTween(curve: curve));
+                  return SlideTransition(
+                    position: animation.drive(tween),
+                    child: child,
+                  );
+                },
+          );
+        },
       ),
     ],
   );

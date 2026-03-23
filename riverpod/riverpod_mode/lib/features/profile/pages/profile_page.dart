@@ -115,6 +115,12 @@ class ProfilePage extends ConsumerWidget {
             title: '开源协议',
             onTap: () => context.push('/profile/licenses'),
           ),
+          const Divider(height: 1, indent: 56),
+          _MenuTile(
+            icon: Icons.bug_report_outlined,
+            title: '错误日志',
+            onTap: () => context.push('/errorLog'),
+          ),
         ],
       ),
     );
