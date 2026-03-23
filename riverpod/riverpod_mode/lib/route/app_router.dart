@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app.dart';
+import '../common/widgets/main_shell.dart';
 import '../features/timer/presentation/pages/timer_page.dart';
 import '../features/theme/pages/theme_settings_page.dart';
+import '../features/profile/pages/profile_page.dart';
+import '../features/profile/pages/privacy_page.dart';
+import '../features/profile/pages/user_agreement_page.dart';
+import '../features/profile/pages/licenses_page.dart';
 import 'index.dart';
 
 class AppRouter {
@@ -11,107 +16,83 @@ class AppRouter {
 
   static final GoRouter _router = GoRouter(
     navigatorKey: _rootNavigatorKey,
+    initialLocation: '/',
     routes: <RouteBase>[
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const AppPage(),
-        routes: <RouteBase>[
+      /// ShellRoute 用于底部导航栏
+      ShellRoute(
+        builder: (context, state, child) => MainShell(child: child),
+        routes: [
+          /// 首页
           GoRoute(
-            path: 'riverpodCounter',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const CounterPage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(0.0, 1.0);
-                    const end = Offset.zero;
-                    const curve = Curves.ease;
-
-                    var tween = Tween(
-                      begin: begin,
-                      end: end,
-                    ).chain(CurveTween(curve: curve));
-
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-            ),
+            path: '/',
+            builder: (context, state) => const AppPage(),
+            routes: [
+              GoRoute(
+                path: 'riverpodCounter',
+                pageBuilder: _buildSlideTransitionPage(const CounterPage()),
+              ),
+              GoRoute(
+                path: 'riverpodSetting',
+                pageBuilder: _buildSlideTransitionPage(const SettingView()),
+              ),
+              GoRoute(
+                path: 'riverpodTimer',
+                pageBuilder: _buildSlideTransitionPage(const TimerPage()),
+              ),
+              GoRoute(
+                path: 'themeSettings',
+                pageBuilder: _buildSlideTransitionPage(
+                  const ThemeSettingsPage(),
+                ),
+              ),
+            ],
           ),
+
+          /// 我的页面
           GoRoute(
-            path: 'riverpodSetting',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const SettingView(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(0.0, 1.0);
-                    const end = Offset.zero;
-                    const curve = Curves.ease;
-
-                    var tween = Tween(
-                      begin: begin,
-                      end: end,
-                    ).chain(CurveTween(curve: curve));
-
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-            ),
-          ),
-          GoRoute(
-            path: 'riverpodTimer',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const TimerPage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(0.0, 1.0);
-                    const end = Offset.zero;
-                    const curve = Curves.ease;
-
-                    var tween = Tween(
-                      begin: begin,
-                      end: end,
-                    ).chain(CurveTween(curve: curve));
-
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-            ),
-          ),
-          GoRoute(
-            path: 'themeSettings',
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const ThemeSettingsPage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                    const begin = Offset(0.0, 1.0);
-                    const end = Offset.zero;
-                    const curve = Curves.ease;
-
-                    var tween = Tween(
-                      begin: begin,
-                      end: end,
-                    ).chain(CurveTween(curve: curve));
-
-                    return SlideTransition(
-                      position: animation.drive(tween),
-                      child: child,
-                    );
-                  },
-            ),
+            path: '/profile',
+            builder: (context, state) => const ProfilePage(),
+            routes: [
+              GoRoute(
+                path: 'privacy',
+                pageBuilder: _buildSlideTransitionPage(const PrivacyPage()),
+              ),
+              GoRoute(
+                path: 'agreement',
+                pageBuilder: _buildSlideTransitionPage(
+                  const UserAgreementPage(),
+                ),
+              ),
+              GoRoute(
+                path: 'licenses',
+                pageBuilder: _buildSlideTransitionPage(const LicensesPage()),
+              ),
+            ],
           ),
         ],
       ),
     ],
   );
 
-  // GoRouter routes() {
-  //   return GoRouter(routes: routes,refreshListenable: );
-  // }
+  /// 构建滑动过渡动画页面
+  static Page<void> Function(BuildContext, GoRouterState)
+  _buildSlideTransitionPage(Widget child) {
+    return (context, state) => CustomTransitionPage(
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+
+        return SlideTransition(position: animation.drive(tween), child: child);
+      },
+    );
+  }
 
   static GoRouter get router => _router;
 }

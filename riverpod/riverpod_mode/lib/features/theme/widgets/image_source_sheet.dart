@@ -49,6 +49,13 @@ class _ImageSourceSheetState extends State<ImageSourceSheet> {
   }
 
   Future<void> _pickFromGallery() async {
+    if (_isLoading) return;
+
+    debugPrint('[ImageSourceSheet] 开始选择图片');
+    setState(() {
+      _isLoading = true;
+    });
+
     final picker = ImagePicker();
     try {
       final image = await picker.pickImage(
@@ -58,15 +65,33 @@ class _ImageSourceSheetState extends State<ImageSourceSheet> {
         imageQuality: 85,
       );
 
+      debugPrint('[ImageSourceSheet] 选择结果: ${image?.path}');
       if (image != null) {
-        Navigator.pop(context);
-        widget.onLocalImageSelected(image.path);
+        if (mounted) {
+          Navigator.pop(context);
+          widget.onLocalImageSelected(image.path);
+        }
+      } else {
+        debugPrint('[ImageSourceSheet] 用户取消选择');
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('[ImageSourceSheet] 选择图片错误: $e');
+      debugPrint('[ImageSourceSheet] 堆栈: $stackTrace');
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('选择图片失败: $e')));
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('选择图片失败: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
       }
     }
   }
@@ -141,14 +166,23 @@ class _ImageSourceSheetState extends State<ImageSourceSheet> {
                       color: colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      Icons.photo_library,
-                      color: colorScheme.onPrimaryContainer,
-                    ),
+                    child: _isLoading
+                        ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: colorScheme.onPrimaryContainer,
+                            ),
+                          )
+                        : Icon(
+                            Icons.photo_library,
+                            color: colorScheme.onPrimaryContainer,
+                          ),
                   ),
                   title: const Text('从相册选择'),
-                  subtitle: const Text('选择本地图片生成主题'),
-                  trailing: const Icon(Icons.chevron_right),
+                  subtitle: Text(_isLoading ? '正在打开相册...' : '选择本地图片生成主题'),
+                  trailing: _isLoading ? null : const Icon(Icons.chevron_right),
                   onTap: _isLoading ? null : _pickFromGallery,
                 ),
                 const SizedBox(height: 16),
