@@ -12,6 +12,8 @@ import '../features/profile/pages/user_agreement_page.dart';
 import '../features/profile/pages/licenses_page.dart';
 import '../features/error_log/pages/error_log_page.dart';
 import '../features/error_log/pages/error_log_detail_page.dart';
+import '../features/tts/pages/tts_page.dart';
+import '../features/tts/pages/tts_models_page.dart';
 import 'index.dart';
 
 class AppRouter {
@@ -53,6 +55,16 @@ class AppRouter {
       GoRoute(
         path: '/themeSettings',
         pageBuilder: _buildSlideTransitionPage(const ThemeSettingsPage()),
+      ),
+
+      /// TTS 语音合成路由
+      GoRoute(
+        path: '/tts',
+        pageBuilder: _buildSlideTransitionPage(const TtsPage()),
+      ),
+      GoRoute(
+        path: '/tts/models',
+        pageBuilder: _buildSlideTransitionPage(const TtsModelsPage()),
       ),
 
       /// 我的页面的子路由（独立路由，不显示底部导航栏）

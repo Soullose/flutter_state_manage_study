@@ -52,6 +52,13 @@ const List<FeatureItem> _features = [
     route: '/themeSettings',
     color: Colors.purple,
   ),
+  FeatureItem(
+    title: 'TTS 语音合成',
+    description: '离线语音合成功能，支持多种模型和发音人',
+    icon: Icons.record_voice_over_outlined,
+    route: '/tts',
+    color: Colors.teal,
+  ),
 ];
 
 /// 首页
