@@ -48,7 +48,7 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   shared_preferences: ^2.5.3
   mmkv: ^2.2.4
-  mqtt_client: ^10.11.1
+  mqtt_client: ^10.11.9
   flex_color_scheme: ^8.3.0
   flutter_image_compress: ^2.3.0
   flutter_launcher_icons: ^0.14.2
@@ -87,7 +87,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
-  build_runner: ^2.10.4
+  build_runner: ^2.13.1
   custom_lint: ^0.8.1
   custom_lint_builder: ^0.8.1
   riverpod_generator: ^3.0.3
