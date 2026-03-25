@@ -61,10 +61,10 @@ packages:
     dependency: "direct main"
     description:
       name: bloc
-      sha256: a2cebb899f91d36eeeaa55c7b20b5915db5a9df1b8fd4a3c9c825e22e474537d
+      sha256: a48653a82055a900b88cd35f92429f068c5a8057ae9b136d197b3d56c57efb81
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "9.1.0"
+    version: "9.2.0"
   bloc_test:
     dependency: "direct dev"
     description:
@@ -253,10 +253,10 @@ packages:
     dependency: "direct main"
     description:
       name: dart_either
-      sha256: "2c6f9bb4426c2f9e5109ca72e132e9d4f858167f9750dabd24a30c992c90db78"
+      sha256: "813687ccfd757124e980a292df54a67c35642d0312bd2d9f70595708295e88d7"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   dart_style:
     dependency: transitive
     description:
@@ -341,10 +341,10 @@ packages:
     dependency: "direct main"
     description:
       name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   event_bus:
     dependency: transitive
     description:
