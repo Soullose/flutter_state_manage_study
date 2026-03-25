@@ -13,7 +13,10 @@ import '../services/tts_model_download_service.dart';
 part 'tts_provider.g.dart';
 
 /// TTS 引擎服务 Provider
-@riverpod
+///
+/// 使用 keepAlive: true 确保引擎在整个应用生命周期内保持活跃，
+/// 避免因 autoDispose 导致引擎被意外销毁。
+@Riverpod(keepAlive: true)
 TtsEngineService ttsEngine(Ref ref) {
   final service = SherpaOnnxTtsEngineService();
   ref.onDispose(() {
@@ -48,57 +51,81 @@ Future<String?> activeModelId(Ref ref) async {
   return prefs.getString('tts_active_model');
 }
 
-/// TTS 状态 Notifier
+/// TTS 状态 AsyncNotifier
+///
+/// 使用 AsyncNotifier 在初始化时自动加载模型列表，
+/// 解决页面打开时空白的问题。
 @riverpod
 class TtsNotifier extends _$TtsNotifier {
   final Logger _logger = Logger();
 
   @override
-  TtsState build() {
-    return const TtsState();
+  Future<TtsState> build() async {
+    // 在初始化时自动加载模型列表
+    return await _loadInitialState();
   }
 
-  /// 初始化 TTS
+  /// 加载初始状态
+  Future<TtsState> _loadInitialState() async {
+    final downloadedIds = await ref.watch(downloadedModelIdsProvider.future);
+
+    final models = TtsPredefinedModels.models.map((config) {
+      final isDownloaded = downloadedIds.contains(config.id);
+      return config.copyWith(isAvailable: isDownloaded, isActive: false);
+    }).toList();
+
+    // 获取当前激活的模型
+    final prefs = await SharedPreferences.getInstance();
+    final activeId = prefs.getString('tts_active_model');
+
+    TtsModelConfig? activeModel;
+    if (activeId != null && models.isNotEmpty) {
+      try {
+        activeModel = models.firstWhere(
+          (m) => m.id == activeId && m.isAvailable,
+          orElse: () => models.firstWhere(
+            (m) => m.isAvailable,
+            orElse: () => models.first,
+          ),
+        );
+      } catch (_) {
+        activeModel = null;
+      }
+
+      // 如果找到可用模型，初始化引擎
+      if (activeModel != null && activeModel.isAvailable) {
+        await _initializeEngine(activeModel);
+        final index = models.indexWhere((m) => m.id == activeModel!.id);
+        if (index != -1) {
+          models[index] = activeModel.copyWith(isActive: true);
+        }
+      }
+    }
+
+    return TtsState(
+      models: models,
+      activeModel: activeModel?.isAvailable == true ? activeModel : null,
+      isInitialized: true,
+    );
+  }
+
+  /// 初始化 TTS（兼容旧代码，现在自动在 build 中完成）
   Future<void> initialize() async {
-    if (state.isInitialized) {
+    // 如果已经初始化，直接返回
+    final currentState = state.value;
+    if (currentState?.isInitialized == true) {
       return;
     }
 
-    state = state.copyWith(statusMessage: '正在初始化...');
-
-    try {
-      // 加载模型列表
-      await loadModels();
-
-      // 获取当前激活的模型
-      final prefs = await SharedPreferences.getInstance();
-      final activeId = prefs.getString('tts_active_model');
-
-      if (activeId != null && state.models.isNotEmpty) {
-        TtsModelConfig? activeModel;
-        try {
-          activeModel = state.models.firstWhere(
-            (m) => m.id == activeId,
-            orElse: () => state.models.first,
-          );
-        } catch (_) {
-          activeModel = null;
-        }
-
-        if (activeModel != null && activeModel.isAvailable) {
-          await _initializeEngine(activeModel);
-        }
-      }
-
-      state = state.copyWith(isInitialized: true, statusMessage: '初始化完成');
-    } catch (e, stackTrace) {
-      _logger.e('Failed to initialize TTS', error: e, stackTrace: stackTrace);
-      state = state.copyWith(errorMessage: '初始化失败: $e', statusMessage: null);
-    }
+    // 触发重新加载
+    ref.invalidateSelf();
+    await future;
   }
 
-  /// 加载模型列表
+  /// 重新加载模型列表
   Future<void> loadModels() async {
+    final currentState = state.value ?? const TtsState();
+
     final downloadedIds = await ref.read(downloadedModelIdsProvider.future);
 
     final models = TtsPredefinedModels.models.map((config) {
@@ -106,29 +133,36 @@ class TtsNotifier extends _$TtsNotifier {
       return config.copyWith(isAvailable: isDownloaded, isActive: false);
     }).toList();
 
-    state = state.copyWith(models: models);
+    state = AsyncValue.data(currentState.copyWith(models: models));
   }
 
   /// 下载模型
   Future<bool> downloadModel(String modelId) async {
-    final modelIndex = state.models.indexWhere((m) => m.id == modelId);
+    final currentState = state.value;
+    if (currentState == null) return false;
+
+    final modelIndex = currentState.models.indexWhere((m) => m.id == modelId);
     if (modelIndex == -1) {
-      state = state.copyWith(errorMessage: '模型未找到: $modelId');
+      state = AsyncValue.data(
+        currentState.copyWith(errorMessage: '模型未找到: $modelId'),
+      );
       return false;
     }
 
-    final model = state.models[modelIndex];
+    final model = currentState.models[modelIndex];
 
     if (model.isAvailable) {
-      state = state.copyWith(statusMessage: '模型已下载');
+      state = AsyncValue.data(currentState.copyWith(statusMessage: '模型已下载'));
       return true;
     }
 
-    state = state.copyWith(
-      isDownloading: true,
-      downloadingModelId: modelId,
-      downloadProgress: 0,
-      statusMessage: '开始下载模型...',
+    state = AsyncValue.data(
+      currentState.copyWith(
+        isDownloading: true,
+        downloadingModelId: modelId,
+        downloadProgress: 0,
+        statusMessage: '开始下载模型...',
+      ),
     );
 
     final downloadService = ref.read(modelDownloadServiceProvider);
@@ -136,12 +170,17 @@ class TtsNotifier extends _$TtsNotifier {
     final result = await downloadService.downloadModel(
       model,
       onProgress: (progress, status) {
-        state = state.copyWith(
-          downloadProgress: progress,
-          statusMessage: status,
-        );
+        final current = state.value;
+        if (current != null) {
+          state = AsyncValue.data(
+            current.copyWith(downloadProgress: progress, statusMessage: status),
+          );
+        }
       },
     );
+
+    final latestState = state.value;
+    if (latestState == null) return false;
 
     if (result != null) {
       // 保存到已下载列表
@@ -156,24 +195,28 @@ class TtsNotifier extends _$TtsNotifier {
       ref.invalidate(downloadedModelIdsProvider);
 
       // 更新状态
-      final updatedModels = List<TtsModelConfig>.from(state.models);
+      final updatedModels = List<TtsModelConfig>.from(latestState.models);
       updatedModels[modelIndex] = model.copyWith(isAvailable: true);
 
-      state = state.copyWith(
-        models: updatedModels,
-        isDownloading: false,
-        downloadingModelId: null,
-        downloadProgress: 1,
-        statusMessage: '模型下载完成',
+      state = AsyncValue.data(
+        latestState.copyWith(
+          models: updatedModels,
+          isDownloading: false,
+          downloadingModelId: null,
+          downloadProgress: 1,
+          statusMessage: '模型下载完成',
+        ),
       );
 
       return true;
     } else {
-      state = state.copyWith(
-        isDownloading: false,
-        downloadingModelId: null,
-        downloadProgress: 0,
-        errorMessage: '模型下载失败',
+      state = AsyncValue.data(
+        latestState.copyWith(
+          isDownloading: false,
+          downloadingModelId: null,
+          downloadProgress: 0,
+          errorMessage: '模型下载失败',
+        ),
       );
       return false;
     }
@@ -181,22 +224,30 @@ class TtsNotifier extends _$TtsNotifier {
 
   /// 设置激活模型
   Future<bool> setActiveModel(String modelId) async {
-    final modelIndex = state.models.indexWhere((m) => m.id == modelId);
+    final currentState = state.value;
+    if (currentState == null) return false;
+
+    final modelIndex = currentState.models.indexWhere((m) => m.id == modelId);
     if (modelIndex == -1) {
-      state = state.copyWith(errorMessage: '模型未找到: $modelId');
+      state = AsyncValue.data(
+        currentState.copyWith(errorMessage: '模型未找到: $modelId'),
+      );
       return false;
     }
 
-    final model = state.models[modelIndex];
+    final model = currentState.models[modelIndex];
 
     if (!model.isAvailable) {
-      state = state.copyWith(errorMessage: '模型未下载');
+      state = AsyncValue.data(currentState.copyWith(errorMessage: '模型未下载'));
       return false;
     }
 
-    state = state.copyWith(statusMessage: '正在加载模型...');
+    state = AsyncValue.data(currentState.copyWith(statusMessage: '正在加载模型...'));
 
     final success = await _initializeEngine(model);
+
+    final latestState = state.value;
+    if (latestState == null) return false;
 
     if (success) {
       // 保存激活模型 ID
@@ -204,20 +255,24 @@ class TtsNotifier extends _$TtsNotifier {
       await prefs.setString('tts_active_model', modelId);
 
       // 更新状态
-      final updatedModels = state.models.map((m) {
+      final updatedModels = latestState.models.map((m) {
         return m.copyWith(isActive: m.id == modelId);
       }).toList();
 
-      state = state.copyWith(
-        models: updatedModels,
-        activeModel: model.copyWith(isActive: true),
-        speakerId: 0,
-        statusMessage: '模型已加载',
+      state = AsyncValue.data(
+        latestState.copyWith(
+          models: updatedModels,
+          activeModel: model.copyWith(isActive: true),
+          speakerId: 0,
+          statusMessage: '模型已加载',
+        ),
       );
 
       return true;
     } else {
-      state = state.copyWith(errorMessage: '模型加载失败', statusMessage: null);
+      state = AsyncValue.data(
+        latestState.copyWith(errorMessage: '模型加载失败', statusMessage: null),
+      );
       return false;
     }
   }
@@ -233,45 +288,63 @@ class TtsNotifier extends _$TtsNotifier {
 
   /// 设置语速
   void setSpeed(double speed) {
-    state = state.copyWith(speed: speed.clamp(0.5, 3.0));
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    state = AsyncValue.data(
+      currentState.copyWith(speed: speed.clamp(0.5, 3.0)),
+    );
   }
 
   /// 设置说话人
   void setSpeakerId(int speakerId) {
+    final currentState = state.value;
+    if (currentState == null) return;
+
     final engine = ref.read(ttsEngineProvider);
     final maxSpeakerId = engine.numSpeakers - 1;
 
-    state = state.copyWith(
-      speakerId: speakerId.clamp(0, maxSpeakerId > 0 ? maxSpeakerId : 0),
+    state = AsyncValue.data(
+      currentState.copyWith(
+        speakerId: speakerId.clamp(0, maxSpeakerId > 0 ? maxSpeakerId : 0),
+      ),
     );
   }
 
   /// 合成语音
   Future<String?> synthesize(String text) async {
+    final currentState = state.value;
+    if (currentState == null) return null;
+
     if (text.trim().isEmpty) {
-      state = state.copyWith(errorMessage: '请输入文本');
+      state = AsyncValue.data(currentState.copyWith(errorMessage: '请输入文本'));
       return null;
     }
 
     final engine = ref.read(ttsEngineProvider);
 
     if (!engine.isInitialized) {
-      state = state.copyWith(errorMessage: 'TTS 引擎未初始化');
+      state = AsyncValue.data(
+        currentState.copyWith(errorMessage: 'TTS 引擎未初始化'),
+      );
       return null;
     }
 
-    state = state.copyWith(
-      isGenerating: true,
-      errorMessage: null,
-      statusMessage: '正在生成语音...',
+    state = AsyncValue.data(
+      currentState.copyWith(
+        isGenerating: true,
+        errorMessage: null,
+        statusMessage: '正在生成语音...',
+      ),
     );
 
     try {
       // 生成输出文件路径
       final appDir = await getApplicationDocumentsDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final latestState = state.value ?? currentState;
       final suffix =
-          '-sid-${state.speakerId}-speed-${state.speed.toStringAsFixed(1)}';
+          '-sid-${latestState.speakerId}-speed-${latestState.speed.toStringAsFixed(1)}';
       final outputPath = p.join(
         appDir.path,
         'tts_output',
@@ -282,58 +355,75 @@ class TtsNotifier extends _$TtsNotifier {
       final result = await engine.synthesizeToFile(
         text,
         outputPath,
-        speakerId: state.speakerId,
-        speed: state.speed,
+        speakerId: latestState.speakerId,
+        speed: latestState.speed,
       );
 
       if (result != null) {
         // 获取生成结果信息
         final synthResult = await engine.synthesize(
           text,
-          speakerId: state.speakerId,
-          speed: state.speed,
+          speakerId: latestState.speakerId,
+          speed: latestState.speed,
         );
 
-        state = state.copyWith(
-          isGenerating: false,
-          lastGeneratedPath: result,
-          lastGeneratedDuration: synthResult.duration,
-          lastGeneratedElapsed: synthResult.elapsed,
-          statusMessage:
-              '生成完成: ${synthResult.duration.toStringAsFixed(1)}s 音频, 耗时 ${synthResult.elapsed.toStringAsFixed(2)}s',
+        state = AsyncValue.data(
+          latestState.copyWith(
+            isGenerating: false,
+            lastGeneratedPath: result,
+            lastGeneratedDuration: synthResult.duration,
+            lastGeneratedElapsed: synthResult.elapsed,
+            statusMessage:
+                '生成完成: ${synthResult.duration.toStringAsFixed(1)}s 音频, 耗时 ${synthResult.elapsed.toStringAsFixed(2)}s',
+          ),
         );
 
         return result;
       } else {
-        state = state.copyWith(isGenerating: false, errorMessage: '语音生成失败');
+        state = AsyncValue.data(
+          latestState.copyWith(isGenerating: false, errorMessage: '语音生成失败'),
+        );
         return null;
       }
     } catch (e, stackTrace) {
       _logger.e('Failed to synthesize', error: e, stackTrace: stackTrace);
-      state = state.copyWith(isGenerating: false, errorMessage: '生成失败: $e');
+      final latestState = state.value ?? currentState;
+      state = AsyncValue.data(
+        latestState.copyWith(isGenerating: false, errorMessage: '生成失败: $e'),
+      );
       return null;
     }
   }
 
   /// 删除模型
   Future<bool> deleteModel(String modelId) async {
-    final modelIndex = state.models.indexWhere((m) => m.id == modelId);
+    final currentState = state.value;
+    if (currentState == null) return false;
+
+    final modelIndex = currentState.models.indexWhere((m) => m.id == modelId);
     if (modelIndex == -1) {
-      state = state.copyWith(errorMessage: '模型未找到: $modelId');
+      state = AsyncValue.data(
+        currentState.copyWith(errorMessage: '模型未找到: $modelId'),
+      );
       return false;
     }
 
-    final model = state.models[modelIndex];
+    final model = currentState.models[modelIndex];
 
     if (model.isActive) {
       // 如果是当前激活的模型，先释放引擎
       final engine = ref.read(ttsEngineProvider);
       engine.dispose();
-      state = state.copyWith(activeModel: null, speakerId: 0);
+      state = AsyncValue.data(
+        currentState.copyWith(activeModel: null, speakerId: 0),
+      );
     }
 
     final downloadService = ref.read(modelDownloadServiceProvider);
     final success = await downloadService.deleteModel(model);
+
+    final latestState = state.value;
+    if (latestState == null) return false;
 
     if (success) {
       // 从已下载列表中移除
@@ -346,29 +436,40 @@ class TtsNotifier extends _$TtsNotifier {
       ref.invalidate(downloadedModelIdsProvider);
 
       // 更新状态
-      final updatedModels = List<TtsModelConfig>.from(state.models);
+      final updatedModels = List<TtsModelConfig>.from(latestState.models);
       updatedModels[modelIndex] = model.copyWith(
         isAvailable: false,
         isActive: false,
       );
 
-      state = state.copyWith(models: updatedModels, statusMessage: '模型已删除');
+      state = AsyncValue.data(
+        latestState.copyWith(models: updatedModels, statusMessage: '模型已删除'),
+      );
 
       return true;
     } else {
-      state = state.copyWith(errorMessage: '删除模型失败');
+      state = AsyncValue.data(latestState.copyWith(errorMessage: '删除模型失败'));
       return false;
     }
   }
 
   /// 清除错误信息
   void clearError() {
-    state = state.copyWith(errorMessage: null);
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    // 只有当 errorMessage 不为 null 时才更新状态，避免无限循环
+    if (currentState.errorMessage != null) {
+      state = AsyncValue.data(currentState.copyWith(errorMessage: null));
+    }
   }
 
   /// 清除状态信息
   void clearStatus() {
-    state = state.copyWith(statusMessage: null);
+    final currentState = state.value;
+    if (currentState == null) return;
+
+    state = AsyncValue.data(currentState.copyWith(statusMessage: null));
   }
 
   /// 获取当前模型的说话人数量

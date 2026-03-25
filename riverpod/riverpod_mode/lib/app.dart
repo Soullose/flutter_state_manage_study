@@ -118,7 +118,7 @@ class _AppPageState extends ConsumerState<AppPage> {
             crossAxisCount: 2,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 0.9,
+            childAspectRatio: 0.82,
           ),
           itemCount: _features.length,
           itemBuilder: (context, index) {

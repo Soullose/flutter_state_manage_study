@@ -37,22 +37,18 @@ class ModelSelector extends StatelessWidget {
               Icon(_getLanguageIcon(model.language), size: 20),
               const SizedBox(width: 8),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(model.name),
-                    Text(
-                      _getLanguageLabel(model.language),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
+                child: Text(
+                  '${model.name} · ${_getLanguageLabel(model.language)}',
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               if (model.numSpeakers > 1)
-                Chip(
-                  label: Text('${model.numSpeakers}人'),
-                  visualDensity: VisualDensity.compact,
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Chip(
+                    label: Text('${model.numSpeakers}人'),
+                    visualDensity: VisualDensity.compact,
+                  ),
                 ),
             ],
           ),

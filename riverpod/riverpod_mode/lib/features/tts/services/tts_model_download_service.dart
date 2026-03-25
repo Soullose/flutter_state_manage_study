@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:archive/archive.dart';
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -116,18 +117,67 @@ class TtsModelDownloadService {
   }
 
   /// 解压 tar.bz2 文件
+  ///
+  /// 使用 archive 库实现两步解压：
+  /// 1. BZip2Decoder 解压 bz2 压缩
+  /// 2. TarDecoder 解压 tar 归档
   Future<void> _extractTarBz2(String tarBz2Path, String targetPath) async {
-    // Flutter 没有内置的 tar 解压功能
-    // 这里我们使用系统命令或第三方库
-    // 由于跨平台兼容性问题，我们假设模型已经预解压
-    // 实际项目中可以使用 archive 库或平台特定实现
+    try {
+      _logger.i('Starting extraction of $tarBz2Path to $targetPath');
 
-    // 简化实现：假设下载的是已解压的文件结构
-    // 实际生产环境需要实现完整的解压逻辑
-    _logger.i('Extracting $tarBz2Path to $targetPath');
+      // 1. 读取 bz2 压缩文件
+      final bz2File = File(tarBz2Path);
+      if (!bz2File.existsSync()) {
+        throw FileSystemException('tar.bz2 file not found', tarBz2Path);
+      }
 
-    // TODO: 实现实际的解压逻辑
-    // 可以使用 archive 库或调用系统命令
+      final bz2Bytes = await bz2File.readAsBytes();
+      _logger.i('Read ${bz2Bytes.length} bytes from bz2 file');
+
+      // 2. 解压 bz2 得到 tar 数据
+      final tarBytes = BZip2Decoder().decodeBytes(bz2Bytes, verify: true);
+      _logger.i('Decompressed bz2, tar size: ${tarBytes.length} bytes');
+
+      // 3. 解压 tar 归档
+      final archive = TarDecoder().decodeBytes(tarBytes);
+      _logger.i('Extracted tar archive with ${archive.length} entries');
+
+      // 4. 写入文件到目标目录
+      int fileCount = 0;
+      for (final entry in archive) {
+        // 安全检查：防止目录穿越攻击
+        final entryName = entry.name;
+        if (entryName.contains('..') || entryName.startsWith('/')) {
+          _logger.w('Skipping potentially unsafe path: $entryName');
+          continue;
+        }
+
+        final filePath = p.join(targetPath, entryName);
+
+        if (entry.isFile) {
+          final file = File(filePath);
+          // 确保父目录存在
+          await file.parent.create(recursive: true);
+          // 写入文件内容
+          final content = entry.content as List<int>;
+          await file.writeAsBytes(content);
+          fileCount++;
+          _logger.d('Extracted file: $filePath (${content.length} bytes)');
+        } else {
+          // 创建目录
+          final dir = Directory(filePath);
+          await dir.create(recursive: true);
+          _logger.d('Created directory: $filePath');
+        }
+      }
+
+      _logger.i(
+        'Extraction completed: $fileCount files extracted to $targetPath',
+      );
+    } catch (e, stackTrace) {
+      _logger.e('Failed to extract archive', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 
   /// 删除已下载的模型

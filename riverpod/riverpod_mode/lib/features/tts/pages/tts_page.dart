@@ -44,19 +44,30 @@ class _TtsPageState extends ConsumerState<TtsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ttsState = ref.watch(ttsProvider);
+    final asyncTtsState = ref.watch(ttsProvider);
     final ttsNotifier = ref.read(ttsProvider.notifier);
 
-    // 初始化
-    ref.listen<TtsState>(ttsProvider, (previous, next) {
-      if (next.errorMessage != null && next.errorMessage!.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(next.errorMessage!),
-            backgroundColor: Colors.red,
-          ),
-        );
-        ttsNotifier.clearError();
+    // 监听错误信息
+    ref.listen<AsyncValue<TtsState>>(ttsProvider, (previous, next) {
+      final prevErrorMsg = previous?.value?.errorMessage;
+      final nextErrorMsg = next.value?.errorMessage;
+
+      // 只有当错误信息从无到有或发生变化时才显示 SnackBar
+      if (nextErrorMsg != null &&
+          nextErrorMsg.isNotEmpty &&
+          prevErrorMsg != nextErrorMsg) {
+        // 延迟到当前帧完成后执行，避免在 build 期间修改状态导致 ParentData dirty 错误
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(nextErrorMsg),
+                backgroundColor: Colors.red,
+              ),
+            );
+            ttsNotifier.clearError();
+          }
+        });
       }
     });
 
@@ -72,34 +83,64 @@ class _TtsPageState extends ConsumerState<TtsPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 模型选择卡片
-            _buildModelCard(context, ttsState, ttsNotifier),
+      body: asyncTtsState.when(
+        loading: () => const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('正在初始化 TTS...'),
+            ],
+          ),
+        ),
+        error: (error, stackTrace) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('初始化失败: $error'),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.refresh),
+                label: const Text('重试'),
+                onPressed: () {
+                  ref.invalidate(ttsProvider);
+                },
+              ),
+            ],
+          ),
+        ),
+        data: (ttsState) => SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 模型选择卡片
+              _buildModelCard(context, ttsState, ttsNotifier),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // 参数调节卡片
-            _buildParamsCard(context, ttsState, ttsNotifier),
+              // 参数调节卡片
+              _buildParamsCard(context, ttsState, ttsNotifier),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // 文本输入卡片
-            _buildInputCard(context, ttsState, ttsNotifier),
+              // 文本输入卡片
+              _buildInputCard(context, ttsState, ttsNotifier),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // 控制按钮
-            _buildControlButtons(context, ttsState, ttsNotifier),
+              // 控制按钮
+              _buildControlButtons(context, ttsState, ttsNotifier),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // 状态信息
-            _buildStatusCard(context, ttsState),
-          ],
+              // 状态信息
+              _buildStatusCard(context, ttsState),
+            ],
+          ),
         ),
       ),
     );

@@ -17,7 +17,7 @@ class TtsModelsPage extends ConsumerStatefulWidget {
 class _TtsModelsPageState extends ConsumerState<TtsModelsPage> {
   @override
   Widget build(BuildContext context) {
-    final ttsState = ref.watch(ttsProvider);
+    final asyncTtsState = ref.watch(ttsProvider);
     final ttsNotifier = ref.read(ttsProvider.notifier);
 
     return Scaffold(
@@ -27,14 +27,48 @@ class _TtsModelsPageState extends ConsumerState<TtsModelsPage> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              ttsNotifier.loadModels();
+              // 重新加载模型列表
+              ref.invalidate(ttsProvider);
             },
           ),
         ],
       ),
-      body: ttsState.isDownloading
-          ? _buildDownloadProgress(ttsState)
-          : _buildModelList(context, ttsState, ttsNotifier),
+      body: asyncTtsState.when(
+        // 加载中状态
+        loading: () => const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('正在加载模型列表...'),
+            ],
+          ),
+        ),
+        // 错误状态
+        error: (error, stackTrace) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('加载失败: $error'),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.refresh),
+                label: const Text('重试'),
+                onPressed: () {
+                  ref.invalidate(ttsProvider);
+                },
+              ),
+            ],
+          ),
+        ),
+        // 成功状态
+        data: (ttsState) => ttsState.isDownloading
+            ? _buildDownloadProgress(ttsState)
+            : _buildModelList(context, ttsState, ttsNotifier),
+      ),
     );
   }
 
@@ -170,13 +204,18 @@ class _TtsModelsPageState extends ConsumerState<TtsModelsPage> {
                     label: Text(isDownloading ? '下载中...' : '下载'),
                     onPressed: isDownloading
                         ? null
-                        : () => _downloadModel(context, model.id, ttsNotifier),
+                        : () => _downloadModel(
+                            this.context,
+                            model.id,
+                            ttsNotifier,
+                          ),
                   ),
                 if (model.isAvailable && !model.isActive)
                   TextButton.icon(
                     icon: const Icon(Icons.check_circle_outline),
                     label: const Text('使用'),
-                    onPressed: () => _setActiveModel(model.id, ttsNotifier),
+                    onPressed: () =>
+                        _setActiveModel(this.context, model.id, ttsNotifier),
                   ),
                 if (model.isAvailable)
                   TextButton.icon(
@@ -184,7 +223,7 @@ class _TtsModelsPageState extends ConsumerState<TtsModelsPage> {
                     label: const Text('删除'),
                     style: TextButton.styleFrom(foregroundColor: Colors.red),
                     onPressed: () =>
-                        _confirmDelete(context, model.id, ttsNotifier),
+                        _confirmDelete(this.context, model.id, ttsNotifier),
                   ),
               ],
             ),
@@ -215,7 +254,11 @@ class _TtsModelsPageState extends ConsumerState<TtsModelsPage> {
   }
 
   /// 设置激活模型
-  Future<void> _setActiveModel(String modelId, TtsNotifier ttsNotifier) async {
+  Future<void> _setActiveModel(
+    BuildContext context,
+    String modelId,
+    TtsNotifier ttsNotifier,
+  ) async {
     final success = await ttsNotifier.setActiveModel(modelId);
     if (mounted && success) {
       ScaffoldMessenger.of(
