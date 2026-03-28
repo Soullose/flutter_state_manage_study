@@ -1,9 +1,7 @@
 part of 'main_wrapper_bloc.dart';
 
 sealed class MainWrapperState extends Equatable {
-  const MainWrapperState._({
-    this.indexPage = 0,
-  });
+  const MainWrapperState._({this.indexPage = 0});
 
   static const MainWrapperInitial _instance = MainWrapperInitial();
 
@@ -20,7 +18,7 @@ final class MainWrapperInitial extends MainWrapperState {
 }
 
 final class MainWrapperChange extends MainWrapperState {
-  const MainWrapperChange(index) : super._(indexPage: index);
+  const MainWrapperChange(int index) : super._(indexPage: index);
 
   @override
   // TODO: implement props

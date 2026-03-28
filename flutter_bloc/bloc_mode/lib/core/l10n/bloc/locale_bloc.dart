@@ -42,7 +42,7 @@ class LocaleBloc extends Bloc<LocaleEvent, LocaleState> {
     LocaleLoadedFromStorage event,
     Emitter<LocaleState> emit,
   ) async {
-    final savedLocale = await _loadLocale();
+    final savedLocale = _loadLocale();
     emit(state.copyWith(locale: savedLocale));
   }
 

@@ -24,7 +24,7 @@ class HttpManager {
   }
 
   Future<ResultData?> netFetch(
-    url, {
+    String url, {
     DioMethod method = DioMethod.get,
     Map<String, dynamic>? params,
     Object? data,
@@ -32,7 +32,7 @@ class HttpManager {
     Map<String, dynamic>? header,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
-    noTip = false,
+    bool noTip = false,
   }) async {
     const methodValues = {
       DioMethod.get: 'get',
@@ -41,9 +41,9 @@ class HttpManager {
       DioMethod.delete: 'delete',
       DioMethod.patch: 'patch',
       DioMethod.head: 'head',
-      DioMethod.non: ''
+      DioMethod.non: '',
     };
-    if(method != DioMethod.non) {
+    if (method != DioMethod.non) {
       options ??= Options(method: methodValues[method]);
     }
     // options ??=Options(method: methodValues[method]) : null;
@@ -54,8 +54,12 @@ class HttpManager {
     Response response;
 
     try {
-      response = await dio.request(url,
-          queryParameters: params, data: data, options: options);
+      response = await dio.request(
+        url,
+        queryParameters: params,
+        data: data,
+        options: options,
+      );
       if (kDebugMode) {
         print('response:$response');
         print('responseHeaders:${response.headers}');
@@ -77,8 +81,10 @@ ResultData _resultError(DioException e, String url) {
   if (e.response != null) {
     errorResponse = e.response;
   } else {
-    errorResponse =
-        Response(statusCode: 999, requestOptions: RequestOptions(path: url));
+    errorResponse = Response(
+      statusCode: 999,
+      requestOptions: RequestOptions(path: url),
+    );
   }
   if (e.type == DioExceptionType.connectionTimeout ||
       e.type == DioExceptionType.receiveTimeout) {
@@ -89,12 +95,4 @@ ResultData _resultError(DioException e, String url) {
 
 final HttpManager httpManager = injector<HttpManager>();
 
-enum DioMethod {
-  get,
-  post,
-  put,
-  delete,
-  patch,
-  head,
-  non
-}
+enum DioMethod { get, post, put, delete, patch, head, non }

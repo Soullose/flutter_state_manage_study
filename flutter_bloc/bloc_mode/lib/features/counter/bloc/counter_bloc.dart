@@ -16,7 +16,10 @@ class CounterBloc extends Bloc<CounterEvent, CounterState> {
     emit(CounterState.init());
   }
 
-  _increment(IncrementCountEvent event, Emitter<CounterState> emit) async {
+  Future<void> _increment(
+    IncrementCountEvent event,
+    Emitter<CounterState> emit,
+  ) async {
     // final strBytes = utf8.encode('Jzsoft@168');
     // final base64String = base64.encode(strBytes);
     // final customBase64String = CustomBase64.encode('Jzsoft@168');
@@ -128,8 +131,8 @@ class CustomBase64 {
       part += (chr2 == 0 && i > bytes.length)
           ? '=='
           : (chr3 == 0 && i > bytes.length)
-              ? '='
-              : _keyStr[enc3] + _keyStr[enc4];
+          ? '='
+          : _keyStr[enc3] + _keyStr[enc4];
 
       output += part;
     }
