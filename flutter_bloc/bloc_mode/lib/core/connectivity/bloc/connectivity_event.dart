@@ -1,26 +1,40 @@
 part of 'connectivity_bloc.dart';
 
+/// 网络状态事件基类
 sealed class ConnectivityEvent extends Equatable {
   const ConnectivityEvent();
 }
 
-class ConnectionRequestedEvent extends ConnectivityEvent {
-  const ConnectionRequestedEvent();
+/// 启动网络监听
+final class ConnectivityStarted extends ConnectivityEvent {
+  const ConnectivityStarted();
+
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
-class ConnectivityChangedEvent extends ConnectivityEvent {
-  final bool isConnected;
+/// 网络状态变化（由 Service 推送）
+final class ConnectivityResultChanged extends ConnectivityEvent {
+  final NetworkResult networkResult;
 
-  const ConnectivityChangedEvent(this.isConnected);
+  const ConnectivityResultChanged(this.networkResult);
 
   @override
-  List<Object> get props => [isConnected];
+  List<Object?> get props => [networkResult];
 }
 
-class ConnectivityClosedEvent extends ConnectivityEvent {
-  const ConnectivityClosedEvent();
+/// 手动重新检测网络
+final class ConnectivityCheckRequested extends ConnectivityEvent {
+  const ConnectivityCheckRequested();
+
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
+}
+
+/// 停止网络监听
+final class ConnectivityStopped extends ConnectivityEvent {
+  const ConnectivityStopped();
+
+  @override
+  List<Object?> get props => [];
 }

@@ -1,3 +1,5 @@
+import 'package:bloc_mode/core/connectivity/bloc/connectivity_bloc.dart';
+import 'package:bloc_mode/core/connectivity/service/connectivity_service.dart';
 import 'package:bloc_mode/core/mqtt/bloc/mqtt_bloc.dart';
 import 'package:bloc_mode/core/net/http_manager.dart';
 import 'package:bloc_mode/core/storage/shared_preferences_service.dart';
@@ -40,6 +42,14 @@ Future<void> initDependencies() async {
   injector.registerLazySingleton<ThemeBloc>(() => ThemeBloc(prefs: injector()));
   injector.registerLazySingleton<LocaleBloc>(
     () => LocaleBloc(prefs: injector()),
+  );
+
+  // 网络连接服务 - 单例
+  injector.registerLazySingleton<ConnectivityService>(
+    () => ConnectivityService(),
+  );
+  injector.registerLazySingleton<ConnectivityBloc>(
+    () => ConnectivityBloc(connectivityService: injector()),
   );
 
   // 认证相关

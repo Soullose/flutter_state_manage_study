@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:bloc_mode/core/bloc_observer.dart';
+import 'package:bloc_mode/core/connectivity/bloc/connectivity_bloc.dart';
+import 'package:bloc_mode/core/connectivity/widgets/connectivity_banner.dart';
 import 'package:bloc_mode/core/di/injector.dart';
 import 'package:bloc_mode/core/l10n/bloc/locale_bloc.dart';
 import 'package:bloc_mode/core/mqtt/bloc/mqtt_bloc.dart';
@@ -47,6 +49,10 @@ Future<void> main() async {
           create: (BuildContext context) =>
               injector<AuthBloc>()..add(const AuthStarted()),
         ),
+        // ConnectivityBloc - 全局网络状态管理
+        BlocProvider<ConnectivityBloc>(
+          create: (BuildContext context) => injector<ConnectivityBloc>(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -74,6 +80,10 @@ class MyApp extends StatelessWidget {
               theme: const MaterialTheme(TextTheme()).light(),
               darkTheme: const MaterialTheme(TextTheme()).dark(),
               themeMode: themeState.themeMode,
+              // 使用 builder 将 ConnectivityBanner 放在 MaterialApp 内部
+              builder: (context, child) {
+                return ConnectivityBanner(child: child!);
+              },
             );
           },
         );
