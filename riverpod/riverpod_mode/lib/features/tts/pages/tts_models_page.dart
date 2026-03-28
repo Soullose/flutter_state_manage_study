@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../models/tts_model_config.dart';
 import '../models/tts_state.dart';
@@ -240,7 +239,7 @@ class _TtsModelsPageState extends ConsumerState<TtsModelsPage> {
     TtsNotifier ttsNotifier,
   ) async {
     final success = await ttsNotifier.downloadModel(modelId);
-    if (mounted) {
+    if (mounted && context.mounted) {
       if (success) {
         ScaffoldMessenger.of(
           context,
@@ -260,7 +259,7 @@ class _TtsModelsPageState extends ConsumerState<TtsModelsPage> {
     TtsNotifier ttsNotifier,
   ) async {
     final success = await ttsNotifier.setActiveModel(modelId);
-    if (mounted && success) {
+    if (mounted && context.mounted && success) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('模型已切换')));

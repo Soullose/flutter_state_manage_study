@@ -40,7 +40,7 @@ class ThemePreviewCard extends StatelessWidget {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: theme.primaryColor.withOpacity(0.3),
+                    color: theme.primaryColor.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -60,13 +60,14 @@ class ThemePreviewCard extends StatelessWidget {
                   end: Alignment.bottomRight,
                   colors: [
                     theme.primaryColor,
-                    theme.secondaryColor ?? theme.primaryColor.withOpacity(0.7),
+                    theme.secondaryColor ??
+                        theme.primaryColor.withValues(alpha: 0.7),
                   ],
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: theme.primaryColor.withOpacity(0.4),
+                    color: theme.primaryColor.withValues(alpha: 0.4),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -168,7 +169,7 @@ class CustomThemePreviewCard extends StatelessWidget {
                                   width: 60,
                                   height: 60,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(
+                                  errorBuilder: (_, _, _) => Container(
                                     width: 60,
                                     height: 60,
                                     color: colorScheme.primaryContainer,
@@ -183,7 +184,7 @@ class CustomThemePreviewCard extends StatelessWidget {
                                   width: 60,
                                   height: 60,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(
+                                  errorBuilder: (_, _, _) => Container(
                                     width: 60,
                                     height: 60,
                                     color: colorScheme.primaryContainer,

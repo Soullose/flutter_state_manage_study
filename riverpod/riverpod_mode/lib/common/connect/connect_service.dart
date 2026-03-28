@@ -18,9 +18,13 @@ Stream<List<ConnectivityResult>> connectivityState(Ref ref) {
 
 @Riverpod(keepAlive: true)
 void connectivityListener(Ref ref) {
-  print('xxxxxxxxxxxxxxxxxxxx');
+  if (kDebugMode) {
+    print('xxxxxxxxxxxxxxxxxxxx');
+  }
   ref.listen(connectivityStateProvider, (previous, next) {
-    print('${next.value}');
+    if (kDebugMode) {
+      print('${next.value}');
+    }
     if (previous != next) {
       if (kDebugMode) {
         print('WiFi status changed: $next');

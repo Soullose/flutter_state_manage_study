@@ -38,11 +38,10 @@ class ThemeConfig {
       isNetworkImage = false;
 
   /// 创建自定义图片主题配置
-  const ThemeConfig.custom(String imageSource, {bool isNetworkImage = false})
+  const ThemeConfig.custom(String imageSource, {this.isNetworkImage = false})
     : type = ThemeType.custom,
       predefinedSchemeKey = null,
-      customImageSource = imageSource,
-      isNetworkImage = isNetworkImage;
+      customImageSource = imageSource;
 
   /// 默认主题配置
   static const ThemeConfig defaultTheme = ThemeConfig.predefined('blue');

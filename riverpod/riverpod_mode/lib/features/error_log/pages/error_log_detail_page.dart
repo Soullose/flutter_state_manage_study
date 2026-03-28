@@ -397,7 +397,12 @@ class ErrorLogDetailPage extends ConsumerWidget {
 
   void _shareLog(BuildContext context) {
     final content = _formatLogForSharing();
-    Share.share(content, subject: '错误日志 - ${_getCategoryLabel(log.category)}');
+    SharePlus.instance.share(
+      ShareParams(
+        text: content,
+        subject: '错误日志 - ${_getCategoryLabel(log.category)}',
+      ),
+    );
   }
 
   void _copyAll(BuildContext context) {

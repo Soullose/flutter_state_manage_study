@@ -93,7 +93,7 @@ class _ErrorLogPageState extends ConsumerState<ErrorLogPage> {
           stats.when(
             data: (data) => _buildStatsCard(data, colorScheme),
             loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
           ),
 
           // 功能测试面板（仅在Debug模式显示）
@@ -488,7 +488,7 @@ class _ErrorLogPageState extends ConsumerState<ErrorLogPage> {
 
     if (confirmed == true) {
       await ref.read(errorLogListProvider.notifier).clearAllLogs();
-      if (mounted) {
+      if (mounted && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('所有日志已清空'),
@@ -504,7 +504,7 @@ class _ErrorLogPageState extends ConsumerState<ErrorLogPage> {
       final storageService = ref.read(errorLogStorageServiceProvider);
       final exportFile = await storageService.exportToFile();
 
-      if (exportFile != null && mounted) {
+      if (exportFile != null && mounted && context.mounted) {
         // 显示导出选项
         final result = await showModalBottomSheet<String>(
           context: context,
@@ -533,11 +533,13 @@ class _ErrorLogPageState extends ConsumerState<ErrorLogPage> {
         );
 
         if (result == 'share') {
-          await Share.shareXFiles([XFile(exportFile.path)], subject: '错误日志导出');
+          await SharePlus.instance.share(
+            ShareParams(files: [XFile(exportFile.path)], subject: '错误日志导出'),
+          );
         } else if (result == 'copy') {
           final jsonString = await storageService.exportAsJsonString();
           await Clipboard.setData(ClipboardData(text: jsonString));
-          if (mounted) {
+          if (mounted && context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('JSON已复制到剪贴板'),
@@ -548,7 +550,7 @@ class _ErrorLogPageState extends ConsumerState<ErrorLogPage> {
         }
       }
     } catch (e) {
-      if (mounted) {
+      if (mounted && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('导出失败: $e'),

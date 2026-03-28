@@ -14,12 +14,10 @@ part 'theme_config_provider.g.dart';
 @riverpod
 class ThemeConfigNotifier extends _$ThemeConfigNotifier {
   late ThemePersistenceService _persistenceService;
-  late ImageColorExtractor _colorExtractor;
 
   @override
   ThemeConfig build() {
     _persistenceService = ref.watch(themePersistenceProvider);
-    _colorExtractor = ref.watch(imageColorExtractorProvider);
 
     // 加载保存的主题配置
     final savedConfig = _persistenceService.loadThemeConfig();

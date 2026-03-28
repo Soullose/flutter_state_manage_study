@@ -26,7 +26,9 @@ class TokenInterceptors extends QueuedInterceptorsWrapper {
 
   @override
   void onResponse(
-      Response<dynamic> response, ResponseInterceptorHandler handler) {
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     final authorizationCode = getToken();
     if (authorizationCode!.isEmpty) {
       saveAuthorization(response);
@@ -50,8 +52,7 @@ class TokenInterceptors extends QueuedInterceptorsWrapper {
     if (kDebugMode) {
       print('token:$authorization');
     }
-    var token = ref.read(tokenProvider).value;
-    token = authorization;
+    // TODO: 实现token持久化保存逻辑
   }
 
   String? getToken() {

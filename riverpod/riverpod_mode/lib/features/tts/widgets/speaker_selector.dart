@@ -28,7 +28,7 @@ class SpeakerSelector extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<int>(
-          value: speakerId.clamp(0, numSpeakers - 1),
+          initialValue: speakerId.clamp(0, numSpeakers - 1),
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

@@ -24,7 +24,7 @@ class ModelSelector extends StatelessWidget {
     }
 
     return DropdownButtonFormField<String>(
-      value: activeModel?.id,
+      initialValue: activeModel?.id,
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
