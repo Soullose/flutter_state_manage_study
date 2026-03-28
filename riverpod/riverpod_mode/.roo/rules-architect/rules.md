@@ -2,6 +2,7 @@
 
 该计划必须满足以下技术规范：
 - 基于 Flutter 3.3+ 及以上版本构建；
+- 在架构设计时，需综合考虑性能、可维护性与测试覆盖度，并提供关键代码示例或配置片段作为参考。
 - 明确声明：PlatformDispatcher.instance.onError 已全面覆盖所有 Dart 异步错误（包括 isolate、Timer、Future、Stream、async/await 等场景），因此禁止使用已被废弃的 runZonedGuarded 方案；
 - 所有错误处理逻辑必须直接绑定至 PlatformDispatcher.instance.onError，并附带错误分类标签（如：TTS 初始化失败、语音文件读取超时、权限拒绝等）；
 - 计划中需包含：错误监控指标（如：捕获率 ≥99.5%、平均响应延迟 ≤200ms）、离线 TTS 缓存策略（文件格式、压缩方案、LRU 清理机制）、以及单元测试覆盖要求（至少 80% 异常路径）；
