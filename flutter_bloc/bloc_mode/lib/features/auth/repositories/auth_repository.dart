@@ -1,6 +1,6 @@
-import 'package:bloc_mode/core/storage/shared_preferences_utils.dart';
+import 'package:bloc_mode/core/storage/mmkv_service.dart';
+import 'package:bloc_mode/core/utils/app_logger.dart';
 import 'package:bloc_mode/features/auth/models/user.dart';
-import 'package:logger/logger.dart';
 
 /// 认证仓库接口
 abstract class AuthRepository {
@@ -19,22 +19,22 @@ abstract class AuthRepository {
 
 /// 认证仓库实现
 class AuthRepositoryImpl implements AuthRepository {
-  final SharedPreferencesUtils _prefs;
-  final Logger _logger = Logger();
+  final MmkvDb _mmkv;
+  final _logger = AppLogger.logger;
 
-  AuthRepositoryImpl({required SharedPreferencesUtils prefs}) : _prefs = prefs;
+  AuthRepositoryImpl({required MmkvDb mmkv}) : _mmkv = mmkv;
 
   @override
   Future<bool> isLoggedIn() async {
-    return _prefs.getBool('isLoggedIn') ?? false;
+    return _mmkv.get<bool>('isLoggedIn', false);
   }
 
   @override
   Future<User?> getCurrentUser() async {
-    final username = _prefs.getString('username');
-    if (username != null && username.isNotEmpty) {
-      final email = _prefs.getString('email');
-      final avatar = _prefs.getString('avatar');
+    final username = _mmkv.get<String>('username', '');
+    if (username.isNotEmpty) {
+      final email = _mmkv.get<String>('email', '');
+      final avatar = _mmkv.get<String>('avatar', '');
       return User(username: username, email: email, avatar: avatar);
     }
     return null;
@@ -53,11 +53,11 @@ class AuthRepositoryImpl implements AuthRepository {
         final user = User(username: username, email: '$username@example.com');
 
         // 保存登录状态
-        await _prefs.setBool('isLoggedIn', true);
-        await _prefs.setString('username', username);
-        await _prefs.setString('email', user.email ?? '');
+        await _mmkv.put('isLoggedIn', true);
+        await _mmkv.put('username', username);
+        await _mmkv.put('email', user.email ?? '');
 
-        _logger.i('用户登录成功: $username');
+        _logger.d('用户登录成功: $username');
         return user;
       } else {
         throw Exception('密码长度至少6位');
@@ -72,12 +72,12 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> logout() async {
     try {
       // 清除登录状态
-      await _prefs.remove('isLoggedIn');
-      await _prefs.remove('username');
-      await _prefs.remove('email');
-      await _prefs.remove('avatar');
+      _mmkv.remove('isLoggedIn');
+      _mmkv.remove('username');
+      _mmkv.remove('email');
+      _mmkv.remove('avatar');
 
-      _logger.i('用户已登出');
+      _logger.d('用户已登出');
     } catch (e) {
       _logger.e('登出失败: $e');
       rethrow;

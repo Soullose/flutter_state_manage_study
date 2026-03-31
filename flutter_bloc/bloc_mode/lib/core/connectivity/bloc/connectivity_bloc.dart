@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_mode/core/connectivity/service/connectivity_service.dart';
+import 'package:bloc_mode/core/utils/app_logger.dart';
 import 'package:equatable/equatable.dart';
-import 'package:logger/logger.dart';
 
 part 'connectivity_event.dart';
 part 'connectivity_state.dart';
@@ -13,7 +13,7 @@ part 'connectivity_state.dart';
 /// 负责监听网络状态变化并发出对应的状态
 class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
   final ConnectivityService _connectivityService;
-  final Logger _logger = Logger();
+  final _logger = AppLogger.logger;
 
   /// 网络服务订阅
   StreamSubscription<NetworkResult>? _networkSubscription;
@@ -36,7 +36,7 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
     ConnectivityStarted event,
     Emitter<ConnectivityState> emit,
   ) async {
-    _logger.i('ConnectivityBloc: 启动网络监听');
+    _logger.d('ConnectivityBloc: 启动网络监听');
 
     // 订阅网络服务的状态流
     _networkSubscription = _connectivityService.networkResultStream.listen(
@@ -57,7 +57,7 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
     Emitter<ConnectivityState> emit,
   ) async {
     final result = event.networkResult;
-    _logger.i('ConnectivityBloc: 网络状态变化 -> $result');
+    _logger.d('ConnectivityBloc: 网络状态变化 -> $result');
 
     if (result.hasInternet) {
       // 有互联网连接
@@ -74,7 +74,7 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
     ConnectivityCheckRequested event,
     Emitter<ConnectivityState> emit,
   ) async {
-    _logger.i('ConnectivityBloc: 手动检测网络');
+    _logger.d('ConnectivityBloc: 手动检测网络');
     emit(const ConnectivityChecking());
 
     final result = await _connectivityService.checkConnectivity();
@@ -93,7 +93,7 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
     ConnectivityStopped event,
     Emitter<ConnectivityState> emit,
   ) async {
-    _logger.i('ConnectivityBloc: 停止网络监听');
+    _logger.d('ConnectivityBloc: 停止网络监听');
     await _networkSubscription?.cancel();
     _networkSubscription = null;
     _connectivityService.stopListening();

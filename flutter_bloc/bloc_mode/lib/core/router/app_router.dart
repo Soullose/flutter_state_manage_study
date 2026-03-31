@@ -6,12 +6,12 @@ import 'package:bloc_mode/features/mqtt_client/view/mqtt_client_page.dart';
 import 'package:bloc_mode/features/timer/view/timer_page.dart';
 import 'package:bloc_mode/features/setting/presentation/pages/settings_page.dart';
 import 'package:bloc_mode/core/di/injector.dart';
+import 'package:bloc_mode/core/utils/app_logger.dart';
 import 'package:bloc_mode/features/auth/bloc/auth_bloc.dart';
 import 'package:bloc_mode/features/auth/bloc/auth_state.dart';
 import 'package:bloc_mode/features/auth/view/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'go_router_refresh_stream.dart';
 
 class AppRouter {
@@ -179,29 +179,29 @@ class AppRouter {
 /// The Navigator observer.
 class MyNavObserver extends NavigatorObserver {
   /// Creates a [MyNavObserver].
-  MyNavObserver() {
-    // Logger.onRecord.listen((e) => debugPrint('$e'));
-  }
+  MyNavObserver();
 
-  /// The logged message.
-  final Logger log = Logger();
+  /// 全局日志实例
+  ///
+  /// 使用 [AppLogger.logger] 统一配置，在 release 模式下自动过滤 debug 级别日志
+  final log = AppLogger.logger;
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    log.i('didPush: ${route.str}, previousRoute= ${previousRoute?.str}');
+    log.d('didPush: ${route.str}, previousRoute= ${previousRoute?.str}');
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) =>
-      log.i('didPop: ${route.str}, previousRoute= ${previousRoute?.str}');
+      log.d('didPop: ${route.str}, previousRoute= ${previousRoute?.str}');
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) =>
-      log.i('didRemove: ${route.str}, previousRoute= ${previousRoute?.str}');
+      log.d('didRemove: ${route.str}, previousRoute= ${previousRoute?.str}');
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) =>
-      log.i('didReplace: new= ${newRoute?.str}, old= ${oldRoute?.str}');
+      log.d('didReplace: new= ${newRoute?.str}, old= ${oldRoute?.str}');
 }
 
 extension on Route<dynamic> {

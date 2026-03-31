@@ -1,12 +1,14 @@
+import 'package:bloc_mode/core/storage/mmkv_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Cookie拦截器
+///
+/// 用于处理HTTP请求和响应中的Cookie。
 class CookieInterceptors extends QueuedInterceptorsWrapper {
-  final SharedPreferences prefs;
+  final MmkvDb mmkv;
 
-  CookieInterceptors({required this.prefs});
+  CookieInterceptors({required this.mmkv});
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {

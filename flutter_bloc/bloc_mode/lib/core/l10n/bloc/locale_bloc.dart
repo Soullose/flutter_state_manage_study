@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:bloc_mode/core/storage/shared_preferences_utils.dart';
+import 'package:bloc_mode/core/storage/mmkv_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -8,11 +8,11 @@ part 'locale_state.dart';
 
 /// 多语言Bloc - 管理应用语言状态
 class LocaleBloc extends Bloc<LocaleEvent, LocaleState> {
-  final SharedPreferencesUtils _prefs;
+  final MmkvDb _mmkv;
   static const String _localeKey = 'locale';
 
-  LocaleBloc({required SharedPreferencesUtils prefs})
-    : _prefs = prefs,
+  LocaleBloc({required MmkvDb mmkv})
+    : _mmkv = mmkv,
       super(const LocaleState()) {
     on<LocaleChanged>(_onChange);
     on<LocaleToggled>(_onToggle);
@@ -48,15 +48,12 @@ class LocaleBloc extends Bloc<LocaleEvent, LocaleState> {
 
   /// 保存语言设置到本地存储
   Future<void> _saveLocale(Locale locale) async {
-    await _prefs.setString(
-      _localeKey,
-      '${locale.languageCode}_${locale.countryCode}',
-    );
+    await _mmkv.put(_localeKey, '${locale.languageCode}_${locale.countryCode}');
   }
 
   /// 从本地存储加载语言设置
   Locale _loadLocale() {
-    final localeStr = _prefs.getString(_localeKey);
+    final localeStr = _mmkv.get<String>(_localeKey, '');
     switch (localeStr) {
       case 'zh_CN':
         return const Locale('zh', 'CN');

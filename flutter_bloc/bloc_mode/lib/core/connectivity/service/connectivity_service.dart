@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:bloc_mode/core/utils/app_logger.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
 
 /// 网络连接类型
 enum NetworkConnectionType {
@@ -72,7 +72,7 @@ enum OfflineReason {
 ///
 /// 封装 connectivity_plus 和互联网可达性验证逻辑
 class ConnectivityService {
-  final Logger _logger = Logger();
+  final _logger = AppLogger.logger;
   final Dio _dio;
 
   /// 互联网验证 URL（使用 Google 的连通性检测端点）
@@ -112,7 +112,7 @@ class ConnectivityService {
       _onConnectivityChanged,
     );
 
-    _logger.i('ConnectivityService 已启动监听');
+    _logger.d('ConnectivityService 已启动监听');
 
     // 启动时立即检测一次当前网络状态
     _checkInitialConnectivity();
@@ -122,7 +122,7 @@ class ConnectivityService {
   Future<void> _checkInitialConnectivity() async {
     try {
       final results = await Connectivity().checkConnectivity();
-      _logger.i('初始网络状态: $results');
+      _logger.d('初始网络状态: $results');
       await _onConnectivityChanged(results);
     } catch (e) {
       _logger.e('检测初始网络状态失败: $e');
@@ -133,7 +133,7 @@ class ConnectivityService {
 
   /// 处理 connectivity_plus 的网络变化
   Future<void> _onConnectivityChanged(List<ConnectivityResult> results) async {
-    _logger.i('网络连接变化: $results');
+    _logger.d('网络连接变化: $results');
 
     // 场景 1: 完全没有连接
     if (results.isEmpty || results.contains(ConnectivityResult.none)) {
@@ -146,12 +146,12 @@ class ConnectivityService {
     if (results.contains(ConnectivityResult.mobile)) {
       // 如果同时有 WiFi 和移动网络
       if (results.contains(ConnectivityResult.wifi)) {
-        _logger.i('WiFi 和移动网络同时连接');
+        _logger.d('WiFi 和移动网络同时连接');
         _networkResultController.add(
           NetworkResult.withInternet(NetworkConnectionType.both),
         );
       } else {
-        _logger.i('移动网络连接');
+        _logger.d('移动网络连接');
         _networkResultController.add(
           NetworkResult.withInternet(NetworkConnectionType.mobile),
         );
@@ -161,11 +161,11 @@ class ConnectivityService {
 
     // 场景 3: 仅 WiFi 连接（需要验证互联网可达性）
     if (results.contains(ConnectivityResult.wifi)) {
-      _logger.i('仅 WiFi 连接，开始验证互联网可达性...');
+      _logger.d('仅 WiFi 连接，开始验证互联网可达性...');
       final hasInternet = await _verifyInternetAccess();
 
       if (hasInternet) {
-        _logger.i('WiFi 互联网可达');
+        _logger.d('WiFi 互联网可达');
         _networkResultController.add(
           NetworkResult.withInternet(NetworkConnectionType.wifi),
         );
@@ -178,7 +178,7 @@ class ConnectivityService {
 
     // 其他情况（如 ethernet, bluetooth 等）暂时视为有网络
     if (results.contains(ConnectivityResult.ethernet)) {
-      _logger.i('以太网连接');
+      _logger.d('以太网连接');
       _networkResultController.add(
         NetworkResult.withInternet(NetworkConnectionType.wifi),
       );
@@ -219,7 +219,7 @@ class ConnectivityService {
   Future<NetworkResult> checkConnectivity() async {
     try {
       final results = await Connectivity().checkConnectivity();
-      _logger.i('手动检测网络状态: $results');
+      _logger.d('手动检测网络状态: $results');
 
       // 复用现有的处理逻辑
       if (results.isEmpty || results.contains(ConnectivityResult.none)) {
@@ -254,13 +254,13 @@ class ConnectivityService {
     _connectivitySubscription?.cancel();
     _connectivitySubscription = null;
     _isStarted = false;
-    _logger.i('ConnectivityService 已停止监听');
+    _logger.d('ConnectivityService 已停止监听');
   }
 
   /// 释放资源
   void dispose() {
     stopListening();
     _networkResultController.close();
-    _logger.i('ConnectivityService 已释放');
+    _logger.d('ConnectivityService 已释放');
   }
 }

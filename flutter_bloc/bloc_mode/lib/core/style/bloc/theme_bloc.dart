@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:bloc_mode/core/storage/shared_preferences_utils.dart';
+import 'package:bloc_mode/core/storage/mmkv_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -8,12 +8,10 @@ part 'theme_state.dart';
 
 /// 主题Bloc - 管理应用主题状态
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
-  final SharedPreferencesUtils _prefs;
+  final MmkvDb _mmkv;
   static const String _themeModeKey = 'theme_mode';
 
-  ThemeBloc({required SharedPreferencesUtils prefs})
-    : _prefs = prefs,
-      super(const ThemeState()) {
+  ThemeBloc({required MmkvDb mmkv}) : _mmkv = mmkv, super(const ThemeState()) {
     on<ThemeToggled>(_onToggled);
     on<ThemeChangedTo>(_onChangeTo);
     on<ThemeLoadedFromStorage>(_onLoadFromStorage);
@@ -54,12 +52,12 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
 
   /// 保存主题模式到本地存储
   Future<void> _saveThemeMode(ThemeMode mode) async {
-    await _prefs.setString(_themeModeKey, mode.name);
+    await _mmkv.put(_themeModeKey, mode.name);
   }
 
   /// 从本地存储加载主题模式
   Future<ThemeMode> _loadThemeMode() async {
-    final modeName = _prefs.getString(_themeModeKey);
+    final modeName = _mmkv.get<String>(_themeModeKey, '');
     switch (modeName) {
       case 'light':
         return ThemeMode.light;
