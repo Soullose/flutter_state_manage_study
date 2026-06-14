@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider_mode/app.dart';
+import 'package:provider_mode/features/auth/presentation/view/login_page.dart';
 import 'package:provider_mode/features/counter/view/counter_page.dart';
 import 'package:provider_mode/features/locale/view/locale_page.dart';
 import 'package:provider_mode/features/logs/view/logs_page.dart';
+import 'package:provider_mode/features/mqtt/view/mqtt_page.dart';
 import 'package:provider_mode/features/settings/view/settings_page.dart';
 import 'package:provider_mode/features/theme/view/theme_page.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+  /// 暴露 navigatorKey 给外部使用（如 SnackBar）
+  static GlobalKey<NavigatorState> get navigatorKey => _rootNavigatorKey;
 
   /// 页面转场动画构建器
   static Widget _slideTransition(
@@ -73,6 +78,22 @@ class AppRouter {
             path: 'logs',
             pageBuilder: (context, state) => CustomTransitionPage(
               child: const LogsPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          // Auth 认证示例
+          GoRoute(
+            path: 'auth',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const LoginPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          // MQTT 状态查看
+          GoRoute(
+            path: 'mqtt',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const MqttPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),

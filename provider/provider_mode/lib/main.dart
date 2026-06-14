@@ -31,9 +31,28 @@ void main() async {
 
   // 设置全局异常捕获
   // 从 Flutter 3.3 开始，PlatformDispatcher.instance.onError 可以捕获所有 Dart 异步错误
-  // 不再需要使用 runZonedGuarded
   final exceptionHandler = injector<GlobalExceptionHandler>();
   exceptionHandler.setup();
+
+  // 监听全局错误流，在 UI 层展示 SnackBar
+  exceptionHandler.errorStream.listen((errorMessage) {
+    final context = AppRouter.navigatorKey.currentContext;
+    if (context != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 4),
+          action: SnackBarAction(
+            label: '查看日志',
+            textColor: Colors.white,
+            onPressed: () => AppRouter.router.go('/logs'),
+          ),
+        ),
+      );
+    }
+  });
 
   // 直接运行应用，异常由 GlobalExceptionHandler 统一处理
   runApp(MultiProvider(

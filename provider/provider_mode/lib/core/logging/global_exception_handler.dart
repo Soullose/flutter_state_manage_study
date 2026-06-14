@@ -1,7 +1,8 @@
 // lib/core/logging/global_exception_handler.dart
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 import 'log_service.dart';
 
@@ -18,6 +19,13 @@ class GlobalExceptionHandler {
 
   /// 自定义错误处理回调
   void Function(dynamic error, StackTrace? stackTrace)? onError;
+
+  /// 错误通知流控制器 — UI 层可以监听此流展示 SnackBar
+  final StreamController<String> _errorStreamController =
+      StreamController<String>.broadcast();
+
+  /// 暴露给 UI 层的错误通知流
+  Stream<String> get errorStream => _errorStreamController.stream;
 
   GlobalExceptionHandler({
     required LogService logService,
@@ -70,6 +78,9 @@ class GlobalExceptionHandler {
       );
     }
 
+    // 通知 UI
+    _errorStreamController.add('应用错误: ${details.exception}');
+
     // 调用自定义回调
     onError?.call(details.exception, details.stack);
   }
@@ -92,6 +103,9 @@ class GlobalExceptionHandler {
         'Platform',
       );
     }
+
+    // 通知 UI
+    _errorStreamController.add('系统错误: $error');
 
     // 调用自定义回调
     onError?.call(error, stackTrace);

@@ -138,6 +138,20 @@ class AppPage extends StatelessWidget {
         route: '/logs',
         color: Colors.red,
       ),
+      _ExampleItem(
+        icon: Icons.login,
+        title: 'Provider认证',
+        subtitle: 'Mock登录/登出示例',
+        route: '/auth',
+        color: Colors.indigo,
+      ),
+      _ExampleItem(
+        icon: Icons.cloud,
+        title: 'MQTT状态',
+        subtitle: '连接状态监听示例',
+        route: '/mqtt',
+        color: Colors.cyan,
+      ),
     ];
 
     return GridView.builder(

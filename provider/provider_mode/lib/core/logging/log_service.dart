@@ -7,6 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'log_file_service.dart';
 import 'models/log_entry.dart';
@@ -77,12 +78,19 @@ class LogService {
 
   /// 获取应用包信息
   Future<Map<String, String>> _getPackageInfo() async {
-    // 由于没有package_info_plus，我们返回默认值
-    // 实际项目中可以添加package_info_plus依赖
-    return {
-      'version': '1.0.0',
-      'buildNumber': '1',
-    };
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      return {
+        'version': packageInfo.version,
+        'buildNumber': packageInfo.buildNumber,
+      };
+    } catch (e) {
+      debugPrint('[LogService] Failed to get package info: $e');
+      return {
+        'version': '1.0.0',
+        'buildNumber': '1',
+      };
+    }
   }
 
   /// 获取设备信息
