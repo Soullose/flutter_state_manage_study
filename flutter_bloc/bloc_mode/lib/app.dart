@@ -74,6 +74,12 @@ class AppPage extends StatelessWidget {
             icon: Icons.cloud_queue,
             route: '/one/blocMqtt',
           ),
+          _ExampleCard(
+            title: '流式聊天',
+            subtitle: '仿 ChatGPT 打字机流式回复（Bloc + Stream）',
+            icon: Icons.chat,
+            route: '/one/chat',
+          ),
 
           const SizedBox(height: 24),
 

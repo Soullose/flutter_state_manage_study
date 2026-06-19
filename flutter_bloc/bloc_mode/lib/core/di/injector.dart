@@ -8,6 +8,12 @@ import 'package:bloc_mode/core/style/bloc/theme_bloc.dart';
 import 'package:bloc_mode/core/utils/app_logger.dart';
 import 'package:bloc_mode/features/auth/bloc/auth_bloc.dart';
 import 'package:bloc_mode/features/auth/repositories/auth_repository.dart';
+import 'package:bloc_mode/features/chat/data/datasources/chat_mock_data_source_impl.dart';
+import 'package:bloc_mode/features/chat/data/datasources/chat_remote_data_source.dart';
+import 'package:bloc_mode/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:bloc_mode/features/chat/domain/repositories/chat_repository.dart';
+import 'package:bloc_mode/features/chat/domain/usecases/send_message.dart';
+import 'package:bloc_mode/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:bloc_mode/features/counter/bloc/counter_bloc.dart';
 import 'package:bloc_mode/features/counter/cubit/counter_cubit.dart';
 import 'package:bloc_mode/features/main_wrapper/main_wrapper_bloc.dart';
@@ -74,4 +80,24 @@ Future<void> initDependencies() async {
   injector.registerFactory(() => CounterCubit());
   injector.registerFactory(() => TimerBloc(ticker: const Ticker()));
   injector.registerFactory(() => MqttBloc());
+
+  // 聊天相关 - Clean Architecture 分层注册
+  // 数据源：默认使用 Mock（开箱即用，无需后端/API Key）
+  // 若需接入真实 OpenAI 兼容接口，将此处替换为 ChatSseDataSourceImpl：
+  //   ChatSseDataSourceImpl(baseUrl: '...', apiKey: '...')
+  injector.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatMockDataSourceImpl(),
+  );
+  // 仓库：将 DataSource 的异常转换为 Failure
+  injector.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(injector()),
+  );
+  // 用例：调用仓库返回流式文本
+  injector.registerLazySingleton<SendMessage>(
+    () => SendMessage(injector()),
+  );
+  // ChatBloc：每次进页面新建（工厂模式），由 ChatPage 的 BlocProvider 注入
+  injector.registerFactory(
+    () => ChatBloc(sendMessage: injector()),
+  );
 }

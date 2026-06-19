@@ -1,4 +1,5 @@
 import 'package:bloc_mode/app.dart';
+import 'package:bloc_mode/features/chat/presentation/view/chat_page.dart';
 import 'package:bloc_mode/features/counter/view/bloc/counter_page.dart';
 import 'package:bloc_mode/features/counter/view/cubit/count/counter_cubit_page.dart';
 import 'package:bloc_mode/features/main_wrapper/view/main_wrapper_page.dart';
@@ -150,6 +151,10 @@ class AppRouter {
                     GoRoute(
                       path: 'blocMqtt',
                       builder: (context, state) => const MqttClientPage(),
+                    ),
+                    GoRoute(
+                      path: 'chat',
+                      builder: (context, state) => const ChatPage(),
                     ),
                   ],
                 ),
