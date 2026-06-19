@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider_mode/app.dart';
 import 'package:provider_mode/features/auth/presentation/view/login_page.dart';
+import 'package:provider_mode/features/chat/presentation/view/chat_page.dart';
 import 'package:provider_mode/features/counter/view/counter_page.dart';
 import 'package:provider_mode/features/locale/view/locale_page.dart';
 import 'package:provider_mode/features/logs/view/logs_page.dart';
@@ -94,6 +95,14 @@ class AppRouter {
             path: 'mqtt',
             pageBuilder: (context, state) => CustomTransitionPage(
               child: const MqttPage(),
+              transitionsBuilder: _slideTransition,
+            ),
+          ),
+          // Chat 流式聊天（仿 ChatGPT 打字机回复）
+          GoRoute(
+            path: 'chat',
+            pageBuilder: (context, state) => CustomTransitionPage(
+              child: const ChatPage(),
               transitionsBuilder: _slideTransition,
             ),
           ),

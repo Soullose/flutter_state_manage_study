@@ -152,6 +152,13 @@ class AppPage extends StatelessWidget {
         route: '/mqtt',
         color: Colors.cyan,
       ),
+      _ExampleItem(
+        icon: Icons.smart_toy,
+        title: '流式聊天',
+        subtitle: '仿ChatGPT打字机回复',
+        route: '/chat',
+        color: Colors.green,
+      ),
     ];
 
     return GridView.builder(

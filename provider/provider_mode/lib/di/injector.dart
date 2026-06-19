@@ -15,6 +15,12 @@ import 'package:provider_mode/features/auth/domain/repositories/auth_repository.
 import 'package:provider_mode/features/auth/domain/usecases/login_user.dart';
 import 'package:provider_mode/features/auth/domain/usecases/logout_user.dart';
 import 'package:provider_mode/features/auth/presentation/viewmodels/auth_view_model.dart';
+import 'package:provider_mode/features/chat/data/datasources/chat_mock_data_source_impl.dart';
+import 'package:provider_mode/features/chat/data/datasources/chat_remote_data_source.dart';
+import 'package:provider_mode/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:provider_mode/features/chat/domain/repositories/chat_repository.dart';
+import 'package:provider_mode/features/chat/domain/usecases/send_message.dart';
+import 'package:provider_mode/features/chat/presentation/viewmodels/chat_view_model.dart';
 import 'package:provider_mode/features/counter/counter_provider.dart';
 import 'package:provider_mode/features/locale/locale_provider.dart';
 import 'package:provider_mode/features/logs/logs_provider.dart';
@@ -74,5 +80,32 @@ Future<void> initDependencies() async {
   injector.registerFactory(() => AuthViewModel(
         loginUser: injector<LoginUser>(),
         logoutUser: injector<LogoutUser>(),
+      ));
+
+  // ========== Chat 聊天模块 ==========
+  // DataSource —— 默认使用 Mock（开箱即用，无需网络和 API Key）
+  //
+  // 若需切换到真实 OpenAI 兼容接口：
+  // 1. 顶部 import: package:provider_mode/features/chat/data/datasources/chat_sse_data_source_impl.dart
+  // 2. 注释掉下方的 Mock，改用 SSE 实现：
+  //    () => ChatSseDataSourceImpl(
+  //          baseUrl: 'https://api.openai.com',
+  //          apiKey: 'YOUR_API_KEY',
+  //          model: 'gpt-3.5-turbo',
+  //    ),
+  injector.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatMockDataSourceImpl(),
+  );
+
+  // Repository
+  injector.registerLazySingleton<ChatRepository>(
+      () => ChatRepositoryImpl(injector<ChatRemoteDataSource>()));
+
+  // UseCase
+  injector.registerFactory(() => SendMessage(injector<ChatRepository>()));
+
+  // ViewModel
+  injector.registerFactory(() => ChatViewModel(
+        sendMessage: injector<SendMessage>(),
       ));
 }
