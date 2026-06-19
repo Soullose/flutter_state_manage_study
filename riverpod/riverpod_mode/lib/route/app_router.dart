@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../app.dart';
 import '../common/widgets/main_shell.dart';
 import '../core/error_log/models/error_log_entry.dart';
+import '../features/chat/presentation/pages/chat_page.dart';
 import '../features/timer/presentation/pages/timer_page.dart';
 import '../features/theme/pages/theme_settings_page.dart';
 import '../features/profile/pages/profile_page.dart';
@@ -65,6 +66,12 @@ class AppRouter {
       GoRoute(
         path: '/tts/models',
         pageBuilder: _buildSlideTransitionPage(const TtsModelsPage()),
+      ),
+
+      /// 聊天路由
+      GoRoute(
+        path: '/chat',
+        pageBuilder: _buildSlideTransitionPage(const ChatPage()),
       ),
 
       /// 我的页面的子路由（独立路由，不显示底部导航栏）

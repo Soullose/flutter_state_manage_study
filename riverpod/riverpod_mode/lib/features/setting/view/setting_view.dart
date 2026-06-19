@@ -80,6 +80,79 @@ class SettingView extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 24),
+            // AI 服务设置分组
+            _buildSectionHeader(context, 'AI 服务'),
+            _buildSettingCard(
+              context,
+              children: [
+                _SettingsTile(
+                  icon: Icons.cloud_outlined,
+                  title: '接口地址',
+                  value: setting.value?.apiBaseUrl ?? '未设置',
+                  onTap: () => _showEditBottomSheet(
+                    context,
+                    title: '编辑接口地址',
+                    hintText: '请输入接口地址（如 https://api.openai.com）',
+                    initialValue: setting.value?.apiBaseUrl ?? '',
+                    onSaved: (value) async {
+                      if (value != null && value.isNotEmpty) {
+                        await settingState.setApiBaseUrl(value);
+                      }
+                    },
+                  ),
+                ),
+                const Divider(height: 1, indent: 56),
+                _SettingsTile(
+                  icon: Icons.key_outlined,
+                  title: 'API Key',
+                  value: _maskApiKey(setting.value?.apiKey ?? ''),
+                  onTap: () => _showEditBottomSheet(
+                    context,
+                    title: '编辑 API Key',
+                    hintText: '请输入 API Key',
+                    initialValue: setting.value?.apiKey ?? '',
+                    onSaved: (value) async {
+                      if (value != null) {
+                        await settingState.setApiKey(value);
+                      }
+                    },
+                  ),
+                ),
+                const Divider(height: 1, indent: 56),
+                _SettingsTile(
+                  icon: Icons.model_training_outlined,
+                  title: '模型名称',
+                  value: setting.value?.apiModel ?? '未设置',
+                  onTap: () => _showEditBottomSheet(
+                    context,
+                    title: '编辑模型名称',
+                    hintText: '请输入模型名称（如 gpt-3.5-turbo）',
+                    initialValue: setting.value?.apiModel ?? '',
+                    onSaved: (value) async {
+                      if (value != null && value.isNotEmpty) {
+                        await settingState.setApiModel(value);
+                      }
+                    },
+                  ),
+                ),
+                const Divider(height: 1, indent: 56),
+                _SettingsTile(
+                  icon: Icons.science_outlined,
+                  title: '使用模拟数据',
+                  value: (setting.value?.useMock ?? true) ? '开启' : '关闭',
+                  showArrow: false,
+                  onTap: () => _showMockToggleSheet(
+                    context,
+                    currentValue: setting.value?.useMock ?? true,
+                    onChanged: (value) async {
+                      await settingState.setUseMock(value);
+                      if (context.mounted) Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
             // 其他设置分组
             _buildSectionHeader(context, '其他'),
             _buildSettingCard(
@@ -135,6 +208,29 @@ class SettingView extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(children: children),
+    );
+  }
+
+  /// 隐藏 API Key 中间部分，只显示首尾
+  String _maskApiKey(String apiKey) {
+    if (apiKey.isEmpty) return '未设置';
+    if (apiKey.length <= 8) return '••••';
+    return '${apiKey.substring(0, 4)}••••${apiKey.substring(apiKey.length - 4)}';
+  }
+
+  /// 显示数据源切换弹窗（模拟 / 真实接口）
+  void _showMockToggleSheet(
+    BuildContext context, {
+    required bool currentValue,
+    required ValueChanged<bool> onChanged,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _MockToggleSheet(
+        currentValue: currentValue,
+        onChanged: onChanged,
+      ),
     );
   }
 
@@ -373,6 +469,99 @@ class _EditBottomSheetState extends State<_EditBottomSheet> {
                           },
                         )
                       : null,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 数据源切换弹窗（模拟数据 / 真实接口）
+class _MockToggleSheet extends StatefulWidget {
+  final bool currentValue;
+  final ValueChanged<bool> onChanged;
+
+  const _MockToggleSheet({
+    required this.currentValue,
+    required this.onChanged,
+  });
+
+  @override
+  State<_MockToggleSheet> createState() => _MockToggleSheetState();
+}
+
+class _MockToggleSheetState extends State<_MockToggleSheet> {
+  late bool _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.currentValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: colorScheme.onSurface.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                '选择数据源',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ),
+            RadioGroup<bool>(
+              groupValue: _value,
+              onChanged: (v) {
+                if (v == null) return;
+                setState(() => _value = v);
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile<bool>(
+                    value: true,
+                    title: const Text('模拟数据'),
+                    subtitle: const Text('无需后端和 API Key，开箱即用'),
+                  ),
+                  RadioListTile<bool>(
+                    value: false,
+                    title: const Text('真实接口'),
+                    subtitle: const Text('需配置接口地址、API Key 和模型名'),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+              child: SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () => widget.onChanged(_value),
+                  child: const Text('确定'),
                 ),
               ),
             ),

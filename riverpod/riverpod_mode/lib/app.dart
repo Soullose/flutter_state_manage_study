@@ -59,6 +59,13 @@ const List<FeatureItem> _features = [
     route: '/tts',
     color: Colors.teal,
   ),
+  FeatureItem(
+    title: '流式聊天',
+    description: '仿 ChatGPT 打字机流式回复，支持 Mock 与 SSE 数据源',
+    icon: Icons.chat_outlined,
+    route: '/chat',
+    color: Colors.indigo,
+  ),
 ];
 
 /// 首页
