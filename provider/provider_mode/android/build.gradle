@@ -16,7 +16,7 @@ allprojects {
         maven { url 'https://mirrors.163.com/maven/repository/maven-public/' }
 
         // 首都在线
-        maven { url 'https://maven.oscs.oschina.net/content/groups/public/' }
+//        maven { url 'https://maven.oscs.oschina.net/content/groups/public/' }
         google()
         mavenCentral()
     }
