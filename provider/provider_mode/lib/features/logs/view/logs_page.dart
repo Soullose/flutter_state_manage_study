@@ -1,10 +1,7 @@
 // lib/features/logs/view/logs_page.dart
 
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -179,7 +176,7 @@ class _LogsPageState extends State<LogsPage> {
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

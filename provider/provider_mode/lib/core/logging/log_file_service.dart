@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -81,7 +82,9 @@ class LogFileService {
       );
     } catch (e) {
       // 写入失败时打印到控制台（避免递归错误）
-      print('[LogFileService] Failed to write log entry: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to write log entry: $e');
+      }
     }
   }
 
@@ -116,7 +119,9 @@ class LogFileService {
           .whereType<LogEntry>()
           .toList();
     } catch (e) {
-      print('[LogFileService] Failed to read logs by date: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to read logs by date: $e');
+      }
       return [];
     }
   }
@@ -155,7 +160,9 @@ class LogFileService {
             }
           }
         } catch (e) {
-          print('[LogFileService] Failed to read file ${file.path}: $e');
+          if (kDebugMode) {
+            print('[LogFileService] Failed to read file ${file.path}: $e');
+          }
         }
       }
 
@@ -163,7 +170,9 @@ class LogFileService {
       allLogs.sort((a, b) => b.timestamp.compareTo(a.timestamp));
       return allLogs;
     } catch (e) {
-      print('[LogFileService] Failed to read all logs: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to read all logs: $e');
+      }
       return [];
     }
   }
@@ -212,7 +221,9 @@ class LogFileService {
           .toList()
         ..sort((a, b) => b.path.compareTo(a.path)); // 按文件名倒序（日期倒序）
     } catch (e) {
-      print('[LogFileService] Failed to get log files: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to get log files: $e');
+      }
       return [];
     }
   }
@@ -230,7 +241,9 @@ class LogFileService {
       }
       return totalSize;
     } catch (e) {
-      print('[LogFileService] Failed to get total log size: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to get total log size: $e');
+      }
       return 0;
     }
   }
@@ -275,7 +288,9 @@ class LogFileService {
         newestLogTime: logs.isNotEmpty ? logs.first.timestamp : null,
       );
     } catch (e) {
-      print('[LogFileService] Failed to get statistics: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to get statistics: $e');
+      }
       return LogStatistics.empty();
     }
   }
@@ -304,7 +319,9 @@ class LogFileService {
 
       return deletedCount;
     } catch (e) {
-      print('[LogFileService] Failed to delete logs before $date: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to delete logs before $date: $e');
+      }
       return 0;
     }
   }
@@ -321,7 +338,9 @@ class LogFileService {
       }
       return false;
     } catch (e) {
-      print('[LogFileService] Failed to delete logs by date: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to delete logs by date: $e');
+      }
       return false;
     }
   }
@@ -341,7 +360,9 @@ class LogFileService {
 
       return deletedCount;
     } catch (e) {
-      print('[LogFileService] Failed to clear all logs: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to clear all logs: $e');
+      }
       return 0;
     }
   }
@@ -394,7 +415,9 @@ class LogFileService {
 
       return exportFile;
     } catch (e) {
-      print('[LogFileService] Failed to export logs: $e');
+      if (kDebugMode) {
+        print('[LogFileService] Failed to export logs: $e');
+      }
       return null;
     }
   }

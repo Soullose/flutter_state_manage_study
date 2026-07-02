@@ -150,7 +150,7 @@ class _MqttPageState extends State<MqttPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
-              color: valueColor.withOpacity(0.1),
+              color: valueColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
