@@ -37,7 +37,7 @@ class GlobalExceptionHandler {
   /// 设置全局异常捕获
   void setup() {
     // 先保存原始的Flutter错误处理器（在设置新的之前）
-    _originalFlutterOnError = FlutterError.onError;
+    // _originalFlutterOnError = FlutterError.onError;
 
     // 捕获Flutter框架错误
     FlutterError.onError = _handleFlutterError;
@@ -50,7 +50,7 @@ class GlobalExceptionHandler {
   }
 
   /// 保存原始的Flutter错误处理器
-  FlutterErrorHandler? _originalFlutterOnError;
+  // FlutterErrorHandler? _originalFlutterOnError;
 
   /// 处理Flutter框架错误
   void _handleFlutterError(FlutterErrorDetails details) {

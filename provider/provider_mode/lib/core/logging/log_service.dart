@@ -126,7 +126,7 @@ class LogService {
       } else if (Platform.isWindows) {
         final windowsInfo = await _deviceInfo.windowsInfo;
         return {
-          'model': 'Windows PC',
+          'model': windowsInfo.computerName,
           'manufacturer': null,
           'osVersion': 'Windows',
           'platform': 'Windows',
@@ -157,25 +157,36 @@ class LogService {
   Future<Map<String, dynamic>> _getConnectivityStatus() async {
     try {
       final result = await _connectivity.checkConnectivity();
-      final isConnected = result != ConnectivityResult.none;
+      final isConnected = !result.contains(ConnectivityResult.none);
 
       String? networkType;
-      switch (result) {
-        case ConnectivityResult.wifi:
-          networkType = 'WiFi';
-          break;
-        case ConnectivityResult.mobile:
-          networkType = 'Cellular';
-          break;
-        case ConnectivityResult.ethernet:
-          networkType = 'Ethernet';
-          break;
-        case ConnectivityResult.none:
-          networkType = 'None';
-          break;
-        default:
-          networkType = 'Unknown';
+      if (result.contains(ConnectivityResult.wifi)) {
+        networkType = 'WiFi';
+      } else if (result.contains(ConnectivityResult.mobile)) {
+        networkType = 'Cellular';
+      } else if (result.contains(ConnectivityResult.ethernet)) {
+        networkType = 'Ethernet';
+      } else if (result.contains(ConnectivityResult.none)) {
+        networkType = 'None';
+      } else {
+        networkType = 'Unknown';
       }
+      // switch (result) {
+      //   case ConnectivityResult.wifi:
+      //     networkType = 'WiFi';
+      //     break;
+      //   case ConnectivityResult.mobile:
+      //     networkType = 'Cellular';
+      //     break;
+      //   case ConnectivityResult.ethernet:
+      //     networkType = 'Ethernet';
+      //     break;
+      //   case ConnectivityResult.none:
+      //     networkType = 'None';
+      //     break;
+      //   default:
+      //     networkType = 'Unknown';
+      // }
 
       return {
         'networkType': networkType,
