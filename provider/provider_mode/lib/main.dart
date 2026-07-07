@@ -37,7 +37,7 @@ void main() async {
   // 监听全局错误流，在 UI 层展示 SnackBar
   exceptionHandler.errorStream.listen((errorMessage) {
     final context = AppRouter.navigatorKey.currentContext;
-    if (context != null) {
+    if (context != null && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(errorMessage),

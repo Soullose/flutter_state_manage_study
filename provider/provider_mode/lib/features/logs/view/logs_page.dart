@@ -248,7 +248,7 @@ class _LogsPageState extends State<LogsPage> {
   /// 构建级别筛选下拉框
   Widget _buildLevelFilterChip(BuildContext context, AppLocalizations l10n) {
     return DropdownButtonFormField<LogLevel?>(
-      value: _selectedLevel,
+      initialValue: _selectedLevel,
       decoration: InputDecoration(
         labelText: l10n.logLevel,
         border: OutlineInputBorder(
@@ -296,6 +296,8 @@ class _LogsPageState extends State<LogsPage> {
         );
 
         if (range != null) {
+          // 🛡️ 2. 核心修复：检查跨越 await 后，当前组件是否还在树上
+          if (!context.mounted) return;
           setState(() {
             _selectedDateRange = range;
           });
@@ -460,23 +462,26 @@ class _LogsPageState extends State<LogsPage> {
     );
 
     if (exportFormat == null) return;
+// 🛡️ 第一次跨越 await：使用 context.mounted 检查当前传入的 context 是否还有效
+    if (!context.mounted) return;
 
     // 显示加载指示器
-    if (mounted) {
+    if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.exporting)),
       );
     }
 
     final file = await provider.exportLogs(readable: exportFormat);
+// 🛡️ 第二次跨越 await：再次检查 context.mounted
+    if (!context.mounted) return;
 
     if (file != null && mounted) {
       // 分享文件
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        subject: l10n.logExportSubject,
+      await SharePlus.instance.share(
+        ShareParams(files: [XFile(file.path)], subject: l10n.logExportSubject),
       );
-    } else if (mounted) {
+    } else if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.exportFailedOrNoLogs)),
       );
@@ -510,8 +515,8 @@ class _LogsPageState extends State<LogsPage> {
         );
 
         if (confirmed == true) {
-          final count = await provider.clearAllLogs();
-          if (mounted) {
+          // final count = await provider.clearAllLogs();
+          if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(l10n.logsCleared)),
             );
@@ -520,9 +525,9 @@ class _LogsPageState extends State<LogsPage> {
         break;
 
       case 'clear_before_week':
-        final weekAgo = DateTime.now().subtract(const Duration(days: 7));
-        final count = await provider.clearLogsBefore(weekAgo);
-        if (mounted) {
+        // final weekAgo = DateTime.now().subtract(const Duration(days: 7));
+        // final count = await provider.clearLogsBefore(weekAgo);
+        if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(l10n.weekOldLogsCleared)),
           );

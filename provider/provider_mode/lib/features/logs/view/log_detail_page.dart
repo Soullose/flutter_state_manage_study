@@ -251,6 +251,7 @@ class LogDetailPage extends StatelessWidget {
   /// 分享日志
   Future<void> _shareLog(BuildContext context, AppLocalizations l10n) async {
     final text = log.toReadableString();
-    await Share.share(text, subject: l10n.logDetailSubject);
+    await SharePlus.instance
+        .share(ShareParams(text: text, subject: l10n.logDetailSubject));
   }
 }
