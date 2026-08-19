@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 说话人选择器组件
 class SpeakerSelector extends StatelessWidget {

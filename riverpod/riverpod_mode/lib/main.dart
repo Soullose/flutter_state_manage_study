@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'bootstrap.dart';
 import 'core/error_log/models/error_log_entry.dart';

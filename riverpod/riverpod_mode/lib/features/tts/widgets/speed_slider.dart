@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 语速滑块组件
 class SpeedSlider extends StatelessWidget {
