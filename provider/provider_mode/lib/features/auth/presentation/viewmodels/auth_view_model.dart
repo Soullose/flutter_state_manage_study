@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider_mode/core/error/failures.dart';
 import 'package:provider_mode/core/usecases/use_case.dart';
 import 'package:provider_mode/features/auth/domain/entities/user.dart';

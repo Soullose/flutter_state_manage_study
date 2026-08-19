@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_mode/di/injector.dart';
 import 'package:provider_mode/features/chat/presentation/view/chat_view.dart';
