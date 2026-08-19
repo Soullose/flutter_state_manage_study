@@ -1,5 +1,5 @@
 import 'package:bloc_mode/core/connectivity/bloc/connectivity_bloc.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// 网络状态提示 Banner

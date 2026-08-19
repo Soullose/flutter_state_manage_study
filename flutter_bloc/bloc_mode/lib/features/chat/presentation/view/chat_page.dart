@@ -1,6 +1,6 @@
 import 'package:bloc_mode/core/di/injector.dart';
 import 'package:bloc_mode/features/chat/presentation/bloc/chat_bloc.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'chat_view.dart';

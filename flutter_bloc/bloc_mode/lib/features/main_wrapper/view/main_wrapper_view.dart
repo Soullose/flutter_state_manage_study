@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:bloc_mode/features/main_wrapper/main_wrapper_bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 

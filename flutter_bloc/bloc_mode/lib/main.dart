@@ -13,7 +13,7 @@ import 'package:bloc_mode/core/style/snack_bar.dart';
 import 'package:bloc_mode/features/auth/bloc/auth_bloc.dart';
 import 'package:bloc_mode/features/auth/bloc/auth_event.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';

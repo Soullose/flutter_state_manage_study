@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// 用于监听 Bloc 状态变化并触发 GoRouter 刷新
 class GoRouterRefreshStream extends ChangeNotifier {

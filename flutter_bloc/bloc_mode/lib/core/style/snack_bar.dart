@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shows [message] in a snack bar as long as a [ScaffoldMessengerState]
 /// with global key [scaffoldMessengerKey] is anywhere in the widget tree.

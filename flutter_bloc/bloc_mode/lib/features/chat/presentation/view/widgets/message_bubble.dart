@@ -1,6 +1,6 @@
 import 'package:bloc_mode/features/chat/domain/entities/chat_message.dart';
 import 'package:bloc_mode/features/chat/presentation/view/widgets/typing_indicator.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 /// 消息气泡

@@ -3,7 +3,7 @@ import 'package:bloc_mode/core/l10n/bloc/locale_bloc.dart';
 import 'package:bloc_mode/features/auth/bloc/auth_bloc.dart';
 import 'package:bloc_mode/features/auth/bloc/auth_event.dart';
 import 'package:bloc_mode/features/setting/presentation/bloc/settings_bloc.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 

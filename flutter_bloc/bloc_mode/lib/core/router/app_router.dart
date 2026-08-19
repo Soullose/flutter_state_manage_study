@@ -11,7 +11,7 @@ import 'package:bloc_mode/core/utils/app_logger.dart';
 import 'package:bloc_mode/features/auth/bloc/auth_bloc.dart';
 import 'package:bloc_mode/features/auth/bloc/auth_state.dart';
 import 'package:bloc_mode/features/auth/view/login_page.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'go_router_refresh_stream.dart';
 

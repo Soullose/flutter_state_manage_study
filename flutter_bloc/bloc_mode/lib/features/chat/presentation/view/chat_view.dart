@@ -2,7 +2,7 @@ import 'package:bloc_mode/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:bloc_mode/features/chat/presentation/bloc/chat_event.dart';
 import 'package:bloc_mode/features/chat/presentation/bloc/chat_state.dart';
 import 'package:bloc_mode/features/chat/presentation/view/widgets/message_bubble.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// 聊天主体视图
